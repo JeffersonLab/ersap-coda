@@ -16,7 +16,7 @@ configuration:
       frame_width: 1200
       frame_height: 600
       # hist_titles is a string containing the list of crate-slot-channel separated by ,
-      hist_titles: "1-3-0, 1-3-4, 1-4-8, 1-3-14"
+      hist_titles: "1-3-0, 1-3-4, 1-3-8, 1-3-14"
       hist_bins: 100
       hist_min: 1000
       hist_max: 9000
@@ -25,8 +25,8 @@ configuration:
       grid_size: 2
   services:
     AggProcessor:
-      sliding_widow_size: 16
-      sliding_step: 1
+      sliding_widow_size: 32
+      sliding_step: 4
 #  beam_center is a string: crate_slot_channel.
 #  If not defined (commented out) algorithm will not consider a cell with a max charge
 #      beam_center: "1-3-12"

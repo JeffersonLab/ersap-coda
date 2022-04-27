@@ -41,6 +41,7 @@ public class LiveHistogram {
         // and add them to the panel
         for(String s: histTitles){
             TGDataCanvas c = new TGDataCanvas();
+            c.setAxisFont(new Font("Avenir",Font.PLAIN,6));
             panel.add(c);
             c.initTimer(600);
             H1F hist = new H1F(s, histBins, histMin, histMax);
