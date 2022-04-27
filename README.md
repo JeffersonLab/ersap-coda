@@ -7,12 +7,14 @@
 
 
     $ clone https://github.com/JeffersonLab/ersap-java.git
+
     $ ./gradlew deploy
 
 3. Clone and build ersap-coda project from the Git repository
 
 
     $ clone https://github.com/JeffersonLab/ersap-coda.git
+    
     $ ./gradlew deploy
 
 ### Configuring
