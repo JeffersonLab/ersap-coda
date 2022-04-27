@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 public class FAdcEvtIdentifyEngine implements Engine {
 
-    private int STOP;
+//    private int STOP;
 
     private static String S_WINDOW = "sliding_widow_size";
     private int slidingWindowSize;
@@ -68,7 +68,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
 
     @Override
     public EngineData execute(EngineData input) {
-        if(STOP > 2) return input;
+//        if(STOP > 2) return input;
 
         EngineData out = new EngineData();
         Map<String, List<Integer>> x = new HashMap<>();
@@ -133,7 +133,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
                     fADCPayloadDecoder(data, timestamp, slt, byteData);
                 }
                 out.setData(JavaObjectType.JOBJ, eventIdentification(data));
-                STOP++;
+//                STOP++;
                 return out;
             }
         }
@@ -194,8 +194,8 @@ public class FAdcEvtIdentifyEngine implements Engine {
             step++;
             final long s = sTime;
             final long e = eTime;
-            System.out.println("DDD large window = "+startFrameTime+" - "+endFrameTime);
-            System.out.println("DDD sub-window = "+sTime+" - "+eTime);
+//            System.out.println("DDD large window = "+startFrameTime+" - "+endFrameTime);
+//            System.out.println("DDD sub-window = "+sTime+" - "+eTime);
             // carve the data for that window from the VTP frame
             Map<Long, List<VAdcHit>> subMap = hits.entrySet().stream()
                     .filter(x -> (x.getKey() >= s) && (x.getKey() <= e))
