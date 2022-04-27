@@ -1,0 +1,11 @@
+---
+name: AggFileReaderEngine
+engine: org.jlab.ersap.coda.engines.AggFileReaderEngine
+type: java
+
+author: Vardan Gyurjyan
+email: gurjyan@jlab.org
+
+version: 0.1
+description:
+  ERSAP engine that reads CODA aggregator created file in CODA format

@@ -1,0 +1,35 @@
+---
+io-services:
+  reader:
+    class: org.jlab.ersap.coda.engines.AggFileReaderEngine
+    name: AggSource
+  writer:
+    class: org.jlab.ersap.coda.engines.AggHistogramEngine
+    name: AggSync
+services:
+  - class: org.jlab.ersap.coda.engines.FAdcEvtIdentifyEngine
+    name: AggProcessor
+configuration:
+  io-services:
+    writer:
+      frame_title: "ERSAP"
+      frame_width: 1200
+      frame_height: 600
+      # hist_titles is a string containing the list of crate-slot-channel separated by ,
+      hist_titles: "1-3-0, 1-3-4, 1-4-12, 1-3,14"
+      hist_bins: 100
+      hist_min: 1000
+      hist_max: 9000
+      # grid_size defines a layout for histogram visualization
+      # (e.g. 5 will plot 25 histograms in 5x5 matrix)
+      grid_size: 5
+  services:
+    AggProcessor:
+      sliding_widow_size: 16
+      sliding_step: 1
+#  beam_center is a string: crate_slot_channel.
+#  If not defined (commented out) algorithm will not consider a cell with a max charge
+#      beam_center: "1-3-12"
+mime-types:
+  - binary/data-evio
+  - binary/data-jobj
