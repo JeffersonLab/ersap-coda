@@ -223,7 +223,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
             boolean foundEvent = true;
             Map<String, Integer> evtCandidate = new HashMap<>();
             // if there are more than 1 hit per channel fail the identification
-            for (var entry : slidingWindowHits.entrySet()) {
+            for (Map.Entry<String, List<Integer>> entry : slidingWindowHits.entrySet()) {
                 if (entry.getValue().size() > 1) {
                     foundEvent = false;
                     evtCandidate.clear();
@@ -235,7 +235,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
             // require beamCenter to have the max deposited charge
             if(!beamCenter.equals(UNDEFINED)) {
                 int maxValueInMap = (Collections.max(evtCandidate.values()));
-                for (var entry : evtCandidate.entrySet()) {
+                for (Map.Entry<String, Integer> entry : evtCandidate.entrySet()) {
                     if ((entry.getValue() == maxValueInMap) && !(entry.getKey().equals(beamCenter))) {
                         foundEvent = false;
                         break;
@@ -244,7 +244,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
             }
             if (foundEvent) {
                 // add to the identified events container
-                for (var entry : evtCandidate.entrySet()) {
+                for (Map.Entry<String, Integer>  entry : evtCandidate.entrySet()) {
                     if (evIdentified.containsKey(entry.getKey())) {
                         evIdentified.get(entry.getKey()).add(entry.getValue());
                     } else {

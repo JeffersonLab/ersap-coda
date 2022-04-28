@@ -25,15 +25,15 @@ ERSAP based application is defined as a yaml file.
 1. Copy ersap-coda.yaml to your user_data directory.
 
 
-     $ cp ersap-coda.yaml $ERSAP_USER_DATA/config
+     $ cp ersap-coda.yaml $ERSAP_USER_DATA/config/services.yaml
 
 There are a few conventions for this application configuration. Namely:
 channel name/ID is defined as:
 
     crate-slot-channel
 
-This example application assumes only a single crate, thus crate = 1.
-Using service.yaml one can configure event identification algorithm 
+This example application assumes only a single crate (crate = 1).
+Using services.yaml one can configure event identification algorithm 
 by selecting sliding window size and sliding step, beam center channel, as well as 
 histogram parameters, such as histogram/grid assignments, histogram bins, min, max, title, etc.
 
