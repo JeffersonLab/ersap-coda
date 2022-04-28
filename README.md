@@ -10,6 +10,8 @@
 
     $ ./gradlew deploy
 
+    $ ./gradlew publishToMavenLocal
+
 3. Clone and build ersap-coda project from the Git repository
 
 
