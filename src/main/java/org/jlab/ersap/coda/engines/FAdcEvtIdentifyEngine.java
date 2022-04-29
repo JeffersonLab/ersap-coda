@@ -159,7 +159,8 @@ public class FAdcEvtIdentifyEngine implements Engine {
                                     byte[] ba) {
         IntBuffer intBuf =
                 ByteBuffer.wrap(ba)
-                        .order(ByteOrder.BIG_ENDIAN)
+//                        .order(ByteOrder.BIG_ENDIAN)
+                        .order(ByteOrder.LITTLE_ENDIAN)
                         .asIntBuffer();
         int[] pData = new int[intBuf.remaining()];
         intBuf.get(pData);
