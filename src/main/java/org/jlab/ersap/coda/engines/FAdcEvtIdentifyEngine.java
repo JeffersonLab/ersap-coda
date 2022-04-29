@@ -36,8 +36,6 @@ import java.util.stream.Collectors;
  */
 public class FAdcEvtIdentifyEngine implements Engine {
 
-//    private int STOP;
-
     private static String S_WINDOW = "sliding_widow_size";
     private int slidingWindowSize;
     private static String S_STEP = "sliding_step";
@@ -68,7 +66,6 @@ public class FAdcEvtIdentifyEngine implements Engine {
 
     @Override
     public EngineData execute(EngineData input) {
-//        if(STOP > 2) return input;
 
         EngineData out = new EngineData();
         Map<String, List<Integer>> x = new HashMap<>();
@@ -128,20 +125,25 @@ public class FAdcEvtIdentifyEngine implements Engine {
                     int payloadId = dataBank.getHeader().getTag();
                     int slt = getSlot(payloadId);
                     byte[] byteData = dataBank.getRawBytes();
-                    System.out.println("payload ID = " + payloadId+", bank size = "+byteData.length);
 
-                    // define the fits for a slot in the VTP frame
-                    fADCPayloadDecoder(data, timestamp, slt, byteData);
-                }
-                for(Long tl: data.keySet()){
-                    System.out.println("============== "+ tl + " =============");
-                    for(VAdcHit v: data .get(tl)){
-                        System.out.println(v);
+                    if(byteData.length > 0) {
+                        // define the fits for a slot in the VTP frame
+                        fADCPayloadDecoder(data, timestamp, slt, byteData);
+                    } else {
+                        System.out.println("Warning: payload ID = " + payloadId+"  bank is empty.");
                     }
                 }
-                out.setData(JavaObjectType.JOBJ, eventIdentification(data));
-//                STOP++;
-                return out;
+
+//                for(Long tl: data.keySet()){
+//                    System.out.println("============== "+ tl + " =============");
+//                    for(VAdcHit v: data .get(tl)){
+//                        System.out.println(v);
+//                    }
+//                }
+                if(!data.isEmpty()) {
+                    out.setData(JavaObjectType.JOBJ, eventIdentification(data));
+                    return out;
+                }
             }
         }
         return input;
