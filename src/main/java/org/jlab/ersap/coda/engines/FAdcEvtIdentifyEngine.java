@@ -127,8 +127,9 @@ public class FAdcEvtIdentifyEngine implements Engine {
                     // Just get the data as bytes
                     int payloadId = dataBank.getHeader().getTag();
                     int slt = getSlot(payloadId);
-                    System.out.println("payload ID = " + payloadId);
                     byte[] byteData = dataBank.getRawBytes();
+                    System.out.println("payload ID = " + payloadId+" "+byteData.length);
+
                     // define the fits for a slot in the VTP frame
                     fADCPayloadDecoder(data, timestamp, slt, byteData);
                 }
@@ -163,7 +164,6 @@ public class FAdcEvtIdentifyEngine implements Engine {
                         .asIntBuffer();
         int[] pData = new int[intBuf.remaining()];
         intBuf.get(pData);
-        System.out.println("DDDDDD "+ ba.length);
         for (int i : pData) {
             int q = (i >> 0) & 0x1FFF;
             int channel = (i >> 13) & 0x000F;
