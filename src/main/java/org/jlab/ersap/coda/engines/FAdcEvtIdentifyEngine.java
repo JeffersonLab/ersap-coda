@@ -159,12 +159,11 @@ public class FAdcEvtIdentifyEngine implements Engine {
                                     byte[] ba) {
         IntBuffer intBuf =
                 ByteBuffer.wrap(ba)
-//                        .order(ByteOrder.BIG_ENDIAN)
-                        .order(ByteOrder.LITTLE_ENDIAN)
+                        .order(ByteOrder.BIG_ENDIAN)
                         .asIntBuffer();
         int[] pData = new int[intBuf.remaining()];
         intBuf.get(pData);
-        System.out.println("DDDDDD "+ pData.length);
+        System.out.println("DDDDDD "+ ba.length);
         for (int i : pData) {
             int q = (i >> 0) & 0x1FFF;
             int channel = (i >> 13) & 0x000F;
