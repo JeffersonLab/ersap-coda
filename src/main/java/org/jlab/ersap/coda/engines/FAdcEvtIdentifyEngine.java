@@ -132,6 +132,12 @@ public class FAdcEvtIdentifyEngine implements Engine {
                     // define the fits for a slot in the VTP frame
                     fADCPayloadDecoder(data, timestamp, slt, byteData);
                 }
+                for(Long tl: data.keySet()){
+                    System.out.println("============== "+ tl + " =============");
+                    for(VAdcHit v: data .get(tl)){
+                        System.out.println(v);
+                    }
+                }
                 out.setData(JavaObjectType.JOBJ, eventIdentification(data));
 //                STOP++;
                 return out;
