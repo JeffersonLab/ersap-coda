@@ -88,9 +88,9 @@ public class FAdcEvtIdentifyEngine implements Engine {
                 return out;
             }
 
-//            if (evTag == 0xff60) {
-//                System.out.println("Found built streaming event");
-//            }
+            if (evTag == 0xff60) {
+                System.out.println("Found built streaming event");
+            }
 
             // Go one level down ->
             int childCount = ev.getChildCount();
@@ -104,7 +104,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
 //            long timestamp = ((((long) intData[1]) & 0x00000000ffffffffL) +
 //                    (((long) intData[2]) << 32));
             long timestamp = frame * 65536L;
-//            System.out.println("  Frame = " + frame + ", TS = " + timestamp);
+            System.out.println("  Frame = " + frame + ", TS = " + timestamp);
 
             // Loop through all ROC Time Slice Banks (TSB) which come after TIB
             for (int j = 1; j < childCount; j++) {
@@ -127,7 +127,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
                     // Just get the data as bytes
                     int payloadId = dataBank.getHeader().getTag();
                     int slt = getSlot(payloadId);
-                    //                    System.out.println("payload ID = " + payloadId);
+                    System.out.println("payload ID = " + payloadId);
                     byte[] byteData = dataBank.getRawBytes();
                     // define the fits for a slot in the VTP frame
                     fADCPayloadDecoder(data, timestamp, slt, byteData);
