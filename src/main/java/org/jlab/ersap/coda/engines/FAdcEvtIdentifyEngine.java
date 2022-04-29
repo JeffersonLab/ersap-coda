@@ -88,9 +88,9 @@ public class FAdcEvtIdentifyEngine implements Engine {
                 return out;
             }
 
-            if (evTag == 0xff60) {
-                System.out.println("Found built streaming event");
-            }
+//            if (evTag == 0xff60) {
+//                System.out.println("Found built streaming event");
+//            }
 
             // Go one level down ->
             int childCount = ev.getChildCount();
@@ -104,7 +104,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
 //            long timestamp = ((((long) intData[1]) & 0x00000000ffffffffL) +
 //                    (((long) intData[2]) << 32));
             long timestamp = frame * 65536L;
-            System.out.println("  Frame = " + frame + ", TS = " + timestamp);
+//            System.out.println("  Frame = " + frame + ", TS = " + timestamp);
 
             // Loop through all ROC Time Slice Banks (TSB) which come after TIB
             for (int j = 1; j < childCount; j++) {
@@ -163,6 +163,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
                         .asIntBuffer();
         int[] pData = new int[intBuf.remaining()];
         intBuf.get(pData);
+        System.out.println("DDDDDD "+ pData.length);
         for (int i : pData) {
             int q = (i >> 0) & 0x1FFF;
             int channel = (i >> 13) & 0x000F;
