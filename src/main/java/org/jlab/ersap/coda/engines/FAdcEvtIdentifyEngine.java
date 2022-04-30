@@ -166,6 +166,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
                         .asIntBuffer();
         int[] pData = new int[intBuf.remaining()];
         intBuf.get(pData);
+        System.out.println("DDD =================================== "+pData.length);
         for (int i : pData) {
             int q = (i >> 0) & 0x1FFF;
             int channel = (i >> 13) & 0x000F;
