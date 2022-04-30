@@ -141,7 +141,6 @@ public class FAdcEvtIdentifyEngine implements Engine {
 //                    }
 //                }
                 if(!data.isEmpty()) {
-                    System.out.println("DDD in identifying algorithm");
                     out.setData(JavaObjectType.JOBJ, eventIdentification(data));
                     return out;
                 }
