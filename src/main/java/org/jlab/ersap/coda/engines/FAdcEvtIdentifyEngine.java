@@ -146,7 +146,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
                 }
             }
         }
-        return input;
+        return out;
     }
 
     /**
