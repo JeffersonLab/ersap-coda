@@ -134,12 +134,12 @@ public class FAdcEvtIdentifyEngine implements Engine {
                     }
                 }
 
-//                for(Long tl: data.keySet()){
-//                    System.out.println("============== "+ tl + " =============");
-//                    for(VAdcHit v: data .get(tl)){
-//                        System.out.println(v);
-//                    }
-//                }
+                for(Long tl: data.keySet()){
+                    System.out.println("============== "+ tl + " =============");
+                    for(VAdcHit v: data .get(tl)){
+                        System.out.println(v);
+                    }
+                }
                 if(!data.isEmpty()) {
                     out.setData(JavaObjectType.JOBJ, eventIdentification(data));
                     return out;
