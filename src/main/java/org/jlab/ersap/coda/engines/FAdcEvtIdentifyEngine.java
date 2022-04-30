@@ -130,7 +130,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
                         // define the fits for a slot in the VTP frame
                         fADCPayloadDecoder(data, timestamp, slt, byteData);
                     } else {
-                        System.out.println("Warning: payload ID = " + payloadId+"  bank is empty.");
+//                        System.out.println("Warning: payload ID = " + payloadId+"  bank is empty.");
                     }
                 }
 
