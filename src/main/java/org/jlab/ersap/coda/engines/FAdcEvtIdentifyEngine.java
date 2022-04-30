@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 public class FAdcEvtIdentifyEngine implements Engine {
 
-    private static String S_WINDOW = "sliding_widow_size";
+      private static String S_WINDOW = "sliding_widow_size";
     private int slidingWindowSize;
     private static String S_STEP = "sliding_step";
     private int stepSize;
