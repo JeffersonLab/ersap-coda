@@ -47,7 +47,7 @@ public class VAdcHit {
     }
 
     public String getName() {
-        return crate+"_"+slot+"_"+channel;
+        return crate+"-"+slot+"-"+channel;
     }
 
     @Override

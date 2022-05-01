@@ -48,16 +48,13 @@ public class LiveHistogram {
             H1F hist = new H1F(s, histBins, histMin, histMax);
             hist.setTitleX(s);
             histograms.put(s, hist);
-            System.out.println("DDDD creating histogram = *"+s+"*");
             c.region().draw(hist);
         }
         frame.setVisible(true);
     }
 
     public void update (String name, int value) {
-//        System.out.println("DDDD updating histogram = *"+name+"* "+histograms.containsKey(name));
         if(histograms.containsKey(name)){
-            System.out.println("DDDD updating histogram = "+histograms.get(name));
             histograms.get(name).fill(value);
         }
     }
