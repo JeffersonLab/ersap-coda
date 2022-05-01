@@ -11,10 +11,7 @@ import org.json.JSONObject;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Copyright (c) 2021, Jefferson Science Associates, all rights reserved.
@@ -104,7 +101,7 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
         List<VAdcHit> h = (List<VAdcHit>)event;
 
         for(VAdcHit v:h){
-                liveHist.update(v.getName(), v.getCharge());
+                liveHist.update(v.getName().trim(), v.getCharge());
         }
     }
 
