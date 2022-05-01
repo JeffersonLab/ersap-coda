@@ -53,7 +53,7 @@ public class LiveHistogram {
         }
 
         JFrame frame2 = new JFrame(frameTitle);
-        frame.setSize(frameWidth, frameHeight);
+        frame2.setSize(frameWidth, frameHeight);
         JPanel panel2 = new JPanel();
         GridLayout gl2 = new GridLayout(gridSize,gridSize);
         gl2.setHgap(10);
