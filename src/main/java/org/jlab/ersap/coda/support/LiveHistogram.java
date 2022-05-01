@@ -27,6 +27,7 @@ public class LiveHistogram {
     private Map<String, H1F> histograms2 = new HashMap<>();
 
     public LiveHistogram(String frameTitle, ArrayList<String> histTitles,
+                         ArrayList<String> histTitles2,
                          int gridSize, int frameWidth, int frameHeight,
                          int histBins, double histMin, double histMax) {
 
@@ -63,7 +64,7 @@ public class LiveHistogram {
 
         // create canvases with associated histograms,
         // and add them to the panel
-        for(String s: histTitles){
+        for(String s: histTitles2){
             TGDataCanvas c = new TGDataCanvas();
             c.setAxisFont(new Font("Avenir",Font.PLAIN,6));
             panel2.add(c);
@@ -81,6 +82,8 @@ public class LiveHistogram {
     public void update (String name, int value) {
         if(histograms.containsKey(name)){
             histograms.get(name).fill(value);
+        } else if(histograms2.containsKey(name)){
+            histograms2.get(name).fill(value);
         }
     }
 }

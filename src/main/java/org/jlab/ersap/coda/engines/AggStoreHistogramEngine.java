@@ -33,6 +33,8 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
     private int frameHeight;
     private static String HIST_TITLES = "hist_titles";
     private ArrayList<String> histTitles;
+    private static String HIST_TITLES2 = "hist_titles2";
+    private ArrayList<String> histTitles2;
     private static String HIST_BINS = "hist_bins";
     private int histBins;
     private static String HIST_MIN = "hist_min";
@@ -64,6 +66,14 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
                 histTitles.add(st.nextToken().trim());
             }
         }
+        if (opts.has(HIST_TITLES2) ) {
+            histTitles2 = new ArrayList<>();
+            String ht = opts.getString(HIST_TITLES2);
+            StringTokenizer st = new StringTokenizer(ht,",");
+            while (st.hasMoreTokens()){
+                histTitles2.add(st.nextToken().trim());
+            }
+        }
         if (opts.has(HIST_BINS) ) {
             histBins = opts.getInt(HIST_BINS);
         }
@@ -77,7 +87,7 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
             gridSize = opts.getInt(GRID_SIZE);
         }
 
-        liveHist = new LiveHistogram(frameTitle, histTitles, gridSize,
+        liveHist = new LiveHistogram(frameTitle, histTitles, histTitles2, gridSize,
                 frameWidth, frameHeight, histBins, histMin, histMax);
 
         try {
