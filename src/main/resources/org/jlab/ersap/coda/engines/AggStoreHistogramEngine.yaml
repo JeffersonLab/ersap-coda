@@ -1,0 +1,11 @@
+---
+name: AggStoreHistogramEngine
+engine: org.jlab.ersap.coda.engines.AggStoreHistogramEngine
+type: java
+
+author: Vardan Gyurjyan
+email: gurjyan@jlab.org
+
+version: 0.1
+description:
+  ERSAP engine that writes  Map<String, List<Integer>> data from the FAdcEvtIdentifyEngine

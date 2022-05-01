@@ -101,7 +101,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
 //            long timestamp = ((((long) intData[1]) & 0x00000000ffffffffL) +
 //                    (((long) intData[2]) << 32));
             long timestamp = frame * 65536L;
-            System.out.println("  Frame = " + frame + ", TS = " + timestamp);
+//            System.out.println("  Frame = " + frame + ", TS = " + timestamp);
 
             // Loop through all ROC Time Slice Banks (TSB) which come after TIB
             for (int j = 1; j < childCount; j++) {
@@ -195,78 +195,77 @@ public class FAdcEvtIdentifyEngine implements Engine {
         Set<Long> timeStamps = hits.keySet();
         long startFrameTime = Collections.min(timeStamps);
         long endFrameTime = Collections.max(timeStamps);
-        System.out.println("DDD ================================================================ "+ (endFrameTime - startFrameTime));
         for(Long l: timeStamps) System.out.println(l);
         System.exit(0);
-//        do {
-//            // sliding time window leading edge
-//            sTime = startFrameTime + ((long) step * stepSize);
-//            // sliding time window trailing edge
-//            eTime = sTime + slidingWindowSize;
-//            step++;
-//            final long s = sTime;
-//            final long e = eTime;
-////            System.out.println("DDD large window = "+startFrameTime+" - "+endFrameTime);
-////            System.out.println("DDD sub-window = "+sTime+" - "+eTime);
-//            // carve the data for that window from the VTP frame
-//            Map<Long, List<VAdcHit>> subMap = hits.entrySet().stream()
-//                    .filter(x -> (x.getKey() >= s) && (x.getKey() <= e))
-//                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-//
-//            // event identification
-//            // store hits within the sliding window in a new container: name and the list of hits
-//            Map<String, List<Integer>> slidingWindowHits = new HashMap<>();
-//            for (List<VAdcHit> l : subMap.values()) {
-//                for (VAdcHit h : l) {
-//                    // the name of the channel: crate-slot-channel
-//                    String n = h.getCrate()
-//                            + "-" + h.getSlot()
-//                            + "-" + h.getChannel();
-//
-//                    if (slidingWindowHits.containsKey(n)) {
-//                        slidingWindowHits.get(n).add(h.getCharge());
-//                    } else {
-//                        List<Integer> ll = new ArrayList<>();
-//                        ll.add(h.getCharge());
-//                        slidingWindowHits.put(n, ll);
-//                    }
-//                }
-//            }
-//            boolean foundEvent = true;
-//            Map<String, Integer> evtCandidate = new HashMap<>();
-//            // if there are more than 1 hit per channel fail the identification
-//            for (Map.Entry<String, List<Integer>> entry : slidingWindowHits.entrySet()) {
-//                if (entry.getValue().size() > 1) {
-//                    foundEvent = false;
-//                    evtCandidate.clear();
-//                    break;
-//                } else {
-//                    evtCandidate.put(entry.getKey(), entry.getValue().get(0));
-//                }
-//            }
-//            // require beamCenter to have the max deposited charge
-//            if(!beamCenter.equals(UNDEFINED)) {
-//                int maxValueInMap = (Collections.max(evtCandidate.values()));
-//                for (Map.Entry<String, Integer> entry : evtCandidate.entrySet()) {
-//                    if ((entry.getValue() == maxValueInMap) && !(entry.getKey().equals(beamCenter))) {
-//                        foundEvent = false;
-//                        break;
-//                    }
-//                }
-//            }
-//            if (foundEvent) {
-//                // add to the identified events container
-//                for (Map.Entry<String, Integer>  entry : evtCandidate.entrySet()) {
-//                    if (evIdentified.containsKey(entry.getKey())) {
-//                        evIdentified.get(entry.getKey()).add(entry.getValue());
-//                    } else {
-//                        List<Integer> lo = new ArrayList<>();
-//                        lo.add(entry.getValue());
-//                        evIdentified.put(entry.getKey(), lo);
-//                    }
-//                }
-//            }
-//        } while (eTime <= endFrameTime);
+        do {
+            // sliding time window leading edge
+            sTime = startFrameTime + ((long) step * stepSize);
+            // sliding time window trailing edge
+            eTime = sTime + slidingWindowSize;
+            step++;
+            final long s = sTime;
+            final long e = eTime;
+//            System.out.println("DDD large window = "+startFrameTime+" - "+endFrameTime);
+//            System.out.println("DDD sub-window = "+sTime+" - "+eTime);
+            // carve the data for that window from the VTP frame
+            Map<Long, List<VAdcHit>> subMap = hits.entrySet().stream()
+                    .filter(x -> (x.getKey() >= s) && (x.getKey() <= e))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+            // event identification
+            // store hits within the sliding window in a new container: name and the list of hits
+            Map<String, List<Integer>> slidingWindowHits = new HashMap<>();
+            for (List<VAdcHit> l : subMap.values()) {
+                for (VAdcHit h : l) {
+                    // the name of the channel: crate-slot-channel
+                    String n = h.getCrate()
+                            + "-" + h.getSlot()
+                            + "-" + h.getChannel();
+
+                    if (slidingWindowHits.containsKey(n)) {
+                        slidingWindowHits.get(n).add(h.getCharge());
+                    } else {
+                        List<Integer> ll = new ArrayList<>();
+                        ll.add(h.getCharge());
+                        slidingWindowHits.put(n, ll);
+                    }
+                }
+            }
+            boolean foundEvent = true;
+            Map<String, Integer> evtCandidate = new HashMap<>();
+            // if there are more than 1 hit per channel fail the identification
+            for (Map.Entry<String, List<Integer>> entry : slidingWindowHits.entrySet()) {
+                if (entry.getValue().size() > 1) {
+                    foundEvent = false;
+                    evtCandidate.clear();
+                    break;
+                } else {
+                    evtCandidate.put(entry.getKey(), entry.getValue().get(0));
+                }
+            }
+            // require beamCenter to have the max deposited charge
+            if(!beamCenter.equals(UNDEFINED)) {
+                int maxValueInMap = (Collections.max(evtCandidate.values()));
+                for (Map.Entry<String, Integer> entry : evtCandidate.entrySet()) {
+                    if ((entry.getValue() == maxValueInMap) && !(entry.getKey().equals(beamCenter))) {
+                        foundEvent = false;
+                        break;
+                    }
+                }
+            }
+            if (foundEvent) {
+                // add to the identified events container
+                for (Map.Entry<String, Integer>  entry : evtCandidate.entrySet()) {
+                    if (evIdentified.containsKey(entry.getKey())) {
+                        evIdentified.get(entry.getKey()).add(entry.getValue());
+                    } else {
+                        List<Integer> lo = new ArrayList<>();
+                        lo.add(entry.getValue());
+                        evIdentified.put(entry.getKey(), lo);
+                    }
+                }
+            }
+        } while (eTime <= endFrameTime);
         return evIdentified;
     }
 

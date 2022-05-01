@@ -4,6 +4,7 @@ import org.jlab.epsci.ersap.engine.EngineDataType;
 import org.jlab.epsci.ersap.std.services.AbstractEventWriterService;
 import org.jlab.epsci.ersap.std.services.EventWriterException;
 import org.jlab.ersap.coda.support.LiveHistogram;
+import org.jlab.ersap.coda.support.VAdcHit;
 import org.jlab.ersap.coda.types.JavaObjectType;
 import org.json.JSONObject;
 
@@ -23,10 +24,10 @@ import java.util.StringTokenizer;
  * 12000, Jefferson Ave, Newport News, VA 23606
  * Phone : (757)-269-7100
  *
- * @author gurjyan on 4/27/22
+ * @author gurjyan on 5/1/22
  * @project ersap-coda
  */
-public class AggHistogramEngine extends AbstractEventWriterService<FileWriter> {
+public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWriter> {
     private static String FRAME_TITLE = "frame_title";
     private String frameTitle;
     private static String FRAME_WIDTH = "frame_width";
@@ -100,12 +101,10 @@ public class AggHistogramEngine extends AbstractEventWriterService<FileWriter> {
 
     @Override
     protected void writeEvent(Object event) throws EventWriterException {
-        Map<String, List<Integer>> evIdentified = (Map<String, List<Integer>>)event;
+        List<VAdcHit> h = (List<VAdcHit>)event;
 
-        for(String s:evIdentified.keySet()){
-            for(Integer charge: evIdentified.get(s)) {
-                liveHist.update(s, charge);
-            }
+        for(VAdcHit v:h){
+                liveHist.update(v.getName(), v.getCharge());
         }
     }
 
@@ -114,4 +113,3 @@ public class AggHistogramEngine extends AbstractEventWriterService<FileWriter> {
         return JavaObjectType.JOBJ;
     }
 }
-

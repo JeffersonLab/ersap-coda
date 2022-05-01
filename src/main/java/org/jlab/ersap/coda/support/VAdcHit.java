@@ -46,6 +46,10 @@ public class VAdcHit {
         return time;
     }
 
+    public String getName() {
+        return crate+"_"+slot+"_"+channel;
+    }
+
     @Override
     public String toString() {
         return "AdcHit{" +
