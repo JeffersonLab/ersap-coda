@@ -45,7 +45,6 @@ public class LiveHistogram {
             c.setAxisFont(new Font("Avenir",Font.PLAIN,6));
             panel.add(c);
             c.initTimer(600);
-            System.out.println("DDD histogram = *"+s+"*");
             H1F hist = new H1F(s, histBins, histMin, histMax);
             hist.setTitleX(s);
             histograms.put(s.trim(), hist);
@@ -56,6 +55,7 @@ public class LiveHistogram {
 
     public void update (String name, int value) {
         if(histograms.containsKey(name)){
+            System.out.println("DDDD updating histogram = "+histograms.get(name));
             histograms.get(name).fill(value);
         }
     }

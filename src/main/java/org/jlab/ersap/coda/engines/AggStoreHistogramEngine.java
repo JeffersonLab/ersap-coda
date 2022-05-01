@@ -101,7 +101,6 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
         List<VAdcHit> h = (List<VAdcHit>)event;
 
         for(VAdcHit v:h){
-            System.out.println("DDDDDDDDDDDDDDD *"+v.getName()+"*");
                 liveHist.update(v.getName().trim(), v.getCharge());
         }
     }
