@@ -198,6 +198,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
         for(Long l: timeStamps) {
             System.out.println(l);
         }
+        System.out.println("DDD "+ (endFrameTime - startFrameTime));
         System.exit(0);
 //        do {
 //            // sliding time window leading edge
