@@ -54,6 +54,7 @@ public class LiveHistogram {
     }
 
     public void update (String name, int value) {
+        System.out.println("DDDD updating histogram = *"+name+"* "+histograms.containsKey(name));
         if(histograms.containsKey(name)){
             System.out.println("DDDD updating histogram = "+histograms.get(name));
             histograms.get(name).fill(value);
