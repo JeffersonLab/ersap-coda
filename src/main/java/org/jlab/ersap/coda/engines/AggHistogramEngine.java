@@ -100,13 +100,13 @@ public class AggHistogramEngine extends AbstractEventWriterService<FileWriter> {
 
     @Override
     protected void writeEvent(Object event) throws EventWriterException {
-        Map<String, List<Integer>> evIdentified = (Map<String, List<Integer>>)event;
-
-        for(String s:evIdentified.keySet()){
-            for(Integer charge: evIdentified.get(s)) {
-                liveHist.update(s, charge);
-            }
-        }
+//        Map<String, List<Integer>> evIdentified = (Map<String, List<Integer>>)event;
+//
+//        for(String s:evIdentified.keySet()){
+//            for(Integer charge: evIdentified.get(s)) {
+//                liveHist.update(s, charge);
+//            }
+//        }
     }
 
     @Override
