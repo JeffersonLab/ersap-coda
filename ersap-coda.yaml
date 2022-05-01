@@ -10,7 +10,7 @@ io-services:
 services:
 #  - class: org.jlab.ersap.coda.engines.FAdcEvtIdentifyEngine
 #    name: AggProcessor
-  - class: org.jlab.ersap.coda.engines.FAdcEvtIdentifyEngine
+  - class: org.jlab.ersap.coda.engines.FAdcHitsEngine
     name: SimpleProcessor
 configuration:
   io-services:
