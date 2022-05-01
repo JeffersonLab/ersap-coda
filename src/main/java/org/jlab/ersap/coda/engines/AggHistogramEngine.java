@@ -79,7 +79,7 @@ public class AggHistogramEngine extends AbstractEventWriterService<FileWriter> {
             gridSize = opts.getInt(GRID_SIZE);
         }
 
-        liveHist = new LiveHistogram(frameTitle, histTitles, gridSize,
+        liveHist = new LiveHistogram(frameTitle, histTitles, histTitles, gridSize,
                 frameWidth, frameHeight, histBins, histMin, histMax);
 
         try {
