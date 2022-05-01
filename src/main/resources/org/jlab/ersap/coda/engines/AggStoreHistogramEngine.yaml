@@ -8,4 +8,4 @@ email: gurjyan@jlab.org
 
 version: 0.1
 description:
-  ERSAP engine that writes  Map<String, List<Integer>> data from the FAdcEvtIdentifyEngine
+  ERSAP engine that writes  List<VAdcHit> data from the FAdcEvtIdentifyEngine
