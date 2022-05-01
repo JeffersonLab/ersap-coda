@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -44,10 +45,10 @@ public class LiveHistogram {
             c.setAxisFont(new Font("Avenir",Font.PLAIN,6));
             panel.add(c);
             c.initTimer(600);
-            System.out.println("DDD histogram = "+s);
+            System.out.println("DDD histogram = *"+s+"*");
             H1F hist = new H1F(s, histBins, histMin, histMax);
             hist.setTitleX(s);
-            histograms.put(s, hist);
+            histograms.put(s.trim(), hist);
             c.region().draw(hist);
         }
         frame.setVisible(true);
