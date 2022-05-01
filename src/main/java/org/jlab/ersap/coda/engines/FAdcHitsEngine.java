@@ -71,7 +71,7 @@ public class FAdcHitsEngine implements Engine {
 //            long timestamp = ((((long) intData[1]) & 0x00000000ffffffffL) +
 //                    (((long) intData[2]) << 32));
             long timestamp = frame * 65536L;
-//            System.out.println("  Frame = " + frame + ", TS = " + timestamp);
+            System.out.println("  Frame = " + frame + ", TS = " + timestamp);
 
             // Loop through all ROC Time Slice Banks (TSB) which come after TIB
             for (int j = 1; j < childCount; j++) {
@@ -154,7 +154,6 @@ public class FAdcHitsEngine implements Engine {
     @Override
     public Set<EngineDataType> getOutputDataTypes() {
         return ErsapUtil.buildDataTypes(EvioDataType.EVIO);
-//        return ErsapUtil.buildDataTypes(JavaObjectType.JOBJ);
     }
 
     @Override
