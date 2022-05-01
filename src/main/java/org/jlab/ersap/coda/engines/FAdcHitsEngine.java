@@ -153,8 +153,8 @@ public class FAdcHitsEngine implements Engine {
 
     @Override
     public Set<EngineDataType> getOutputDataTypes() {
-//        return ErsapUtil.buildDataTypes(EvioDataType.EVIO);
-        return ErsapUtil.buildDataTypes(JavaObjectType.JOBJ);
+        return ErsapUtil.buildDataTypes(EvioDataType.EVIO);
+//        return ErsapUtil.buildDataTypes(JavaObjectType.JOBJ);
     }
 
     @Override
