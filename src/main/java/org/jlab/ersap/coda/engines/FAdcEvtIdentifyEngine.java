@@ -140,10 +140,10 @@ public class FAdcEvtIdentifyEngine implements Engine {
 //                        System.out.println(v);
 //                    }
 //                }
-                if(!data.isEmpty()) {
-                    out.setData(JavaObjectType.JOBJ, eventIdentification(data));
-                    return out;
-                }
+//                if(!data.isEmpty()) {
+//                    out.setData(JavaObjectType.JOBJ, eventIdentification(data));
+//                    return out;
+//                }
             }
         }
         return out;
