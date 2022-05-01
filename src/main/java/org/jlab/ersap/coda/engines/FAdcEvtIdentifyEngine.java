@@ -101,7 +101,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
 //            long timestamp = ((((long) intData[1]) & 0x00000000ffffffffL) +
 //                    (((long) intData[2]) << 32));
             long timestamp = frame * 65536L;
-//            System.out.println("  Frame = " + frame + ", TS = " + timestamp);
+            System.out.println("  Frame = " + frame + ", TS = " + timestamp);
 
             // Loop through all ROC Time Slice Banks (TSB) which come after TIB
             for (int j = 1; j < childCount; j++) {
@@ -196,6 +196,8 @@ public class FAdcEvtIdentifyEngine implements Engine {
         long startFrameTime = Collections.min(timeStamps);
         long endFrameTime = Collections.max(timeStamps);
         System.out.println("DDD "+ (endFrameTime - startFrameTime));
+        for(Long l: timeStamps) System.out.println(l);
+        System.exit(0);
 //        do {
 //            // sliding time window leading edge
 //            sTime = startFrameTime + ((long) step * stepSize);
