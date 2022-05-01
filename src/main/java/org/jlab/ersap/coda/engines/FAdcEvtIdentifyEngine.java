@@ -196,7 +196,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
         long startFrameTime = Collections.min(timeStamps);
         long endFrameTime = Collections.max(timeStamps);
         for(Long l: timeStamps) {
-            System.out.printf("l");
+            System.out.println(l);
         }
         System.exit(0);
 //        do {
