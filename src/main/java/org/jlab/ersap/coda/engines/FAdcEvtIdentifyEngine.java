@@ -195,11 +195,7 @@ public class FAdcEvtIdentifyEngine implements Engine {
         Set<Long> timeStamps = hits.keySet();
         long startFrameTime = Collections.min(timeStamps);
         long endFrameTime = Collections.max(timeStamps);
-        for(Long l: timeStamps) {
-            System.out.println(l);
-        }
         System.out.println("DDD "+ (endFrameTime - startFrameTime));
-        System.exit(0);
 //        do {
 //            // sliding time window leading edge
 //            sTime = startFrameTime + ((long) step * stepSize);
