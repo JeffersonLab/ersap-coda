@@ -24,6 +24,7 @@ import java.util.Map;
 public class LiveHistogram {
 
     private Map<String, H1F> histograms = new HashMap<>();
+    private Map<String, H1F> histograms2 = new HashMap<>();
 
     public LiveHistogram(String frameTitle, ArrayList<String> histTitles,
                          int gridSize, int frameWidth, int frameHeight,
@@ -50,7 +51,31 @@ public class LiveHistogram {
             histograms.put(s, hist);
             c.region().draw(hist);
         }
+
+        JFrame frame2 = new JFrame(frameTitle);
+        frame.setSize(frameWidth, frameHeight);
+        JPanel panel2 = new JPanel();
+        GridLayout gl2 = new GridLayout(gridSize,gridSize);
+        gl2.setHgap(10);
+        gl2.setVgap(10);
+        panel2.setLayout(gl2);
+        frame2.getContentPane().add(panel2);
+
+        // create canvases with associated histograms,
+        // and add them to the panel
+        for(String s: histTitles){
+            TGDataCanvas c = new TGDataCanvas();
+            c.setAxisFont(new Font("Avenir",Font.PLAIN,6));
+            panel2.add(c);
+            c.initTimer(600);
+            H1F hist = new H1F(s, histBins, histMin, histMax);
+            hist.setTitleX(s);
+            histograms2.put(s, hist);
+            c.region().draw(hist);
+        }
+
         frame.setVisible(true);
+        frame2.setVisible(true);
     }
 
     public void update (String name, int value) {
