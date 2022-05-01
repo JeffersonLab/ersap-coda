@@ -38,7 +38,7 @@ public class FAdcHitsEngine implements Engine {
     @Override
     public EngineData execute(EngineData engineData) {
         EngineData out = new EngineData();
-        Map<String, List<Integer>> x = new HashMap<>();
+        List<VAdcHit> x = new ArrayList<>();
         out.setData(JavaObjectType.JOBJ, x);
         String dataType = engineData.getMimeType();
         if (dataType.equals(EvioDataType.EVIO.mimeType())) {
