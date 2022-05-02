@@ -88,7 +88,7 @@ public class LiveHistogram {
         frame3.setSize(600, 600);
 
         cc.initTimer(600);
-        h = new H2F("channel vs hitTime",100,0,66000, 100, 0,33);
+        h = new H2F("channel vs hitTime",1024,0,66000, 100, 0,33);
 
         cc.region().draw(h);
         frame3.setVisible(true);
