@@ -90,7 +90,7 @@ public class LiveHistogram {
         frame3.setSize(600, 600);
 
         cc.initTimer(600);
-        scatter = new H2F("channel vs hitTime",100,0,70000, 100, 0,33);
+        scatter = new H2F("cvh",100,0,70000, 100, 0,33);
         cc.region().draw(scatter);
         frame3.setVisible(true);
 
@@ -117,7 +117,7 @@ public class LiveHistogram {
             histDir.add(ERSAP_USER_DATA + "/data/output", h2);
         }
         histDir.add(ERSAP_USER_DATA + "/data/output", scatter);
-        histDir.write("hist_desy.twig");
+        histDir.write(ERSAP_USER_DATA + "/data/output/hist_desy.twig");
     }
 
     public void readPlotHist(){
