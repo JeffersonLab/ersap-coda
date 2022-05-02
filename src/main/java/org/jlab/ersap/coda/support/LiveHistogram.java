@@ -82,24 +82,25 @@ public class LiveHistogram {
         }
 
         JFrame frame3 = new JFrame( "ERSAP" );
-        TGDataCanvas c = new TGDataCanvas();
+        TGDataCanvas cc = new TGDataCanvas();
 
-        frame3.add(c);
+        frame3.add(cc);
         frame3.setSize(600, 600);
 
-        c.initTimer(600);
-        h = new H2F("channel vs hitTime",1024,0,66000, 100, 0,33);
-        c.region().draw(h);
+        cc.initTimer(600);
+        h = new H2F("channel vs hitTime",100,0,66000, 100, 0,33);
+
+        cc.region().draw(h);
         frame3.setVisible(true);
     }
 
     public void update (String name, VAdcHit v) {
         if(histograms.containsKey(name)){
             histograms.get(name).fill(v.getCharge());
-            h.fill(v.getChannel(), v.getTime());
+            h.fill(v.getTime(), v.getChannel());
         } else if(histograms2.containsKey(name)){
             histograms2.get(name).fill(v.getCharge());
-            h.fill(v.getChannel()+16, v.getTime());
+            h.fill(v.getTime(), v.getChannel()+16);
         }
     }
 }
