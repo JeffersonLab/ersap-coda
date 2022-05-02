@@ -81,14 +81,14 @@ public class LiveHistogram {
             frame2.setVisible(true);
         }
 
-        JFrame frame3 = new JFrame( "ERSAP" );
+        JFrame frame3 = new JFrame( "ERSAP: channel vs hitTime" );
         TGDataCanvas cc = new TGDataCanvas();
 
         frame3.add(cc);
         frame3.setSize(600, 600);
 
         cc.initTimer(600);
-        h = new H2F("channel vs hitTime",1024,0,66000, 100, 0,33);
+        h = new H2F("channel vs hitTime",100,0,66000, 100, 0,33);
 
         cc.region().draw(h);
         frame3.setVisible(true);
