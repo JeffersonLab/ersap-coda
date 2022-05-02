@@ -2,13 +2,13 @@ package org.jlab.ersap.coda.support;
 
 import twig.data.H1F;
 import twig.data.H2F;
+import twig.data.TDirectory;
 import twig.graphics.TGDataCanvas;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -26,7 +26,9 @@ public class LiveHistogram {
 
     private Map<String, H1F> histograms = new HashMap<>();
     private Map<String, H1F> histograms2 = new HashMap<>();
-    private H2F h;
+    private H2F scatter;
+    private TDirectory histDir;
+    private static String ERSAP_USER_DATA;
 
     public LiveHistogram(String frameTitle, ArrayList<String> histTitles,
                          ArrayList<String> histTitles2,
@@ -88,21 +90,34 @@ public class LiveHistogram {
         frame3.setSize(600, 600);
 
         cc.initTimer(600);
-        h = new H2F("channel vs hitTime",100,0,66000, 100, 0,33);
-
-        cc.region().draw(h);
+        scatter = new H2F("channel vs hitTime",100,0,70000, 100, 0,33);
+        cc.region().draw(scatter);
         frame3.setVisible(true);
+
+        // create directory
+        histDir = new TDirectory();
+        ERSAP_USER_DATA = System.getenv("ERSAP_USER_DATA");
     }
 
     public void update (String name, VAdcHit v) {
         if(histograms.containsKey(name)){
             histograms.get(name).fill(v.getCharge());
-            System.out.println("DDD "+ v.getTime());
-            h.fill(v.getTime(), v.getChannel());
+            scatter.fill(v.getTime(), v.getChannel());
         } else if(histograms2.containsKey(name)){
             histograms2.get(name).fill(v.getCharge());
-            h.fill(v.getTime(), v.getChannel()+16);
+            scatter.fill(v.getTime(), v.getChannel()+16);
         }
+    }
+
+    public void writeHist(){
+        for(H1F h1: histograms.values()) {
+            histDir.add(ERSAP_USER_DATA + "/data/output", h1);
+        }
+        for(H1F h2: histograms2.values()) {
+            histDir.add(ERSAP_USER_DATA + "/data/output", h2);
+        }
+        histDir.add(ERSAP_USER_DATA + "/data/output", scatter);
+        histDir.write("hist_desy.twig");
     }
 }
 

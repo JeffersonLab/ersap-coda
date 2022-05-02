@@ -100,6 +100,7 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
     @Override
     protected void closeWriter() {
         try {
+            liveHist.writeHist();
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
