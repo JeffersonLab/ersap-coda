@@ -119,5 +119,17 @@ public class LiveHistogram {
         histDir.add(ERSAP_USER_DATA + "/data/output", scatter);
         histDir.write("hist_desy.twig");
     }
+
+    public void readPlotHist(){
+
+//        TDirectory dir2 = new TDirectory("hist_desy.twig");
+
+//        dir2.show(); // will print content of the file
+
+//        H1F h2 = (H1F) dir2.get(ERSAP_USER_DATA + "/data/output");
+//        TGCanvas c = new TGCanvas();
+//        c.view().region().draw(h2);
+//        c.repaint();
+    }
 }
 
