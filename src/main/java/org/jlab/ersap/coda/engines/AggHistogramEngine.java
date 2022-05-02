@@ -104,7 +104,7 @@ public class AggHistogramEngine extends AbstractEventWriterService<FileWriter> {
 
         for(String s:evIdentified.keySet()){
             for(Integer charge: evIdentified.get(s)) {
-                liveHist.update(s, charge);
+//                liveHist.update(s, charge);
             }
         }
     }

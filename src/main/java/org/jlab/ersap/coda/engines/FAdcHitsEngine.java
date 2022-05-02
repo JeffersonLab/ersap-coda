@@ -131,7 +131,8 @@ public class FAdcHitsEngine implements Engine {
             int q = (i >> 0) & 0x1FFF;
             int channel = (i >> 13) & 0x000F;
             long v = ((i >> 17) & 0x3FFF) * 4;
-            long ht = frame_time_ns + v;
+//            long ht = frame_time_ns + v;
+            long ht = v;
             data.add(new VAdcHit(1, slot, channel, q, ht));
         }
     }

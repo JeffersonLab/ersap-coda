@@ -1,6 +1,7 @@
 package org.jlab.ersap.coda.support;
 
 import twig.data.H1F;
+import twig.data.H2F;
 import twig.graphics.TGDataCanvas;
 
 import javax.swing.*;
@@ -25,6 +26,7 @@ public class LiveHistogram {
 
     private Map<String, H1F> histograms = new HashMap<>();
     private Map<String, H1F> histograms2 = new HashMap<>();
+    private H2F h;
 
     public LiveHistogram(String frameTitle, ArrayList<String> histTitles,
                          ArrayList<String> histTitles2,
@@ -78,13 +80,27 @@ public class LiveHistogram {
             }
             frame2.setVisible(true);
         }
+
+        JFrame frame3 = new JFrame( "ERSAP" );
+        TGDataCanvas c = new TGDataCanvas();
+
+        frame.add(c);
+        frame.setSize(600, 600);
+        frame.setVisible(true);
+
+        c.initTimer(600);
+        h = new H2F("channel vs hitTime",1024,0,66000, 100, 0,33);
+        c.region().draw(h);
+        frame3.setVisible(true);
     }
 
-    public void update (String name, int value) {
+    public void update (String name, VAdcHit v) {
         if(histograms.containsKey(name)){
-            histograms.get(name).fill(value);
+            histograms.get(name).fill(v.getCharge());
+            h.fill(v.getChannel(), v.getTime());
         } else if(histograms2.containsKey(name)){
-            histograms2.get(name).fill(value);
+            histograms2.get(name).fill(v.getCharge());
+            h.fill(v.getChannel()+16, v.getTime());
         }
     }
 }
