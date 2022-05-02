@@ -97,10 +97,10 @@ public class LiveHistogram {
     public void update (String name, VAdcHit v) {
         if(histograms.containsKey(name)){
             histograms.get(name).fill(v.getCharge());
-            h.fill(v.getTime(), v.getChannel());
+//            h.fill(v.getTime(), v.getChannel());
         } else if(histograms2.containsKey(name)){
             histograms2.get(name).fill(v.getCharge());
-            h.fill(v.getTime(), v.getChannel()+16);
+//            h.fill(v.getTime(), v.getChannel()+16);
         }
     }
 }
