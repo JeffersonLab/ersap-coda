@@ -4,7 +4,6 @@ io-services:
     class: org.jlab.ersap.coda.engines.AggFileReaderEngine
     name: AggSource
   writer:
-#    class: org.jlab.ersap.coda.engines.AggHistogramEngine
     class: org.jlab.ersap.coda.engines.AggStoreHistogramEngine
     name: AggSync
 services:
