@@ -100,7 +100,6 @@ public class LiveHistogram {
     }
 
     public void update (String name, VAdcHit v) {
-        scatter.reset();
         if(histograms.containsKey(name)){
             histograms.get(name).fill(v.getCharge());
             scatter.fill(v.getTime(), v.getChannel());
@@ -108,6 +107,10 @@ public class LiveHistogram {
             histograms2.get(name).fill(v.getCharge());
             scatter.fill(v.getTime(), v.getChannel()+16);
         }
+    }
+
+    public void resetScatter(){
+        scatter.reset();
     }
 
     public void writeHist(){
