@@ -160,9 +160,6 @@ public class FAdcHitsEngine implements Engine {
             long v = ((i >> 17) & 0x3FFF) * 4;
 //            long ht = frame_time_ns + v;
             long ht = v;
-            if (slot == tSlot && channel == tChannel && slot == bcSlot && channel == bcChannel) {
-                foundTrigger = true;
-            }
             if (tSlot == 0 && tChannel == 0) {
                 if (bcSlot > 0 && bcChannel > 0
                         && slot == bcSlot && channel == bcChannel) {
@@ -178,6 +175,7 @@ public class FAdcHitsEngine implements Engine {
                     if(q >= minQ && q <= maxQ) {
                         foundTrigger = true;
                     }
+                    System.out.println("DDD "+q + " "+ foundTrigger);
                 } else {
                     foundTrigger = true;
                 }
