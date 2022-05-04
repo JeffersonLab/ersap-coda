@@ -29,6 +29,7 @@ import java.util.*;
 public class FAdcHitsEngine implements Engine {
 
     private static int[] slotMap = {0, 10, 13, 9, 14, 8, 15, 7, 16, 6, 17, 5, 18, 4, 19, 3, 20};
+    private boolean foundTrigger = false;
 
     @Override
     public EngineData configure(EngineData engineData) {
@@ -37,6 +38,7 @@ public class FAdcHitsEngine implements Engine {
 
     @Override
     public EngineData execute(EngineData engineData) {
+        foundTrigger = false;
         EngineData out = new EngineData();
         List<VAdcHit> x = new ArrayList<>();
         out.setData(JavaObjectType.JOBJ, x);
@@ -100,7 +102,7 @@ public class FAdcHitsEngine implements Engine {
                         fADCPayloadDecoder(data, timestamp, slt, byteData);
                     }
                 }
-                if (!data.isEmpty()) {
+                if (!data.isEmpty() && foundTrigger) {
                     out.setData(JavaObjectType.JOBJ, data);
                     return out;
                 }
@@ -133,6 +135,7 @@ public class FAdcHitsEngine implements Engine {
             long v = ((i >> 17) & 0x3FFF) * 4;
 //            long ht = frame_time_ns + v;
             long ht = v;
+            if(slot == 17 && channel == 14) foundTrigger = true;
             data.add(new VAdcHit(1, slot, channel, q, ht));
         }
     }

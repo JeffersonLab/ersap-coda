@@ -49,41 +49,41 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
     @Override
     protected FileWriter createWriter(Path file, JSONObject opts)
             throws EventWriterException {
-        if (opts.has(FRAME_TITLE) ) {
+        if (opts.has(FRAME_TITLE)) {
             frameTitle = opts.getString(FRAME_TITLE);
         }
-        if (opts.has(FRAME_WIDTH) ) {
+        if (opts.has(FRAME_WIDTH)) {
             frameWidth = opts.getInt(FRAME_WIDTH);
         }
-        if (opts.has(FRAME_HEIGHT) ) {
+        if (opts.has(FRAME_HEIGHT)) {
             frameHeight = opts.getInt(FRAME_HEIGHT);
         }
-        if (opts.has(HIST_TITLES) ) {
+        if (opts.has(HIST_TITLES)) {
             histTitles = new ArrayList<>();
             String ht = opts.getString(HIST_TITLES);
-            StringTokenizer st = new StringTokenizer(ht,",");
-            while (st.hasMoreTokens()){
+            StringTokenizer st = new StringTokenizer(ht, ",");
+            while (st.hasMoreTokens()) {
                 histTitles.add(st.nextToken().trim());
             }
         }
-        if (opts.has(HIST_TITLES2) ) {
+        if (opts.has(HIST_TITLES2)) {
             histTitles2 = new ArrayList<>();
             String ht = opts.getString(HIST_TITLES2);
-            StringTokenizer st = new StringTokenizer(ht,",");
-            while (st.hasMoreTokens()){
+            StringTokenizer st = new StringTokenizer(ht, ",");
+            while (st.hasMoreTokens()) {
                 histTitles2.add(st.nextToken().trim());
             }
         }
-        if (opts.has(HIST_BINS) ) {
+        if (opts.has(HIST_BINS)) {
             histBins = opts.getInt(HIST_BINS);
         }
-        if (opts.has(HIST_MIN) ) {
+        if (opts.has(HIST_MIN)) {
             histMin = opts.getDouble(HIST_MIN);
         }
-        if (opts.has(HIST_MAX) ) {
+        if (opts.has(HIST_MAX)) {
             histMax = opts.getDouble(HIST_MAX);
         }
-        if (opts.has(GRID_SIZE) ) {
+        if (opts.has(GRID_SIZE)) {
             gridSize = opts.getInt(GRID_SIZE);
         }
 
@@ -109,16 +109,10 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
 
     @Override
     protected void writeEvent(Object event) throws EventWriterException {
-        List<VAdcHit> h = (List<VAdcHit>)event;
+        List<VAdcHit> h = (List<VAdcHit>) event;
         liveHist.resetScatter();
-        int trigger = 0;
-        for(VAdcHit v:h){
-            if(v.getSlot() == 17 && v.getChannel() == 14) trigger++;
-        }
-        if(trigger > 0) {
-            for (VAdcHit v : h) {
-                liveHist.update(v.getName().trim(), v);
-            }
+        for (VAdcHit v : h) {
+            liveHist.update(v.getName().trim(), v);
         }
     }
 
