@@ -135,8 +135,8 @@ public class FAdcHitsEngine implements Engine {
             long v = ((i >> 17) & 0x3FFF) * 4;
 //            long ht = frame_time_ns + v;
             long ht = v;
-            if(slot == 17 && channel == 14) foundTrigger = true;
-            if ((slot != 17 || channel != 13) && (slot != 19 || channel != 12)) {
+            if(slot == 17 && channel == 14 && q < 8000) foundTrigger = true;
+            if ((slot != 17 || channel != 13) && (slot != 19 || channel != 12)) { //1-17-13 and 1-19-12 are hot
                 data.add(new VAdcHit(1, slot, channel, q, ht));
             }
         }
