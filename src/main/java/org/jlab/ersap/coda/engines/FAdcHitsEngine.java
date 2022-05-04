@@ -148,7 +148,9 @@ public class FAdcHitsEngine implements Engine {
             long v = ((i >> 17) & 0x3FFF) * 4;
 //            long ht = frame_time_ns + v;
             long ht = v;
-            if (tSlot > 0 && tChannel > 0) {
+            if (tSlot == 0 && tChannel == 0) {
+                foundTrigger = true;
+            } else {
                 if (slot == tSlot && channel == tChannel) foundTrigger = true;
             }
             data.add(new VAdcHit(1, slot, channel, q, ht));
