@@ -9,6 +9,7 @@ import org.jlab.epsci.ersap.engine.EngineDataType;
 import org.jlab.ersap.coda.support.VAdcHit;
 import org.jlab.ersap.coda.types.EvioDataType;
 import org.jlab.ersap.coda.types.JavaObjectType;
+import org.json.JSONObject;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -31,8 +32,20 @@ public class FAdcHitsEngine implements Engine {
     private static int[] slotMap = {0, 10, 13, 9, 14, 8, 15, 7, 16, 6, 17, 5, 18, 4, 19, 3, 20};
     private boolean foundTrigger = false;
 
+    private static String T_SLOT = "t_slot";
+    private int tSlot;
+    private static String T_CHANNEL = "t_channel";
+    private int tChannel;
+
     @Override
     public EngineData configure(EngineData engineData) {
+        if (engineData.getMimeType().equalsIgnoreCase(EngineDataType.JSON.mimeType())) {
+            String source = (String) engineData.getData();
+            JSONObject data = new JSONObject(source);
+            tSlot = data.has(T_SLOT) ? data.getInt(T_SLOT) : 0;
+            tChannel = data.has(T_CHANNEL) ? data.getInt(T_CHANNEL) : 0;
+        }
+
         return null;
     }
 
@@ -135,10 +148,10 @@ public class FAdcHitsEngine implements Engine {
             long v = ((i >> 17) & 0x3FFF) * 4;
 //            long ht = frame_time_ns + v;
             long ht = v;
-            if(slot == 17 && channel == 14) foundTrigger = true;
-            if ((slot != 17 || channel != 13) && (slot != 19 || channel != 12)) { //1-17-13 and 1-19-12 are hot
-                data.add(new VAdcHit(1, slot, channel, q, ht));
+            if (tSlot > 0 && tChannel > 0) {
+                if (slot == tSlot && channel == tChannel) foundTrigger = true;
             }
+            data.add(new VAdcHit(1, slot, channel, q, ht));
         }
     }
 
