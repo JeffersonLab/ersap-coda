@@ -31,6 +31,7 @@ configuration:
 #  logical trigger channel assignment
       t_slot: 17
       t_channel: 14
+#  beam center channel assignment
       bc_slot: 17
       bc_channel: 12
       min_q: 2500

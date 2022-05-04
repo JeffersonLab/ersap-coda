@@ -31,6 +31,7 @@ public class FAdcHitsEngine implements Engine {
 
     private static int[] slotMap = {0, 10, 13, 9, 14, 8, 15, 7, 16, 6, 17, 5, 18, 4, 19, 3, 20};
     private boolean foundTrigger = false;
+    private boolean foundCenter = false;
 
     private static String T_SLOT = "t_slot";
     private int tSlot;
@@ -64,6 +65,7 @@ public class FAdcHitsEngine implements Engine {
     @Override
     public EngineData execute(EngineData engineData) {
         foundTrigger = false;
+        foundCenter = false;
         EngineData out = new EngineData();
         List<VAdcHit> x = new ArrayList<>();
         out.setData(JavaObjectType.JOBJ, x);
@@ -127,10 +129,25 @@ public class FAdcHitsEngine implements Engine {
                         fADCPayloadDecoder(data, timestamp, slt, byteData);
                     }
                 }
-                if (!data.isEmpty() && foundTrigger) {
-                    out.setData(JavaObjectType.JOBJ, data);
-                    return out;
+                if(!data.isEmpty()){
+                    if(tSlot > 0 && tChannel > 0 &&
+                            bcSlot > 0 && bcChannel > 0 &&
+                            foundTrigger && foundCenter){
+                        out.setData(JavaObjectType.JOBJ, data);
+                    } else if(tSlot > 0 && tChannel > 0 &&
+                            bcSlot == 0 && bcChannel == 0 &&
+                            foundTrigger ) {
+                        out.setData(JavaObjectType.JOBJ, data);
+                    } else if(tSlot == 0 && tChannel == 0 &&
+                            bcSlot > 0 && bcChannel > 0 &&
+                            foundCenter ) {
+                        out.setData(JavaObjectType.JOBJ, data);
+                    } else if (tSlot == 0 && tChannel == 0 &&
+                            bcSlot == 0 && bcChannel == 0) {
+                        out.setData(JavaObjectType.JOBJ, data);
+                    }
                 }
+                return out;
             }
         }
         return out;
@@ -160,26 +177,13 @@ public class FAdcHitsEngine implements Engine {
             long v = ((i >> 17) & 0x3FFF) * 4;
 //            long ht = frame_time_ns + v;
             long ht = v;
-            if (tSlot == 0 && tChannel == 0) {
-                if (bcSlot > 0 && bcChannel > 0
-                        && slot == bcSlot && channel == bcChannel) {
-                    if(q >= minQ && q <= maxQ) {
-                        foundTrigger = true;
-                    }
-                } else {
-                    foundTrigger = true;
-                }
-            } else if (slot == tSlot && channel == tChannel) {
-                System.out.println("DDD-1 "+bcSlot +" "+ bcChannel +" "+slot +" "+ channel);
-                if (bcSlot > 0 && bcChannel > 0
-                        && slot == bcSlot && channel == bcChannel) {
-                    System.out.println("DDD-2");
-                    if(q >= minQ && q <= maxQ) {
-                        foundTrigger = true;
-                    }
-                    System.out.println("DDD "+q + " "+ foundTrigger);
-                } else {
-                    foundTrigger = true;
+            if (tSlot > 0 && tChannel > 0 &&
+                    slot == tSlot && channel == tChannel) {
+                foundTrigger = true;
+            } else if (bcSlot > 0 && bcChannel > 0
+                    && slot == bcSlot && channel == bcChannel) {
+                if (q >= minQ && q <= maxQ) {
+                    foundCenter = true;
                 }
             }
             data.add(new VAdcHit(1, slot, channel, q, ht));
