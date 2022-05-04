@@ -170,8 +170,10 @@ public class FAdcHitsEngine implements Engine {
                     foundTrigger = true;
                 }
             } else if (slot == tSlot && channel == tChannel) {
+                System.out.println("DDD-1");
                 if (bcSlot > 0 && bcChannel > 0
                         && slot == bcSlot && channel == bcChannel) {
+                    System.out.println("DDD-2");
                     if(q >= minQ && q <= maxQ) {
                         foundTrigger = true;
                     }
