@@ -97,6 +97,7 @@ public class LiveHistogram {
         // create directory
         histDir = new TDirectory();
         ERSAP_USER_DATA = System.getenv("ERSAP_USER_DATA");
+
     }
 
     public void update (String name, VAdcHit v) {

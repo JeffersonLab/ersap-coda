@@ -43,6 +43,8 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
     private double histMax;
     private static String GRID_SIZE = "grid_size";
     private int gridSize;
+    private static String SCATTER_RESET = "scatter_reset";
+    private boolean scatterReset;
 
     private LiveHistogram liveHist;
 
@@ -87,8 +89,13 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
             gridSize = opts.getInt(GRID_SIZE);
         }
 
+        if (opts.has(SCATTER_RESET)) {
+            scatterReset = true;
+        }
+
         liveHist = new LiveHistogram(frameTitle, histTitles, histTitles2, gridSize,
                 frameWidth, frameHeight, histBins, histMin, histMax);
+
 
         try {
             return new FileWriter(file.toString());
@@ -110,7 +117,7 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
     @Override
     protected void writeEvent(Object event) throws EventWriterException {
         List<VAdcHit> h = (List<VAdcHit>) event;
-//        liveHist.resetScatter();
+        if(scatterReset) liveHist.resetScatter();
         for (VAdcHit v : h) {
             liveHist.update(v.getName().trim(), v);
         }
