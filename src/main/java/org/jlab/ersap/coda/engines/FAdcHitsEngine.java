@@ -102,7 +102,6 @@ public class FAdcHitsEngine implements Engine {
                         fADCPayloadDecoder(data, timestamp, slt, byteData);
                     }
                 }
-                foundTrigger = true; // debug
                 if (!data.isEmpty() && foundTrigger) {
                     out.setData(JavaObjectType.JOBJ, data);
                     return out;
@@ -137,7 +136,9 @@ public class FAdcHitsEngine implements Engine {
 //            long ht = frame_time_ns + v;
             long ht = v;
             if(slot == 17 && channel == 14) foundTrigger = true;
-            data.add(new VAdcHit(1, slot, channel, q, ht));
+            if ((slot != 17 || channel != 13) && (slot != 19 || channel != 12)) {
+                data.add(new VAdcHit(1, slot, channel, q, ht));
+            }
         }
     }
 
