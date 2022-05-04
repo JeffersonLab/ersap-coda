@@ -103,10 +103,18 @@ public class LiveHistogram {
     public void update (String name, VAdcHit v) {
         if(histograms.containsKey(name)){
             histograms.get(name).fill(v.getCharge());
-            scatter.fill(v.getTime(), v.getChannel());
+            if(v.getSlot() == 19) {
+                scatter.fill(v.getTime(), v.getChannel()+16);
+            } else {
+                scatter.fill(v.getTime(), v.getChannel());
+            }
         } else if(histograms2.containsKey(name)){
             histograms2.get(name).fill(v.getCharge());
-            scatter.fill(v.getTime(), v.getChannel()+16);
+            if(v.getSlot() == 19) {
+                scatter.fill(v.getTime(), v.getChannel()+16);
+            } else {
+                scatter.fill(v.getTime(), v.getChannel());
+            }
         }
     }
 
