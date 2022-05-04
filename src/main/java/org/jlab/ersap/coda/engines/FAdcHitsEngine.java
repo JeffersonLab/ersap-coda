@@ -36,6 +36,15 @@ public class FAdcHitsEngine implements Engine {
     private int tSlot;
     private static String T_CHANNEL = "t_channel";
     private int tChannel;
+    private static String BC_SLOT = "bc_slot";
+    private int bcSlot;
+    private static String BC_CHANNEL = "bc_channel";
+    private int bcChannel;
+
+    private static String MIN_Q = "min_q";
+    private int minQ;
+    private static String MAX_Q = "max_q";
+    private int maxQ;
 
     @Override
     public EngineData configure(EngineData engineData) {
@@ -44,8 +53,11 @@ public class FAdcHitsEngine implements Engine {
             JSONObject data = new JSONObject(source);
             tSlot = data.has(T_SLOT) ? data.getInt(T_SLOT) : 0;
             tChannel = data.has(T_CHANNEL) ? data.getInt(T_CHANNEL) : 0;
+            bcSlot = data.has(BC_SLOT) ? data.getInt(BC_SLOT) : 0;
+            bcChannel = data.has(BC_CHANNEL) ? data.getInt(BC_CHANNEL) : 0;
+            minQ = data.has(MIN_Q) ? data.getInt(MIN_Q) : 0;
+            maxQ = data.has(MAX_Q) ? data.getInt(MAX_Q) : 9000;
         }
-
         return null;
     }
 
@@ -148,10 +160,27 @@ public class FAdcHitsEngine implements Engine {
             long v = ((i >> 17) & 0x3FFF) * 4;
 //            long ht = frame_time_ns + v;
             long ht = v;
-            if (tSlot == 0 && tChannel == 0) {
+            if (slot == tSlot && channel == tChannel && slot == bcSlot && channel == bcChannel) {
                 foundTrigger = true;
-            } else {
-                if (slot == tSlot && channel == tChannel) foundTrigger = true;
+            }
+            if (tSlot == 0 && tChannel == 0) {
+                if (bcSlot > 0 && bcChannel > 0
+                        && slot == bcSlot && channel == bcChannel) {
+                    if(q >= minQ && q <= maxQ) {
+                        foundTrigger = true;
+                    }
+                } else {
+                    foundTrigger = true;
+                }
+            } else if (slot == tSlot && channel == tChannel) {
+                if (bcSlot > 0 && bcChannel > 0
+                        && slot == bcSlot && channel == bcChannel) {
+                    if(q >= minQ && q <= maxQ) {
+                        foundTrigger = true;
+                    }
+                } else {
+                    foundTrigger = true;
+                }
             }
             data.add(new VAdcHit(1, slot, channel, q, ht));
         }
