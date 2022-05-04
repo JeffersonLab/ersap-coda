@@ -102,6 +102,7 @@ public class FAdcHitsEngine implements Engine {
                         fADCPayloadDecoder(data, timestamp, slt, byteData);
                     }
                 }
+                foundTrigger = true; // debug
                 if (!data.isEmpty() && foundTrigger) {
                     out.setData(JavaObjectType.JOBJ, data);
                     return out;
