@@ -38,7 +38,7 @@ public class LiveHistogram {
         JFrame frame = new JFrame(frameTitle);
         frame.setSize(frameWidth, frameHeight);
         JPanel panel = new JPanel();
-        GridLayout gl = new GridLayout(gridSize,gridSize);
+        GridLayout gl = new GridLayout(gridSize, gridSize);
         gl.setHgap(10);
         gl.setVgap(10);
         panel.setLayout(gl);
@@ -46,9 +46,9 @@ public class LiveHistogram {
 
         // create canvases with associated histograms,
         // and add them to the panel
-        for(String s: histTitles){
+        for (String s : histTitles) {
             TGDataCanvas c = new TGDataCanvas();
-            c.setAxisFont(new Font("Avenir",Font.PLAIN,6));
+            c.setAxisFont(new Font("Avenir", Font.PLAIN, 6));
             panel.add(c);
             c.initTimer(600);
             H1F hist = new H1F(s, histBins, histMin, histMax);
@@ -58,7 +58,7 @@ public class LiveHistogram {
         }
         frame.setVisible(true);
 
-        if(histTitles2!=null) {
+        if (histTitles2 != null) {
             JFrame frame2 = new JFrame(frameTitle);
             frame2.setSize(frameWidth, frameHeight);
             JPanel panel2 = new JPanel();
@@ -83,14 +83,14 @@ public class LiveHistogram {
             frame2.setVisible(true);
         }
 
-        JFrame frame3 = new JFrame( "ERSAP: channel vs hitTime" );
+        JFrame frame3 = new JFrame("ERSAP: channel vs hitTime");
         TGDataCanvas cc = new TGDataCanvas();
 
         frame3.add(cc);
         frame3.setSize(600, 600);
 
         cc.initTimer(600);
-        scatter = new H2F("cvh",100,0,70000, 100, 0,33);
+        scatter = new H2F("cvh", 100, 0, 70000, 100, 0, 33);
         cc.region().draw(scatter);
         frame3.setVisible(true);
 
@@ -100,44 +100,41 @@ public class LiveHistogram {
 
     }
 
-    public void update (String name, VAdcHit v) {
-        if(histograms.containsKey(name)){
+    public void update(String name, VAdcHit v) {
+        if (histograms.containsKey(name)) {
             histograms.get(name).fill(v.getCharge());
-            if(histograms.containsKey(name)) {
-                if (v.getSlot() == 19) {
-                    scatter.fill(v.getTime(), v.getChannel() + 16);
-                } else {
-                    scatter.fill(v.getTime(), v.getChannel());
-                }
+            if (v.getSlot() == 19) {
+                scatter.fill(v.getTime(), v.getChannel() + 16);
+            } else {
+                scatter.fill(v.getTime(), v.getChannel());
             }
-        } else if(histograms2.containsKey(name)){
+
+        } else if (histograms2.containsKey(name)) {
             histograms2.get(name).fill(v.getCharge());
-            if(histograms2.containsKey(name)) {
-                if (v.getSlot() == 19) {
-                    scatter.fill(v.getTime(), v.getChannel() + 16);
-                } else {
-                    scatter.fill(v.getTime(), v.getChannel());
-                }
+            if (v.getSlot() == 19) {
+                scatter.fill(v.getTime(), v.getChannel() + 16);
+            } else {
+                scatter.fill(v.getTime(), v.getChannel());
             }
         }
     }
 
-    public void resetScatter(){
+    public void resetScatter() {
         scatter.reset();
     }
 
-    public void writeHist(){
-        for(H1F h1: histograms.values()) {
+    public void writeHist() {
+        for (H1F h1 : histograms.values()) {
             histDir.add(ERSAP_USER_DATA + "/data/output", h1);
         }
-        for(H1F h2: histograms2.values()) {
+        for (H1F h2 : histograms2.values()) {
             histDir.add(ERSAP_USER_DATA + "/data/output", h2);
         }
         histDir.add(ERSAP_USER_DATA + "/data/output", scatter);
         histDir.write(ERSAP_USER_DATA + "/data/output/hist_desy.twig");
     }
 
-    public void readPlotHist(){
+    public void readPlotHist() {
 
 //        TDirectory dir2 = new TDirectory("hist_desy.twig");
 
