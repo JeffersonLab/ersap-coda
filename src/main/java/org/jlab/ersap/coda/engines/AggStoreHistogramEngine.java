@@ -115,9 +115,10 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
         for(VAdcHit v:h){
             if(v.getSlot() == 17 && v.getChannel() == 14) trigger++;
         }
-        System.out.println("DDD triggers = "+trigger);
-        for(VAdcHit v:h){
+        if(trigger > 0) {
+            for (VAdcHit v : h) {
                 liveHist.update(v.getName().trim(), v);
+            }
         }
     }
 
