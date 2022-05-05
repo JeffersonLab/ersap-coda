@@ -34,8 +34,8 @@ configuration:
 #  beam center channel assignment
       bc_slot: 17
       bc_channel: 12
-      min_q: 2500
-      max_q: 4000
+      #min_q: 2500
+      #max_q: 4000
 mime-types:
   - binary/data-evio
   - binary/data-jobj
