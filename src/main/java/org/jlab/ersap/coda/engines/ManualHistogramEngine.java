@@ -5,6 +5,7 @@ import org.jlab.epsci.ersap.std.services.AbstractEventWriterService;
 import org.jlab.epsci.ersap.std.services.EventWriterException;
 import org.jlab.ersap.coda.support.ManualHistogram;
 import org.jlab.ersap.coda.support.VAdcHit;
+import org.jlab.ersap.coda.types.JavaObjectType;
 import org.json.JSONObject;
 
 import java.io.FileWriter;
@@ -58,6 +59,6 @@ public class ManualHistogramEngine extends AbstractEventWriterService<FileWriter
 
     @Override
     protected EngineDataType getDataType() {
-        return null;
+        return JavaObjectType.JOBJ;
     }
 }
