@@ -18,15 +18,15 @@ import javax.swing.*;
  */
 public class ManualHistogram {
     private H2F scatter;
-
+private TGDataCanvas cc;
     public ManualHistogram() {
         JFrame frame = new JFrame("ERSAP: channel vs hitTime");
-        TGDataCanvas cc = new TGDataCanvas();
+        cc = new TGDataCanvas();
 
         frame.add(cc);
         frame.setSize(600, 600);
 
-        cc.initTimer(600);
+//        cc.initTimer(600);
         scatter = new H2F("cvh", 100, 0, 70000, 100, 0, 33);
         cc.region().draw(scatter);
         frame.setVisible(true);
@@ -39,7 +39,7 @@ public class ManualHistogram {
         } else {
             scatter.fill(v.getTime(), v.getChannel());
         }
-
+        cc.updateUI();
     }
     public void reset() {
         scatter.reset();
