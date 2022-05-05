@@ -26,7 +26,7 @@ private TGDataCanvas cc;
         frame.add(cc);
         frame.setSize(600, 600);
 
-        cc.initTimer(10);
+        cc.initTimer(600);
         scatter = new H2F("cvh", 100, 0, 70000, 100, 0, 33);
         cc.region().draw(scatter);
         frame.setVisible(true);
