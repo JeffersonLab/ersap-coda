@@ -52,16 +52,11 @@ public class ManualHistogramEngine extends AbstractEventWriterService<FileWriter
         List<VAdcHit> h = (List<VAdcHit>) o;
         manHist.reset();
         for (VAdcHit v : h) {
+            System.out.printf(" DDD: "+ v.getSlot()+ "-"+v.getChannel()+" "+v.getTime());
             manHist.update(v.getName().trim(), v);
         }
 //        System.out.println("Next event?");
 //        scanner.next();
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Override

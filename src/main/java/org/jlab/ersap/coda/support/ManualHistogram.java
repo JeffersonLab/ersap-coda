@@ -39,7 +39,6 @@ private TGDataCanvas cc;
         } else {
             scatter.fill(v.getTime(), v.getChannel());
         }
-        cc.updateUI();
     }
     public void reset() {
         scatter.reset();
