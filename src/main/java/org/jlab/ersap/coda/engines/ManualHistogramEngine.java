@@ -53,10 +53,10 @@ public class ManualHistogramEngine extends AbstractEventWriterService<FileWriter
         manHist.reset();
         if(!h.isEmpty()) {
             for (VAdcHit v : h) {
-//                System.out.println(" DDD: " + v.getSlot() + "-" + v.getChannel() + " " + v.getTime());
+                System.out.println(" DDD: " + v.getSlot() + "-" + v.getChannel() + " " + v.getTime());
                 manHist.update(v.getName().trim(), v);
             }
-//            System.out.println(" -------------- ");
+            System.out.println(" -------------- ");
 //            try {
 //                Thread.sleep(1000);
 //            } catch (InterruptedException e) {
