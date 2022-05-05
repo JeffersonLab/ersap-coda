@@ -8,6 +8,7 @@ import org.jlab.ersap.coda.support.VAdcHit;
 import org.jlab.ersap.coda.types.JavaObjectType;
 import org.json.JSONObject;
 
+import javax.print.attribute.standard.MediaSize;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -27,7 +28,6 @@ import java.util.Scanner;
  */
 public class ManualHistogramEngine extends AbstractEventWriterService<FileWriter> {
     private ManualHistogram manHist;
- private Scanner scanner = new Scanner(System.in);
     @Override
     protected FileWriter createWriter(Path path, JSONObject jsonObject) throws EventWriterException {
         manHist = new ManualHistogram();
@@ -57,8 +57,11 @@ public class ManualHistogramEngine extends AbstractEventWriterService<FileWriter
                 manHist.update(v.getName().trim(), v);
             }
             System.out.println(" -------------- ");
-        System.out.println("Next event?");
-        scanner.next();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
