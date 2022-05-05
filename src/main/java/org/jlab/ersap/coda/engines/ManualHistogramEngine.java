@@ -50,11 +50,12 @@ public class ManualHistogramEngine extends AbstractEventWriterService<FileWriter
     @Override
     protected void writeEvent(Object o) throws EventWriterException {
         List<VAdcHit> h = (List<VAdcHit>) o;
-        manHist.reset();
+//        manHist.reset();
         for (VAdcHit v : h) {
             manHist.update(v.getName().trim(), v);
         }
-//        scanner.nextLine();
+//        System.out.println("Next event?");
+//        scanner.next();
     }
 
     @Override
