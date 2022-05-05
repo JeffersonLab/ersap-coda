@@ -58,7 +58,7 @@ public class ManualHistogramEngine extends AbstractEventWriterService<FileWriter
             }
             System.out.println(" -------------- ");
             try {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
