@@ -117,9 +117,11 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
     @Override
     protected void writeEvent(Object event) throws EventWriterException {
         List<VAdcHit> h = (List<VAdcHit>) event;
-        if(scatterReset) liveHist.resetScatter();
-        for (VAdcHit v : h) {
-            liveHist.update(v.getName().trim(), v);
+        if(!h.isEmpty()) {
+            if (scatterReset) liveHist.resetScatter();
+            for (VAdcHit v : h) {
+                liveHist.update(v.getName().trim(), v);
+            }
         }
     }
 
