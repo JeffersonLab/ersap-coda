@@ -54,8 +54,8 @@ public class ManualHistogramEngine extends AbstractEventWriterService<FileWriter
         for (VAdcHit v : h) {
             manHist.update(v.getName().trim(), v);
         }
-//        System.out.println("Next event?");
-//        scanner.next();
+        System.out.println("Next event?");
+        scanner.next();
     }
 
     @Override
