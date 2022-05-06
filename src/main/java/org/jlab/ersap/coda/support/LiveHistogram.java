@@ -27,6 +27,7 @@ public class LiveHistogram {
     private Map<String, H1F> histograms = new HashMap<>();
     private Map<String, H1F> histograms2 = new HashMap<>();
     private H2F scatter;
+    private TGDataCanvas cc;
     private TDirectory histDir;
     private static String ERSAP_USER_DATA;
 
@@ -84,12 +85,12 @@ public class LiveHistogram {
         }
 
         JFrame frame3 = new JFrame("ERSAP: channel vs hitTime");
-        TGDataCanvas cc = new TGDataCanvas();
+        cc = new TGDataCanvas();
 
         frame3.add(cc);
         frame3.setSize(600, 600);
 
-        cc.initTimer(600);
+//        cc.initTimer(600);
         scatter = new H2F("cvh", 100, 0, 70000, 100, 0, 33);
         cc.region().draw(scatter);
         frame3.setVisible(true);
@@ -117,6 +118,7 @@ public class LiveHistogram {
                 scatter.fill(v.getTime(), v.getChannel());
             }
         }
+        cc.repaint();
     }
 
     public void resetScatter() {
