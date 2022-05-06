@@ -119,6 +119,7 @@ public class AggStoreHistogramEngine extends AbstractEventWriterService<FileWrit
         List<VAdcHit> h = (List<VAdcHit>) event;
         if(!h.isEmpty()) {
             if (scatterReset) liveHist.resetScatter();
+            System.out.println("DDD "+h.size());
             for (VAdcHit v : h) {
                 liveHist.update(v.getName().trim(), v);
             }
