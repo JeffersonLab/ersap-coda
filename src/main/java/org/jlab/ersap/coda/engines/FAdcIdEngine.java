@@ -140,7 +140,6 @@ public class FAdcIdEngine implements Engine {
                     long tee;
                     List<VAdcHit> event = new ArrayList<>();
                     int hitCount = 0;
-                    System.out.println("DDD ================================ startTime = " + tStart + " endTime = " + tEnd);
                     do {
                         final long ts = tStart + ((long) step * stepSize);
                         final long te = ts + tDelta;
@@ -154,7 +153,7 @@ public class FAdcIdEngine implements Engine {
                         long dup = slice.stream()
                                 .filter(i -> Collections.frequency(slice, i) > 1)
                                 .count();
-//                    System.out.println("DDD dup = "+dup +" size = "+slice.size());
+                    System.out.println("DDD dup = "+dup +" size = "+slice.size());
                         // if no duplicates found we take a window wit the maximum hits
                         if (dup == 0 && (slice.size() > hitCount)) {
                             hitCount = slice.size();
@@ -163,7 +162,7 @@ public class FAdcIdEngine implements Engine {
 
                     } while (tee >= tEnd);
 
-                    System.out.println("DDD final size = " + event.size());
+                    System.out.println("DDD ========================== final size = " + event.size());
                     if (!event.isEmpty()) {
                         if (tSlot > 0 && tChannel > 0 &&
                                 bcSlot > 0 && bcChannel > 0 &&
