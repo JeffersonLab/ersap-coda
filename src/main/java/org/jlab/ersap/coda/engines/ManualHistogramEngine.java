@@ -56,6 +56,7 @@ public class ManualHistogramEngine extends AbstractEventWriterService<FileWriter
                 System.out.println(" DDD: " + v.getSlot() + "-" + v.getChannel() + " " + v.getTime());
                 manHist.update(v.getName().trim(), v);
             }
+            manHist.repaint();
             System.out.println(" -------------- ");
             try {
                 Thread.sleep(5000);
