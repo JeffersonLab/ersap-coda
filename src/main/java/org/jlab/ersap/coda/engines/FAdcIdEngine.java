@@ -131,17 +131,15 @@ public class FAdcIdEngine implements Engine {
 
                     if (byteData.length > 0) {
                         // define the hits for a slot in the VTP frame
-                        System.out.println("DDD-1");
                         fADCPayloadDecoder(data, timestamp, slt, byteData);
                     }
                 }
-                System.out.println("DDD-2");
 
                 int step = 0;
                 long tee;
                 List<VAdcHit> event = new ArrayList<>();
                 int hitCount = 0;
-                System.out.printf("startTime = "+tStart +" endTime = "+tEnd);
+                System.out.println("DDD ================================ startTime = "+tStart +" endTime = "+tEnd);
                 do {
                     final long ts = tStart + ((long) step * stepSize);
                     final long te = ts + tDelta;
@@ -220,6 +218,7 @@ public class FAdcIdEngine implements Engine {
                     && slot == bcSlot && channel == bcChannel) {
                 foundCenter = true;
             }
+            System.out.println(ht+" "+tStart+" "+tEnd);
             if (tStart == 0) {
                 tStart = ht;
                 tEnd = ht;
