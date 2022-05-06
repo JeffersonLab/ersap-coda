@@ -163,7 +163,7 @@ public class FAdcIdEngine implements Engine {
 
                     } while (tee >= tEnd);
 
-                    System.out.printf("DDD final size = " + event.size());
+                    System.out.println("DDD final size = " + event.size());
                     if (!event.isEmpty()) {
                         if (tSlot > 0 && tChannel > 0 &&
                                 bcSlot > 0 && bcChannel > 0 &&
