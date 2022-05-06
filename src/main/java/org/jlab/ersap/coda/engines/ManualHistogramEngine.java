@@ -52,18 +52,20 @@ public class ManualHistogramEngine extends AbstractEventWriterService<FileWriter
     protected void writeEvent(Object o) throws EventWriterException {
         List<VAdcHit> h = (List<VAdcHit>) o;
         manHist.reset();
-        if(!h.isEmpty() && h.size() > 3) {
+        if (!h.isEmpty() && h.size() > 3) {
             nTriggers++;
             for (VAdcHit v : h) {
                 System.out.println(" DDD: " + v.getSlot() + "-" + v.getChannel() + " " + v.getTime());
                 manHist.update(v.getName().trim(), v);
             }
             manHist.repaint();
-            System.out.println(" -------------- "+" "+nTriggers);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            System.out.println(" -------------- " + " " + nTriggers);
+            if (nTriggers > 100) {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
