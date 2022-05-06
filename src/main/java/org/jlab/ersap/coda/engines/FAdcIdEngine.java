@@ -131,9 +131,12 @@ public class FAdcIdEngine implements Engine {
 
                     if (byteData.length > 0) {
                         // define the hits for a slot in the VTP frame
+                        System.out.println("DDD-1");
                         fADCPayloadDecoder(data, timestamp, slt, byteData);
                     }
                 }
+                System.out.println("DDD-2");
+
                 int step = 0;
                 long tee;
                 List<VAdcHit> event = new ArrayList<>();
@@ -150,7 +153,7 @@ public class FAdcIdEngine implements Engine {
                    long dup = slice.stream()
                             .filter(i -> Collections.frequency(slice, i) > 1)
                             .count();
-
+                    System.out.println("DDD dup = "+dup +" size = "+slice.size());
                    // if no duplicates found we take a window wit the maximum hits
                    if (dup == 0 && (slice.size() > hitCount)) {
                            hitCount = slice.size();
@@ -159,6 +162,7 @@ public class FAdcIdEngine implements Engine {
 
                 } while (tee >= tEnd);
 
+                System.out.printf("DDD final size = "+event.size());
                 if (!event.isEmpty()) {
                     if (tSlot > 0 && tChannel > 0 &&
                             bcSlot > 0 && bcChannel > 0 &&
