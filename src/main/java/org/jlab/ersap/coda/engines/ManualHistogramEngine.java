@@ -60,11 +60,11 @@ public class ManualHistogramEngine extends AbstractEventWriterService<FileWriter
             }
             manHist.repaint();
             System.out.println(" -------------- "+" "+nTriggers);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 
