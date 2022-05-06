@@ -135,53 +135,55 @@ public class FAdcIdEngine implements Engine {
                     }
                 }
 
-                int step = 0;
-                long tee;
-                List<VAdcHit> event = new ArrayList<>();
-                int hitCount = 0;
-                System.out.println("DDD ================================ startTime = "+tStart +" endTime = "+tEnd);
-                do {
-                    final long ts = tStart + ((long) step * stepSize);
-                    final long te = ts + tDelta;
-                    tee = te;
-                    step++;
-                    List<VAdcHit> slice = data.stream()
-                            .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
-                            .collect(Collectors.toList());
+                if (!data.isEmpty()) {
+                    int step = 0;
+                    long tee;
+                    List<VAdcHit> event = new ArrayList<>();
+                    int hitCount = 0;
+                    System.out.println("DDD ================================ startTime = " + tStart + " endTime = " + tEnd);
+                    do {
+                        final long ts = tStart + ((long) step * stepSize);
+                        final long te = ts + tDelta;
+                        tee = te;
+                        step++;
+                        List<VAdcHit> slice = data.stream()
+                                .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
+                                .collect(Collectors.toList());
 
-                    // see if we find duplicate hits
-                   long dup = slice.stream()
-                            .filter(i -> Collections.frequency(slice, i) > 1)
-                            .count();
+                        // see if we find duplicate hits
+                        long dup = slice.stream()
+                                .filter(i -> Collections.frequency(slice, i) > 1)
+                                .count();
 //                    System.out.println("DDD dup = "+dup +" size = "+slice.size());
-                   // if no duplicates found we take a window wit the maximum hits
-                   if (dup == 0 && (slice.size() > hitCount)) {
-                           hitCount = slice.size();
-                           event = slice;
-                   }
+                        // if no duplicates found we take a window wit the maximum hits
+                        if (dup == 0 && (slice.size() > hitCount)) {
+                            hitCount = slice.size();
+                            event = slice;
+                        }
 
-                } while (tee >= tEnd);
+                    } while (tee >= tEnd);
 
-                System.out.printf("DDD final size = "+event.size());
-                if (!event.isEmpty()) {
-                    if (tSlot > 0 && tChannel > 0 &&
-                            bcSlot > 0 && bcChannel > 0 &&
-                            foundTrigger && foundCenter) {
-                        out.setData(JavaObjectType.JOBJ, event);
-                    } else if (tSlot > 0 && tChannel > 0 &&
-                            bcSlot == 0 && bcChannel == 0 &&
-                            foundTrigger) {
-                        out.setData(JavaObjectType.JOBJ, event);
-                    } else if (tSlot == 0 && tChannel == 0 &&
-                            bcSlot > 0 && bcChannel > 0 &&
-                            foundCenter) {
-                        out.setData(JavaObjectType.JOBJ, event);
-                    } else if (tSlot == 0 && tChannel == 0 &&
-                            bcSlot == 0 && bcChannel == 0) {
-                        out.setData(JavaObjectType.JOBJ, event);
+                    System.out.printf("DDD final size = " + event.size());
+                    if (!event.isEmpty()) {
+                        if (tSlot > 0 && tChannel > 0 &&
+                                bcSlot > 0 && bcChannel > 0 &&
+                                foundTrigger && foundCenter) {
+                            out.setData(JavaObjectType.JOBJ, event);
+                        } else if (tSlot > 0 && tChannel > 0 &&
+                                bcSlot == 0 && bcChannel == 0 &&
+                                foundTrigger) {
+                            out.setData(JavaObjectType.JOBJ, event);
+                        } else if (tSlot == 0 && tChannel == 0 &&
+                                bcSlot > 0 && bcChannel > 0 &&
+                                foundCenter) {
+                            out.setData(JavaObjectType.JOBJ, event);
+                        } else if (tSlot == 0 && tChannel == 0 &&
+                                bcSlot == 0 && bcChannel == 0) {
+                            out.setData(JavaObjectType.JOBJ, event);
+                        }
                     }
+                    return out;
                 }
-                return out;
             }
         }
         return out;
