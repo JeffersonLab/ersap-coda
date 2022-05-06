@@ -180,8 +180,8 @@ public class FAdcIdEngine implements Engine {
                                 bcSlot == 0 && bcChannel == 0) {
                             out.setData(JavaObjectType.JOBJ, event);
                         }
+                        return out;
                     }
-                    return out;
                 }
             }
         }
