@@ -149,7 +149,7 @@ public class FAdcIdEngine implements Engine {
                                 .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
                                 .collect(Collectors.toList());
 
-                        if(slice.size() > 2) {
+                        if(slice.size() > 3) {
                             // see if we find duplicate hits
                             long dup = slice.stream()
                                     .filter(i -> Collections.frequency(slice, i) > 1)
@@ -165,7 +165,7 @@ public class FAdcIdEngine implements Engine {
                     } while (tee >= tEnd);
 
                     System.out.println("DDD ========================== final size = " + event.size());
-                    if (!event.isEmpty()) {
+                    if (event.size() > 3) {
                         if (tSlot > 0 && tChannel > 0 &&
                                 bcSlot > 0 && bcChannel > 0 &&
                                 foundTrigger && foundCenter) {
