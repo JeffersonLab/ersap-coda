@@ -149,15 +149,17 @@ public class FAdcIdEngine implements Engine {
                                 .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
                                 .collect(Collectors.toList());
 
-                        // see if we find duplicate hits
-                        long dup = slice.stream()
-                                .filter(i -> Collections.frequency(slice, i) > 1)
-                                .count();
-                    System.out.println("DDD dup = "+dup +" size = "+slice.size());
-                        // if no duplicates found we take a window wit the maximum hits
-                        if (dup == 0 && (slice.size() > hitCount)) {
-                            hitCount = slice.size();
-                            event = slice;
+                        if(slice.size() > 2) {
+                            // see if we find duplicate hits
+                            long dup = slice.stream()
+                                    .filter(i -> Collections.frequency(slice, i) > 1)
+                                    .count();
+                            System.out.println("DDD dup = " + dup + " size = " + slice.size());
+                            // if no duplicates found we take a window wit the maximum hits
+                            if (dup == 0 && (slice.size() > hitCount)) {
+                                hitCount = slice.size();
+                                event = slice;
+                            }
                         }
 
                     } while (tee >= tEnd);
