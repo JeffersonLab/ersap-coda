@@ -135,7 +135,7 @@ public class FAdcIdEngine implements Engine {
                     }
                 }
 
-                if (!data.isEmpty()) {
+                if (!data.isEmpty() && tStart < tEnd) {
                     int step = 0;
                     long tee;
                     List<VAdcHit> event = new ArrayList<>();
