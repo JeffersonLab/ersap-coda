@@ -220,7 +220,6 @@ public class FAdcIdEngine implements Engine {
                     && slot == bcSlot && channel == bcChannel) {
                 foundCenter = true;
             }
-            System.out.println(ht+" "+tStart+" "+tEnd);
             if (tStart == 0) {
                 tStart = ht;
                 tEnd = ht;
@@ -229,6 +228,7 @@ public class FAdcIdEngine implements Engine {
             } else if (ht >= tEnd) {
                 tEnd = ht;
             }
+            data.add(new VAdcHit(1, slot, channel, q, ht));
         }
     }
 
