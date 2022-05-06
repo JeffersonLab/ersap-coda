@@ -2,40 +2,47 @@
 io-services:
   reader:
     class: org.jlab.ersap.coda.engines.AggFileReaderEngine
-    name: AggSource
+    name: Source
   writer:
     class: org.jlab.ersap.coda.engines.AggStoreHistogramEngine
-    name: AggSync
+    name: Sync
 services:
-#  - class: org.jlab.ersap.coda.engines.FAdcEvtIdentifyEngine
-#    name: AggProcessor
-  - class: org.jlab.ersap.coda.engines.FAdcHitsEngine
-    name: SimpleProcessor
+  - class: org.jlab.ersap.coda.engines.FAdcIdEngine
+    name: Processor
+#  - class: org.jlab.ersap.coda.engines.FAdcHitsEngine
+#    name: SimpleProcessor
 configuration:
   io-services:
     writer:
       frame_title: "ERSAP"
       frame_width: 1400
       frame_height: 1200
-      # hist_titles is a string containing the list of crate-slot-channel separated by ,
+      #> hist_titles is a string containing the list of crate-slot-channel separated by ,
       hist_titles: "1-17-0, 1-17-1, 1-17-2, 1-17-3, 1-17-4, 1-17-5, 1-17-6, 1-17-7, 1-17-8, 1-17-9, 1-17-10, 1-17-11, 1-17-12, 1-19-0, 1-19-1, 1-19-2, 1-19-3, 1-19-4, 1-19-5, 1-19-6, 1-19-7, 1-19-8, 1-19-9, 1-19-10, 1-19-11"
       hist_bins: 100
-      hist_min: 300
+      hist_min: 100
       hist_max: 8000
       scatter_reset: true
-      # grid_size defines a layout for histogram visualization
-      # (e.g. 5 will plot 25 histograms in 5x5 matrix)
+      #> grid_size defines a layout for histogram visualization
+      #> (e.g. 5 will plot 25 histograms in 5x5 matrix)
       grid_size: 5
   services:
-    SimpleProcessor:
-#  logical trigger channel assignment
-      t_slot: 17
-      t_channel: 14
-#  beam center channel assignment
-      bc_slot: 17
-      bc_channel: 12
-      #min_q: 2500
-      #max_q: 4000
+    Processor:
+      s_window: 32
+      s_step: 1
+#      t_slot: 17
+#      t_channel: 14
+#      bc_slot: 17
+#      bc_channel: 12
+#    SimpleProcessor:
+      #> logical trigger channel assignment
+#      t_slot: 17
+#      t_channel: 14
+      #> beam center channel assignment
+#      bc_slot: 17
+#      bc_channel: 12
+#      min_q: 2500
+#      max_q: 4000
 mime-types:
   - binary/data-evio
   - binary/data-jobj

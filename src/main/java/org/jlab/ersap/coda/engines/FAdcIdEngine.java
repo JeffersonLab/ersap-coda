@@ -15,6 +15,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Copyright (c) 2021, Jefferson Science Associates, all rights reserved.
@@ -24,14 +25,20 @@ import java.util.*;
  * 12000, Jefferson Ave, Newport News, VA 23606
  * Phone : (757)-269-7100
  *
- * @author gurjyan on 5/1/22
+ * @author gurjyan on 5/6/22
  * @project ersap-coda
  */
-public class FAdcHitsEngine implements Engine {
+public class FAdcIdEngine implements Engine {
+    private long tStart, tEnd; // start and hits
 
     private static int[] slotMap = {0, 10, 13, 9, 14, 8, 15, 7, 16, 6, 17, 5, 18, 4, 19, 3, 20};
     private boolean foundTrigger = false;
     private boolean foundCenter = false;
+
+    private static String C_WINDOW = "s_window";
+    private long tDelta; // time window to correlate hits as candidate for an event, i.e. coincident
+    private static String S_STEP = "s_step";
+    private int stepSize;
 
     private static String T_SLOT = "t_slot";
     private int tSlot;
@@ -42,28 +49,26 @@ public class FAdcHitsEngine implements Engine {
     private static String BC_CHANNEL = "bc_channel";
     private int bcChannel;
 
-    private static String MIN_Q = "min_q";
-    private int minQ;
-    private static String MAX_Q = "max_q";
-    private int maxQ;
-
     @Override
     public EngineData configure(EngineData engineData) {
         if (engineData.getMimeType().equalsIgnoreCase(EngineDataType.JSON.mimeType())) {
             String source = (String) engineData.getData();
             JSONObject data = new JSONObject(source);
+            tDelta = data.has(C_WINDOW) ? data.getLong(C_WINDOW) : 0;
             tSlot = data.has(T_SLOT) ? data.getInt(T_SLOT) : 0;
             tChannel = data.has(T_CHANNEL) ? data.getInt(T_CHANNEL) : 0;
             bcSlot = data.has(BC_SLOT) ? data.getInt(BC_SLOT) : 0;
             bcChannel = data.has(BC_CHANNEL) ? data.getInt(BC_CHANNEL) : 0;
-            minQ = data.has(MIN_Q) ? data.getInt(MIN_Q) : 0;
-            maxQ = data.has(MAX_Q) ? data.getInt(MAX_Q) : 9000;
         }
         return null;
     }
 
     @Override
     public EngineData execute(EngineData engineData) {
+        // reset hit bins and hit start times
+        tStart = 0;
+        tEnd = 0;
+
         foundTrigger = false;
         foundCenter = false;
         EngineData out = new EngineData();
@@ -129,22 +134,47 @@ public class FAdcHitsEngine implements Engine {
                         fADCPayloadDecoder(data, timestamp, slt, byteData);
                     }
                 }
-                if(!data.isEmpty()){
-                    if(tSlot > 0 && tChannel > 0 &&
+                int step = 0;
+                long tee;
+                List<VAdcHit> event = new ArrayList<>();
+                int hitCount = 0;
+                do {
+                    final long ts = tStart + ((long) step * stepSize);
+                    final long te = ts + tDelta;
+                    tee = te;
+                    List<VAdcHit> slice = data.stream()
+                            .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
+                            .collect(Collectors.toList());
+
+                    // see if we find duplicate hits
+                   long dup = slice.stream()
+                            .filter(i -> Collections.frequency(slice, i) > 1)
+                            .count();
+
+                   // if no duplicates found we take a window wit the maximum hits
+                   if (dup == 0 && (slice.size() > hitCount)) {
+                           hitCount = slice.size();
+                           event = slice;
+                   }
+
+                } while (tee >= tEnd);
+
+                if (!event.isEmpty()) {
+                    if (tSlot > 0 && tChannel > 0 &&
                             bcSlot > 0 && bcChannel > 0 &&
-                            foundTrigger && foundCenter){
-                        out.setData(JavaObjectType.JOBJ, data);
-                    } else if(tSlot > 0 && tChannel > 0 &&
+                            foundTrigger && foundCenter) {
+                        out.setData(JavaObjectType.JOBJ, event);
+                    } else if (tSlot > 0 && tChannel > 0 &&
                             bcSlot == 0 && bcChannel == 0 &&
-                            foundTrigger ) {
-                        out.setData(JavaObjectType.JOBJ, data);
-                    } else if(tSlot == 0 && tChannel == 0 &&
+                            foundTrigger) {
+                        out.setData(JavaObjectType.JOBJ, event);
+                    } else if (tSlot == 0 && tChannel == 0 &&
                             bcSlot > 0 && bcChannel > 0 &&
-                            foundCenter ) {
-                        out.setData(JavaObjectType.JOBJ, data);
+                            foundCenter) {
+                        out.setData(JavaObjectType.JOBJ, event);
                     } else if (tSlot == 0 && tChannel == 0 &&
                             bcSlot == 0 && bcChannel == 0) {
-                        out.setData(JavaObjectType.JOBJ, data);
+                        out.setData(JavaObjectType.JOBJ, event);
                     }
                 }
                 return out;
@@ -175,18 +205,23 @@ public class FAdcHitsEngine implements Engine {
             int q = (i >> 0) & 0x1FFF;
             int channel = (i >> 13) & 0x000F;
             long v = ((i >> 17) & 0x3FFF) * 4;
-//            long ht = frame_time_ns + v;
-            long ht = v;
+//            long ht = frame_time_ns + v; // actual time
+            long ht = v; // time within the frame
             if (tSlot > 0 && tChannel > 0 &&
                     slot == tSlot && channel == tChannel) {
                 foundTrigger = true;
             } else if (bcSlot > 0 && bcChannel > 0
                     && slot == bcSlot && channel == bcChannel) {
-                if (q >= minQ && q <= maxQ) {
-                    foundCenter = true;
-                }
+                foundCenter = true;
             }
-            data.add(new VAdcHit(1, slot, channel, q, ht));
+            if (tStart == 0) {
+                tStart = ht;
+                tEnd = ht;
+            } else if (ht <= tStart) {
+                tStart = ht;
+            } else if (ht >= tEnd) {
+                tEnd = ht;
+            }
         }
     }
 
@@ -238,6 +273,22 @@ public class FAdcHitsEngine implements Engine {
     @Override
     public void destroy() {
     }
+
+
+//    private class HitBin {
+//        ArrayList<VAdcHit> hits = new ArrayList<>();
+//
+//        public void add(VAdcHit h) {
+//            hits.add(h);
+//        }
+//
+//        public int getNumberOfHits() {
+//            return hits.size();
+//        }
+//
+//        public void clear() {
+//            hits.clear();
+//        }
+//
+//    }
 }
-
-

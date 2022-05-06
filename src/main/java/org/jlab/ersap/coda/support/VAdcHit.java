@@ -1,5 +1,7 @@
 package org.jlab.ersap.coda.support;
 
+import java.util.Objects;
+
 /**
  * Copyright (c) 2021, Jefferson Science Associates, all rights reserved.
  * See LICENSE.txt file.
@@ -48,6 +50,19 @@ public class VAdcHit {
 
     public String getName() {
         return crate+"-"+slot+"-"+channel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof VAdcHit)) return false;
+        VAdcHit vAdcHit = (VAdcHit) o;
+        return getCrate() == vAdcHit.getCrate() && getSlot() == vAdcHit.getSlot() && getChannel() == vAdcHit.getChannel();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCrate(), getSlot(), getChannel());
     }
 
     @Override

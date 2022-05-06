@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * @author gurjyan on 4/27/22
  * @project ersap-coda
  */
-public class FAdcEvtIdentifyEngine implements Engine {
+public class FAdcSlidingWindowIdEngine implements Engine {
 
     private static String S_WINDOW = "sliding_widow_size";
     private int slidingWindowSize;
