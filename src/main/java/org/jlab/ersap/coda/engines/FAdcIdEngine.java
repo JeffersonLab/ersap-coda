@@ -70,8 +70,6 @@ public class FAdcIdEngine implements Engine {
         tStart = 0;
         tEnd = 0;
 
-        foundTrigger = false;
-        foundCenter = false;
         EngineData out = new EngineData();
         List<VAdcHit> x = new ArrayList<>();
         out.setData(JavaObjectType.JOBJ, x);
@@ -160,7 +158,6 @@ public class FAdcIdEngine implements Engine {
                         tEnd = Collections.max(times);
                         /////////////////////////////////
 
-//                        fADCPayloadDecoder(data, timestamp, slt, byteData);
                     }
                 }
 
@@ -168,7 +165,6 @@ public class FAdcIdEngine implements Engine {
                     int step = 0;
                     long tee;
                     List<VAdcHit> event = new ArrayList<>();
-                    int hitCount = 0;
                     do {
                         final long ts = tStart + ((long) step * stepSize);
                         final long te = ts + tDelta;
@@ -178,77 +174,41 @@ public class FAdcIdEngine implements Engine {
                                 .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
                                 .collect(Collectors.toList());
 
-                        if(slice.size() > 3) {
+                        if (slice.size() > 3) {
                             // see if we find duplicate hits
                             long dup = slice.stream()
                                     .filter(i -> Collections.frequency(slice, i) > 1)
                                     .count();
-                            // if no duplicates found we take a window wit the maximum hits
-                            if (dup == 0 && (slice.size() > hitCount)) {
-                                hitCount = slice.size();
-                                event = slice;
+                            // if no duplicates found we take a window with the maximum hits
+                            if (dup == 0) {
+                                if (tSlot > 0 && tChannel > 0 &&
+                                        bcSlot > 0 && bcChannel > 0 &&
+                                        foundTrigger && foundCenter) {
+                                    event.addAll(slice);
+                                } else if (tSlot > 0 && tChannel > 0 &&
+                                        bcSlot == 0 && bcChannel == 0 &&
+                                        foundTrigger) {
+                                    event.addAll(slice);
+                                } else if (tSlot == 0 && tChannel == 0 &&
+                                        bcSlot > 0 && bcChannel > 0 &&
+                                        foundCenter) {
+                                    event.addAll(slice);
+                                } else if (tSlot == 0 && tChannel == 0 &&
+                                        bcSlot == 0 && bcChannel == 0) {
+                                    event.addAll(slice);
+                                }
                             }
                         }
-                        System.out.println("DDD "+tStart+" "+tEnd);
-
                     } while (tee <= tEnd);
 
-                    if (event.size() > 3) {
-                        if (tSlot > 0 && tChannel > 0 &&
-                                bcSlot > 0 && bcChannel > 0 &&
-                                foundTrigger && foundCenter) {
+                    if (!event.isEmpty()) {
                             out.setData(JavaObjectType.JOBJ, event);
-                        } else if (tSlot > 0 && tChannel > 0 &&
-                                bcSlot == 0 && bcChannel == 0 &&
-                                foundTrigger) {
-                            out.setData(JavaObjectType.JOBJ, event);
-                        } else if (tSlot == 0 && tChannel == 0 &&
-                                bcSlot > 0 && bcChannel > 0 &&
-                                foundCenter) {
-                            out.setData(JavaObjectType.JOBJ, event);
-                        } else if (tSlot == 0 && tChannel == 0 &&
-                                bcSlot == 0 && bcChannel == 0) {
-                            out.setData(JavaObjectType.JOBJ, event);
-                        }
-                        return out;
                     }
                 }
             }
         }
         return out;
     }
-
-//    private void fADCPayloadDecoder(List<VAdcHit> data,
-//                                    Long frame_time_ns,
-//                                    int slot,
-//                                    byte[] ba) {
-//
-//        ArrayList<Long> times = new ArrayList<>();
-//        IntBuffer intBuf =
-//                ByteBuffer.wrap(ba)
-//                        .order(ByteOrder.BIG_ENDIAN)
-//                        .asIntBuffer();
-//        int[] pData = new int[intBuf.remaining()];
-//        intBuf.get(pData);
-//        for (int i : pData) {
-//            int q = (i >> 0) & 0x1FFF;
-//            int channel = (i >> 13) & 0x000F;
-//            long v = ((i >> 17) & 0x3FFF) * 4;
-////            long ht = frame_time_ns + v; // actual time
-//            long ht = v; // time within the frame
-//            if (tSlot > 0 && tChannel > 0 &&
-//                    slot == tSlot && channel == tChannel) {
-//                foundTrigger = true;
-//            } else if (bcSlot > 0 && bcChannel > 0
-//                    && slot == bcSlot && channel == bcChannel) {
-//                foundCenter = true;
-//            }
-//            times.add(ht);
-//            data.add(new VAdcHit(1, slot, channel, q, ht));
-//        }
-//        tStart = Collections.min(times);
-//        tEnd = Collections.max(times);
-//    }
 
     private int getSlot(int payloadId) {
         return slotMap[payloadId];
