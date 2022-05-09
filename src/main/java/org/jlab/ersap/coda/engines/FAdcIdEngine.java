@@ -182,6 +182,7 @@ public class FAdcIdEngine implements Engine {
                             final long te = ts + tDelta;
                             tee = te;
                             step++;
+                            System.out.println("DDD start = "+ts+" end = "+tee);
                             List<VAdcHit> slice = data.stream()
                                     .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
                                     .collect(Collectors.toList());
