@@ -170,8 +170,14 @@ public class FAdcIdEngine implements Engine {
                     if (tDelta > 0 && tStart < tEnd) {
                         int step = 0;
                         long tee;
+                        long newTStart = 0;
                         List<VAdcHit> event = new ArrayList<>();
                         do {
+                            if(newTStart > 0) {
+                                tStart = newTStart;
+                                step = 0;
+                                newTStart = 0;
+                            }
                             final long ts = tStart + ((long) step * stepSize);
                             final long te = ts + tDelta;
                             tee = te;
@@ -187,6 +193,7 @@ public class FAdcIdEngine implements Engine {
                                         .count();
                                 // if no duplicates found we take a window with the maximum hits
                                 if (dup == 0) {
+                                    newTStart = tee;
                                     if (tSlot > 0 && tChannel > 0 &&
                                             bcSlot > 0 && bcChannel > 0 &&
                                             foundTrigger && foundCenter) {
