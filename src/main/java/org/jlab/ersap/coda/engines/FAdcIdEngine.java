@@ -136,6 +136,9 @@ public class FAdcIdEngine implements Engine {
                     }
                 }
 
+                if(tStart < tEnd) {
+                    System.out.println("DDD "+tStart+" "+tEnd);
+                }
                 if (!data.isEmpty() && tStart < tEnd) {
                     int step = 0;
                     long tee;
@@ -161,8 +164,7 @@ public class FAdcIdEngine implements Engine {
                                 event = slice;
                             }
                         }
-                        System.out.println("DDD "+tee+" "+tEnd);
-                    } while (tee >= tEnd);
+                    } while (tee <= tEnd);
 
                     if (event.size() > 3) {
                         if (tSlot > 0 && tChannel > 0 &&
