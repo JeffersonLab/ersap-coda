@@ -224,7 +224,22 @@ public class FAdcIdEngine implements Engine {
                         }
                     } else {
                         // no software trigger, i.e. sliding window
-                        out.setData(JavaObjectType.JOBJ, data);
+                        if (tSlot > 0 && tChannel > 0 &&
+                                bcSlot > 0 && bcChannel > 0 &&
+                                foundTrigger && foundCenter) {
+                            out.setData(JavaObjectType.JOBJ, data);
+                        } else if (tSlot > 0 && tChannel > 0 &&
+                                bcSlot == 0 && bcChannel == 0 &&
+                                foundTrigger) {
+                            out.setData(JavaObjectType.JOBJ, data);
+                        } else if (tSlot == 0 && tChannel == 0 &&
+                                bcSlot > 0 && bcChannel > 0 &&
+                                foundCenter) {
+                            out.setData(JavaObjectType.JOBJ, data);
+                        } else if (tSlot == 0 && tChannel == 0 &&
+                                bcSlot == 0 && bcChannel == 0) {
+                            out.setData(JavaObjectType.JOBJ, data);
+                        }
                     }
                 }
             }
