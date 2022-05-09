@@ -164,48 +164,55 @@ public class FAdcIdEngine implements Engine {
                     }
                 }
 
-                if (!data.isEmpty() && tStart < tEnd) {
-                    int step = 0;
-                    long tee;
-                    List<VAdcHit> event = new ArrayList<>();
-                    do {
-                        final long ts = tStart + ((long) step * stepSize);
-                        final long te = ts + tDelta;
-                        tee = te;
-                        step++;
-                        List<VAdcHit> slice = data.stream()
-                                .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
-                                .collect(Collectors.toList());
+                if (!data.isEmpty()) {
 
-                        if (slice.size() > nHitsInSWindow) {
-                            // see if we find duplicate hits
-                            long dup = slice.stream()
-                                    .filter(i -> Collections.frequency(slice, i) > 1)
-                                    .count();
-                            // if no duplicates found we take a window with the maximum hits
-                            if (dup == 0) {
-                                if (tSlot > 0 && tChannel > 0 &&
-                                        bcSlot > 0 && bcChannel > 0 &&
-                                        foundTrigger && foundCenter) {
-                                    event.addAll(slice);
-                                } else if (tSlot > 0 && tChannel > 0 &&
-                                        bcSlot == 0 && bcChannel == 0 &&
-                                        foundTrigger) {
-                                    event.addAll(slice);
-                                } else if (tSlot == 0 && tChannel == 0 &&
-                                        bcSlot > 0 && bcChannel > 0 &&
-                                        foundCenter) {
-                                    event.addAll(slice);
-                                } else if (tSlot == 0 && tChannel == 0 &&
-                                        bcSlot == 0 && bcChannel == 0) {
-                                    event.addAll(slice);
+                    // sliding window technique
+                    if (tDelta > 0 && tStart < tEnd) {
+                        int step = 0;
+                        long tee;
+                        List<VAdcHit> event = new ArrayList<>();
+                        do {
+                            final long ts = tStart + ((long) step * stepSize);
+                            final long te = ts + tDelta;
+                            tee = te;
+                            step++;
+                            List<VAdcHit> slice = data.stream()
+                                    .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
+                                    .collect(Collectors.toList());
+
+                            if (slice.size() > nHitsInSWindow) {
+                                // see if we find duplicate hits
+                                long dup = slice.stream()
+                                        .filter(i -> Collections.frequency(slice, i) > 1)
+                                        .count();
+                                // if no duplicates found we take a window with the maximum hits
+                                if (dup == 0) {
+                                    if (tSlot > 0 && tChannel > 0 &&
+                                            bcSlot > 0 && bcChannel > 0 &&
+                                            foundTrigger && foundCenter) {
+                                        event.addAll(slice);
+                                    } else if (tSlot > 0 && tChannel > 0 &&
+                                            bcSlot == 0 && bcChannel == 0 &&
+                                            foundTrigger) {
+                                        event.addAll(slice);
+                                    } else if (tSlot == 0 && tChannel == 0 &&
+                                            bcSlot > 0 && bcChannel > 0 &&
+                                            foundCenter) {
+                                        event.addAll(slice);
+                                    } else if (tSlot == 0 && tChannel == 0 &&
+                                            bcSlot == 0 && bcChannel == 0) {
+                                        event.addAll(slice);
+                                    }
                                 }
                             }
-                        }
-                    } while (tee <= tEnd);
+                        } while (tee <= tEnd);
 
-                    if (!event.isEmpty()) {
+                        if (!event.isEmpty()) {
                             out.setData(JavaObjectType.JOBJ, event);
+                        }
+                    } else {
+                        // no software trigger, i.e. sliding window
+                        out.setData(JavaObjectType.JOBJ, data);
                     }
                 }
             }
@@ -261,22 +268,4 @@ public class FAdcIdEngine implements Engine {
     @Override
     public void destroy() {
     }
-
-
-//    private class HitBin {
-//        ArrayList<VAdcHit> hits = new ArrayList<>();
-//
-//        public void add(VAdcHit h) {
-//            hits.add(h);
-//        }
-//
-//        public int getNumberOfHits() {
-//            return hits.size();
-//        }
-//
-//        public void clear() {
-//            hits.clear();
-//        }
-//
-//    }
 }
