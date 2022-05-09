@@ -25,29 +25,27 @@ import java.util.stream.Collectors;
  * 12000, Jefferson Ave, Newport News, VA 23606
  * Phone : (757)-269-7100
  *
- * @author gurjyan on 5/6/22
+ * @author gurjyan on 5/9/22
  * @project ersap-coda
  */
-public class FAdcIdEngine implements Engine {
+public class FAdcCosmicIdEngine implements Engine {
     private long tStart, tEnd; // start and hits
 
     private static int[] slotMap = {0, 10, 13, 9, 14, 8, 15, 7, 16, 6, 17, 5, 18, 4, 19, 3, 20};
-    private boolean foundTrigger = false;
-    private boolean foundCenter = false;
 
     private static String C_WINDOW = "s_window";
     private long tDelta; // time window to correlate hits as candidate for an event, i.e. coincident
     private static String S_STEP = "s_step";
     private int stepSize;
 
-    private static String T_SLOT = "t_slot";
-    private int tSlot;
-    private static String T_CHANNEL = "t_channel";
-    private int tChannel;
-    private static String BC_SLOT = "bc_slot";
-    private int bcSlot;
-    private static String BC_CHANNEL = "bc_channel";
-    private int bcChannel;
+    private HashSet<Integer> v1 = new HashSet<>();
+    private HashSet<Integer> v2 = new HashSet<>();
+    private HashSet<Integer> v3 = new HashSet<>();
+    private HashSet<Integer> v4 = new HashSet<>();
+    private HashSet<Integer> v5 = new HashSet<>();
+    private HashSet<Integer> v6 = new HashSet<>();
+    private HashSet<Integer> v7 = new HashSet<>();
+    private HashSet<Integer> v8 = new HashSet<>();
 
     @Override
     public EngineData configure(EngineData engineData) {
@@ -56,11 +54,54 @@ public class FAdcIdEngine implements Engine {
             JSONObject data = new JSONObject(source);
             tDelta = data.has(C_WINDOW) ? data.getLong(C_WINDOW) : 0;
             stepSize = data.has(S_STEP) ? data.getInt(S_STEP) : 1;
-            tSlot = data.has(T_SLOT) ? data.getInt(T_SLOT) : 0;
-            tChannel = data.has(T_CHANNEL) ? data.getInt(T_CHANNEL) : 0;
-            bcSlot = data.has(BC_SLOT) ? data.getInt(BC_SLOT) : 0;
-            bcChannel = data.has(BC_CHANNEL) ? data.getInt(BC_CHANNEL) : 0;
         }
+        v1.add(17 * 0);
+        v1.add(17 * 5);
+        v1.add(17 * 10);
+        v1.add(19 * 2);
+        v1.add(19 * 7);
+
+        v2.add(17 * 1);
+        v2.add(17 * 6);
+        v2.add(17 * 11);
+        v2.add(19 * 3);
+        v2.add(19 * 8);
+
+        v3.add(17 * 2);
+        v3.add(17 * 7);
+        v3.add(17 * 12);
+        v3.add(19 * 4);
+        v3.add(19 * 9);
+
+        v4.add(17 * 3);
+        v4.add(17 * 8);
+        v4.add(19 * 0);
+        v4.add(19 * 5);
+        v4.add(19 * 10);
+
+        v5.add(17 * 4);
+        v5.add(17 * 9);
+        v5.add(19 * 1);
+        v5.add(19 * 6);
+        v5.add(19 * 11);
+
+        v6.add(17 * 0);
+        v6.add(17 * 6);
+        v6.add(17 * 12);
+        v6.add(19 * 5);
+        v6.add(19 * 11);
+
+        v7.add(17 * 4);
+        v7.add(17 * 8);
+        v7.add(17 * 12);
+        v7.add(19 * 3);
+        v7.add(19 * 7);
+
+        v8.add(17 * 1);
+        v8.add(17 * 7);
+        v8.add(19 * 0);
+        v8.add(19 * 6);
+
         return null;
     }
 
@@ -70,8 +111,6 @@ public class FAdcIdEngine implements Engine {
         tStart = 0;
         tEnd = 0;
 
-        foundTrigger = false;
-        foundCenter = false;
         EngineData out = new EngineData();
         List<VAdcHit> x = new ArrayList<>();
         out.setData(JavaObjectType.JOBJ, x);
@@ -150,39 +189,33 @@ public class FAdcIdEngine implements Engine {
                                 .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
                                 .collect(Collectors.toList());
 
-                        if(slice.size() > 3) {
+                        if (slice.size() > 3) {
                             // see if we find duplicate hits
                             long dup = slice.stream()
                                     .filter(i -> Collections.frequency(slice, i) > 1)
                                     .count();
-                            // if no duplicates found we take a window wit the maximum hits
-                            if (dup == 0 && (slice.size() > hitCount)) {
-                                hitCount = slice.size();
-                                event = slice;
+                            // See if we see vertical tracks
+                            if (dup == 0) {
+                                HashSet<Integer> trackCandidate = new HashSet<>();
+                                for (VAdcHit a : slice) {
+                                    trackCandidate.add(a.getSlot() * a.getChannel());
+                                }
+                                if ((v1.retainAll(trackCandidate) && v1.size() <= 1)
+                                        || (v2.retainAll(trackCandidate) && v2.size() <= 1)
+                                        || (v3.retainAll(trackCandidate) && v3.size() <= 1)
+                                        || (v4.retainAll(trackCandidate) && v4.size() <= 1)
+                                        || (v5.retainAll(trackCandidate) && v5.size() <= 1)
+                                        || (v6.retainAll(trackCandidate) && v6.size() <= 1)
+                                        || (v7.retainAll(trackCandidate) && v7.size() <= 1)
+                                        || (v8.retainAll(trackCandidate) && v8.size() <= 1)
+                                ) {
+                                    event = slice;
+                                }
                             }
                         }
 
                     } while (tee >= tEnd);
-
-                    if (event.size() > 3) {
-                        if (tSlot > 0 && tChannel > 0 &&
-                                bcSlot > 0 && bcChannel > 0 &&
-                                foundTrigger && foundCenter) {
-                            out.setData(JavaObjectType.JOBJ, event);
-                        } else if (tSlot > 0 && tChannel > 0 &&
-                                bcSlot == 0 && bcChannel == 0 &&
-                                foundTrigger) {
-                            out.setData(JavaObjectType.JOBJ, event);
-                        } else if (tSlot == 0 && tChannel == 0 &&
-                                bcSlot > 0 && bcChannel > 0 &&
-                                foundCenter) {
-                            out.setData(JavaObjectType.JOBJ, event);
-                        } else if (tSlot == 0 && tChannel == 0 &&
-                                bcSlot == 0 && bcChannel == 0) {
-                            out.setData(JavaObjectType.JOBJ, event);
-                        }
-                        return out;
-                    }
+                    out.setData(JavaObjectType.JOBJ, event);
                 }
             }
         }
@@ -213,13 +246,6 @@ public class FAdcIdEngine implements Engine {
             long v = ((i >> 17) & 0x3FFF) * 4;
 //            long ht = frame_time_ns + v; // actual time
             long ht = v; // time within the frame
-            if (tSlot > 0 && tChannel > 0 &&
-                    slot == tSlot && channel == tChannel) {
-                foundTrigger = true;
-            } else if (bcSlot > 0 && bcChannel > 0
-                    && slot == bcSlot && channel == bcChannel) {
-                foundCenter = true;
-            }
             if (tStart == 0) {
                 tStart = ht;
                 tEnd = ht;
@@ -282,20 +308,4 @@ public class FAdcIdEngine implements Engine {
     }
 
 
-//    private class HitBin {
-//        ArrayList<VAdcHit> hits = new ArrayList<>();
-//
-//        public void add(VAdcHit h) {
-//            hits.add(h);
-//        }
-//
-//        public int getNumberOfHits() {
-//            return hits.size();
-//        }
-//
-//        public void clear() {
-//            hits.clear();
-//        }
-//
-//    }
 }
