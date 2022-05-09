@@ -29,11 +29,8 @@ import java.util.stream.Collectors;
  * @project ersap-coda
  */
 public class FAdcIdEngine implements Engine {
-    private long tStart, tEnd; // start and hits
 
     private static int[] slotMap = {0, 10, 13, 9, 14, 8, 15, 7, 16, 6, 17, 5, 18, 4, 19, 3, 20};
-    private boolean foundTrigger = false;
-    private boolean foundCenter = false;
 
     private static String C_WINDOW = "s_window";
     private long tDelta; // time window to correlate hits as candidate for an event, i.e. coincident
@@ -67,6 +64,9 @@ public class FAdcIdEngine implements Engine {
     @Override
     public EngineData execute(EngineData engineData) {
         // reset hit bins and hit start times
+        long tStart, tEnd;
+        boolean foundTrigger = false;
+        boolean foundCenter = false;
         tStart = 0;
         tEnd = 0;
 
@@ -131,12 +131,40 @@ public class FAdcIdEngine implements Engine {
                     byte[] byteData = dataBank.getRawBytes();
 
                     if (byteData.length > 0) {
+                        ///////////////////////////////
                         // define the hits for a slot in the VTP frame
-                        fADCPayloadDecoder(data, timestamp, slt, byteData);
+                        ArrayList<Long> times = new ArrayList<>();
+                        IntBuffer intBuf =
+                                ByteBuffer.wrap(byteData)
+                                        .order(ByteOrder.BIG_ENDIAN)
+                                        .asIntBuffer();
+                        int[] pData = new int[intBuf.remaining()];
+                        intBuf.get(pData);
+                        for (int i : pData) {
+                            int q = (i >> 0) & 0x1FFF;
+                            int channel = (i >> 13) & 0x000F;
+                            long v = ((i >> 17) & 0x3FFF) * 4;
+//            long ht = frame_time_ns + v; // actual time
+                            long ht = v; // time within the frame
+                            if (tSlot > 0 && tChannel > 0 &&
+                                    slt == tSlot && channel == tChannel) {
+                                foundTrigger = true;
+                            } else if (bcSlot > 0 && bcChannel > 0
+                                    && slt == bcSlot && channel == bcChannel) {
+                                foundCenter = true;
+                            }
+                            times.add(ht);
+                            data.add(new VAdcHit(1, slt, channel, q, ht));
+                        }
+                        tStart = Collections.min(times);
+                        tEnd = Collections.max(times);
+                        /////////////////////////////////
+
+//                        fADCPayloadDecoder(data, timestamp, slt, byteData);
                     }
                 }
 
-                if (!data.isEmpty() && tStart < tEnd && tEnd >0) {
+                if (!data.isEmpty() && tStart < tEnd) {
                     int step = 0;
                     long tee;
                     List<VAdcHit> event = new ArrayList<>();
@@ -190,45 +218,37 @@ public class FAdcIdEngine implements Engine {
         return out;
     }
 
-    /**
-     * Finds the hits (channel, charge and time) reported by the fADC in a specific slot
-     *
-     * @param data
-     * @param frame_time_ns
-     * @param slot
-     * @param ba
-     */
-    private void fADCPayloadDecoder(List<VAdcHit> data,
-                                    Long frame_time_ns,
-                                    int slot,
-                                    byte[] ba) {
-
-        ArrayList<Long> times = new ArrayList<>();
-        IntBuffer intBuf =
-                ByteBuffer.wrap(ba)
-                        .order(ByteOrder.BIG_ENDIAN)
-                        .asIntBuffer();
-        int[] pData = new int[intBuf.remaining()];
-        intBuf.get(pData);
-        for (int i : pData) {
-            int q = (i >> 0) & 0x1FFF;
-            int channel = (i >> 13) & 0x000F;
-            long v = ((i >> 17) & 0x3FFF) * 4;
-//            long ht = frame_time_ns + v; // actual time
-            long ht = v; // time within the frame
-            if (tSlot > 0 && tChannel > 0 &&
-                    slot == tSlot && channel == tChannel) {
-                foundTrigger = true;
-            } else if (bcSlot > 0 && bcChannel > 0
-                    && slot == bcSlot && channel == bcChannel) {
-                foundCenter = true;
-            }
-            times.add(ht);
-            data.add(new VAdcHit(1, slot, channel, q, ht));
-        }
-        tStart = Collections.min(times);
-        tEnd = Collections.max(times);
-    }
+//    private void fADCPayloadDecoder(List<VAdcHit> data,
+//                                    Long frame_time_ns,
+//                                    int slot,
+//                                    byte[] ba) {
+//
+//        ArrayList<Long> times = new ArrayList<>();
+//        IntBuffer intBuf =
+//                ByteBuffer.wrap(ba)
+//                        .order(ByteOrder.BIG_ENDIAN)
+//                        .asIntBuffer();
+//        int[] pData = new int[intBuf.remaining()];
+//        intBuf.get(pData);
+//        for (int i : pData) {
+//            int q = (i >> 0) & 0x1FFF;
+//            int channel = (i >> 13) & 0x000F;
+//            long v = ((i >> 17) & 0x3FFF) * 4;
+////            long ht = frame_time_ns + v; // actual time
+//            long ht = v; // time within the frame
+//            if (tSlot > 0 && tChannel > 0 &&
+//                    slot == tSlot && channel == tChannel) {
+//                foundTrigger = true;
+//            } else if (bcSlot > 0 && bcChannel > 0
+//                    && slot == bcSlot && channel == bcChannel) {
+//                foundCenter = true;
+//            }
+//            times.add(ht);
+//            data.add(new VAdcHit(1, slot, channel, q, ht));
+//        }
+//        tStart = Collections.min(times);
+//        tEnd = Collections.max(times);
+//    }
 
     private int getSlot(int payloadId) {
         return slotMap[payloadId];
