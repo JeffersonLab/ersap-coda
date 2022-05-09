@@ -36,6 +36,8 @@ public class FAdcIdEngine implements Engine {
     private long tDelta; // time window to correlate hits as candidate for an event, i.e. coincident
     private static String S_STEP = "s_step";
     private int stepSize;
+    private static String S_HITS = "s_hits";
+    private int nHitsInSWindow;
 
     private static String T_SLOT = "t_slot";
     private int tSlot;
@@ -53,6 +55,7 @@ public class FAdcIdEngine implements Engine {
             JSONObject data = new JSONObject(source);
             tDelta = data.has(C_WINDOW) ? data.getLong(C_WINDOW) : 0;
             stepSize = data.has(S_STEP) ? data.getInt(S_STEP) : 1;
+            nHitsInSWindow = data.has(S_HITS) ? data.getInt(S_HITS) : 3;
             tSlot = data.has(T_SLOT) ? data.getInt(T_SLOT) : 0;
             tChannel = data.has(T_CHANNEL) ? data.getInt(T_CHANNEL) : 0;
             bcSlot = data.has(BC_SLOT) ? data.getInt(BC_SLOT) : 0;
@@ -174,7 +177,7 @@ public class FAdcIdEngine implements Engine {
                                 .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
                                 .collect(Collectors.toList());
 
-                        if (slice.size() > 3) {
+                        if (slice.size() > nHitsInSWindow) {
                             // see if we find duplicate hits
                             long dup = slice.stream()
                                     .filter(i -> Collections.frequency(slice, i) > 1)
