@@ -167,58 +167,60 @@ public class FAdcIdEngine implements Engine {
                 if (!data.isEmpty()) {
 
                     // sliding window technique
-                    if (tDelta > 0 && tStart < tEnd) {
-                        int step = 0;
-                        long tee;
-                        long newTStart = 0;
-                        List<VAdcHit> event = new ArrayList<>();
-                        do {
-                            if(newTStart > 0) {
-                                tStart = newTStart + stepSize;
-                                step = 0;
-                                newTStart = 0;
-                            }
-                            final long ts = tStart + ((long) step * stepSize);
-                            final long te = ts + tDelta;
-                            tee = te;
-                            step++;
-                            List<VAdcHit> slice = data.stream()
-                                    .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
-                                    .collect(Collectors.toList());
+                    if (tDelta > 0) {
+                        if (tStart < tEnd) {
+                            int step = 0;
+                            long tee;
+                            long newTStart = 0;
+                            List<VAdcHit> event = new ArrayList<>();
+                            do {
+                                if (newTStart > 0) {
+                                    tStart = newTStart + stepSize;
+                                    step = 0;
+                                    newTStart = 0;
+                                }
+                                final long ts = tStart + ((long) step * stepSize);
+                                final long te = ts + tDelta;
+                                tee = te;
+                                step++;
+                                List<VAdcHit> slice = data.stream()
+                                        .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
+                                        .collect(Collectors.toList());
 
-                            if (slice.size() > nHitsInSWindow) {
-                                // see if we find duplicate hits
-                                long dup = slice.stream()
-                                        .filter(i -> Collections.frequency(slice, i) > 1)
-                                        .count();
-                                // if no duplicates found we take a window with the maximum hits
-                                if (dup == 0) {
-                                    if (tSlot > 0 && tChannel > 0 &&
-                                            bcSlot > 0 && bcChannel > 0 &&
-                                            foundTrigger && foundCenter) {
-                                        event.addAll(slice);
-                                        newTStart = tee;
-                                    } else if (tSlot > 0 && tChannel > 0 &&
-                                            bcSlot == 0 && bcChannel == 0 &&
-                                            foundTrigger) {
-                                        event.addAll(slice);
-                                        newTStart = tee;
-                                    } else if (tSlot == 0 && tChannel == 0 &&
-                                            bcSlot > 0 && bcChannel > 0 &&
-                                            foundCenter) {
-                                        event.addAll(slice);
-                                        newTStart = tee;
-                                    } else if (tSlot == 0 && tChannel == 0 &&
-                                            bcSlot == 0 && bcChannel == 0) {
-                                        event.addAll(slice);
-                                        newTStart = tee;
+                                if (slice.size() > nHitsInSWindow) {
+                                    // see if we find duplicate hits
+                                    long dup = slice.stream()
+                                            .filter(i -> Collections.frequency(slice, i) > 1)
+                                            .count();
+                                    // if no duplicates found we take a window with the maximum hits
+                                    if (dup == 0) {
+                                        if (tSlot > 0 && tChannel > 0 &&
+                                                bcSlot > 0 && bcChannel > 0 &&
+                                                foundTrigger && foundCenter) {
+                                            event.addAll(slice);
+                                            newTStart = tee;
+                                        } else if (tSlot > 0 && tChannel > 0 &&
+                                                bcSlot == 0 && bcChannel == 0 &&
+                                                foundTrigger) {
+                                            event.addAll(slice);
+                                            newTStart = tee;
+                                        } else if (tSlot == 0 && tChannel == 0 &&
+                                                bcSlot > 0 && bcChannel > 0 &&
+                                                foundCenter) {
+                                            event.addAll(slice);
+                                            newTStart = tee;
+                                        } else if (tSlot == 0 && tChannel == 0 &&
+                                                bcSlot == 0 && bcChannel == 0) {
+                                            event.addAll(slice);
+                                            newTStart = tee;
+                                        }
                                     }
                                 }
-                            }
-                        } while (tee <= tEnd);
+                            } while (tee <= tEnd);
 
-                        if (!event.isEmpty()) {
-                            out.setData(JavaObjectType.JOBJ, event);
+                            if (!event.isEmpty()) {
+                                out.setData(JavaObjectType.JOBJ, event);
+                            }
                         }
                     } else {
                         // no software trigger, i.e. sliding window
