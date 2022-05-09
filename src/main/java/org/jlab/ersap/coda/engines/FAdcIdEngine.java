@@ -161,7 +161,7 @@ public class FAdcIdEngine implements Engine {
                                 event = slice;
                             }
                         }
-
+                        System.out.println("DDD "+tee+" "+tEnd);
                     } while (tee >= tEnd);
 
                     if (event.size() > 3) {
