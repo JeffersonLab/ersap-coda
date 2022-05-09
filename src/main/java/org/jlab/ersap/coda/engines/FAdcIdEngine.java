@@ -201,6 +201,8 @@ public class FAdcIdEngine implements Engine {
                                     Long frame_time_ns,
                                     int slot,
                                     byte[] ba) {
+
+        ArrayList<Long> times = new ArrayList<>();
         IntBuffer intBuf =
                 ByteBuffer.wrap(ba)
                         .order(ByteOrder.BIG_ENDIAN)
@@ -220,16 +222,11 @@ public class FAdcIdEngine implements Engine {
                     && slot == bcSlot && channel == bcChannel) {
                 foundCenter = true;
             }
-            if (tStart == 0) {
-                tStart = ht;
-                tEnd = ht;
-            } else if (ht <= tStart) {
-                tStart = ht;
-            } else if (ht >= tEnd) {
-                tEnd = ht;
-            }
+            times.add(ht);
             data.add(new VAdcHit(1, slot, channel, q, ht));
         }
+        tStart = Collections.min(times);
+        tEnd = Collections.max(times);
     }
 
     private int getSlot(int payloadId) {
