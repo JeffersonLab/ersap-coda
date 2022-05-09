@@ -174,7 +174,7 @@ public class FAdcIdEngine implements Engine {
                         List<VAdcHit> event = new ArrayList<>();
                         do {
                             if(newTStart > 0) {
-                                tStart = newTStart;
+                                tStart = newTStart + stepSize;
                                 step = 0;
                                 newTStart = 0;
                             }
