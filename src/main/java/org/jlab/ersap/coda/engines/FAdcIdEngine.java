@@ -63,15 +63,15 @@ public class FAdcIdEngine implements Engine {
             bcSlot = data.has(BC_SLOT) ? data.getInt(BC_SLOT) : 0;
             bcChannel = data.has(BC_CHANNEL) ? data.getInt(BC_CHANNEL) : 0;
         }
-        centerBlocks.add("1_17_6");
-        centerBlocks.add("1_17_7");
-        centerBlocks.add("1_17_8");
-        centerBlocks.add("1_17_11");
-        centerBlocks.add("1_17_12");
-        centerBlocks.add("1_19_0");
-        centerBlocks.add("1_19_3");
-        centerBlocks.add("1_19_4");
-        centerBlocks.add("1_19_5");
+        centerBlocks.add("1-17-6");
+        centerBlocks.add("1-17-7");
+        centerBlocks.add("1-17-8");
+        centerBlocks.add("1-17-11");
+        centerBlocks.add("1-17-12");
+        centerBlocks.add("1-19-0");
+        centerBlocks.add("1-19-3");
+        centerBlocks.add("1-19-4");
+        centerBlocks.add("1-19-5");
         return null;
     }
 
@@ -239,7 +239,6 @@ public class FAdcIdEngine implements Engine {
                                                 bcSlot == 0 && bcChannel == 0) {
                                             event.addAll(slice);
                                             for(VAdcHit v:event){
-
                                                 if(centerBlocks.contains(v.getName().trim())){
                                                     System.out.println("DDD "+v.getName()+" "+sum.getCharge());
                                                     sum.setCharge(sum.getCharge() + v.getCharge());
