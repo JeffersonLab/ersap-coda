@@ -44,6 +44,10 @@ public class VAdcHit {
         return charge;
     }
 
+    public void setCharge(int charge) {
+        this.charge = charge;
+    }
+
     public long getTime() {
         return time;
     }

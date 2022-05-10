@@ -48,6 +48,8 @@ public class FAdcIdEngine implements Engine {
     private static String BC_CHANNEL = "bc_channel";
     private int bcChannel;
 
+    private ArrayList<String> centerBlocks = new ArrayList<>();
+
     @Override
     public EngineData configure(EngineData engineData) {
         if (engineData.getMimeType().equalsIgnoreCase(EngineDataType.JSON.mimeType())) {
@@ -61,6 +63,15 @@ public class FAdcIdEngine implements Engine {
             bcSlot = data.has(BC_SLOT) ? data.getInt(BC_SLOT) : 0;
             bcChannel = data.has(BC_CHANNEL) ? data.getInt(BC_CHANNEL) : 0;
         }
+        centerBlocks.add("1_17_6");
+        centerBlocks.add("1_17_7");
+        centerBlocks.add("1_17_8");
+        centerBlocks.add("1_17_11");
+        centerBlocks.add("1_17_12");
+        centerBlocks.add("1_19_0");
+        centerBlocks.add("1_19_3");
+        centerBlocks.add("1_19_4");
+        centerBlocks.add("1_19_5");
         return null;
     }
 
@@ -122,6 +133,7 @@ public class FAdcIdEngine implements Engine {
                 // followed by data banks
                 // actual container of all fADC hits in the VTP frame
                 List<VAdcHit> data = new ArrayList<>();
+                VAdcHit sum = new VAdcHit(0,0,0,0,0);
                 // Skip over SIB by starting at 1
                 for (int k = 1; k < kids; k++) {
                     EvioBank dataBank = (EvioBank) rocTSB.getChildAt(k);
@@ -160,7 +172,6 @@ public class FAdcIdEngine implements Engine {
                         tStart = Collections.min(times);
                         tEnd = Collections.max(times);
                         /////////////////////////////////
-
                     }
                 }
 
@@ -198,20 +209,40 @@ public class FAdcIdEngine implements Engine {
                                                 bcSlot > 0 && bcChannel > 0 &&
                                                 foundTrigger && foundCenter) {
                                             event.addAll(slice);
+                                            for(VAdcHit v:event){
+                                                if(centerBlocks.contains(v.getName())){
+                                                    sum.setCharge(sum.getCharge() + v.getCharge());
+                                                }
+                                            }
                                             newTStart = tee;
                                         } else if (tSlot > 0 && tChannel > 0 &&
                                                 bcSlot == 0 && bcChannel == 0 &&
                                                 foundTrigger) {
                                             event.addAll(slice);
+                                            for(VAdcHit v:event){
+                                                if(centerBlocks.contains(v.getName())){
+                                                    sum.setCharge(sum.getCharge() + v.getCharge());
+                                                }
+                                            }
                                             newTStart = tee;
                                         } else if (tSlot == 0 && tChannel == 0 &&
                                                 bcSlot > 0 && bcChannel > 0 &&
                                                 foundCenter) {
                                             event.addAll(slice);
+                                            for(VAdcHit v:event){
+                                                if(centerBlocks.contains(v.getName())){
+                                                    sum.setCharge(sum.getCharge() + v.getCharge());
+                                                }
+                                            }
                                             newTStart = tee;
                                         } else if (tSlot == 0 && tChannel == 0 &&
                                                 bcSlot == 0 && bcChannel == 0) {
                                             event.addAll(slice);
+                                            for(VAdcHit v:event){
+                                                if(centerBlocks.contains(v.getName())){
+                                                    sum.setCharge(sum.getCharge() + v.getCharge());
+                                                }
+                                            }
                                             newTStart = tee;
                                         }
                                     }
@@ -219,6 +250,7 @@ public class FAdcIdEngine implements Engine {
                             } while (tee <= tEnd);
 
                             if (!event.isEmpty()) {
+                                event.add(sum);
                                 out.setData(JavaObjectType.JOBJ, event);
                             }
                         }

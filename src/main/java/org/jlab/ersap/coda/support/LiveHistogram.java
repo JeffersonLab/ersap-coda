@@ -3,6 +3,7 @@ package org.jlab.ersap.coda.support;
 import twig.data.H1F;
 import twig.data.H2F;
 import twig.data.TDirectory;
+import twig.graphics.TGCanvas;
 import twig.graphics.TGDataCanvas;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ public class LiveHistogram {
 
     private Map<String, H1F> histograms = new HashMap<>();
     private Map<String, H1F> histograms2 = new HashMap<>();
+    private H1F sumHist;
     private H2F scatter;
     private TGDataCanvas cc;
     private TDirectory histDir;
@@ -86,14 +88,21 @@ public class LiveHistogram {
 
         JFrame frame3 = new JFrame("ERSAP: channel vs hitTime");
         cc = new TGDataCanvas();
-
         frame3.add(cc);
         frame3.setSize(600, 600);
-
 //        cc.initTimer(600);
         scatter = new H2F("cvh", 100, 0, 70000, 100, 0, 33);
         cc.region().draw(scatter);
         frame3.setVisible(true);
+
+        JFrame frame4 = new JFrame("ERSAP: Sum");
+        TGDataCanvas ccc = new TGDataCanvas();
+        frame4.add(ccc);
+        frame4.setSize(600, 600);
+        ccc.initTimer(600);
+        sumHist = new H1F("sum", 100, 1000, 5000);
+        ccc.region().draw(sumHist);
+        frame4.setVisible(true);
 
         // create directory
         histDir = new TDirectory();
@@ -109,6 +118,9 @@ public class LiveHistogram {
             } else {
                 scatter.fill(v.getTime(), v.getChannel());
             }
+            if(v.getSlot() == 0 && v.getChannel() == 0){
+                sumHist.fill(v.getCharge());
+            }
 
         } else if (histograms2.containsKey(name)) {
             histograms2.get(name).fill(v.getCharge());
@@ -116,6 +128,9 @@ public class LiveHistogram {
                 scatter.fill(v.getTime(), v.getChannel() + 16);
             } else {
                 scatter.fill(v.getTime(), v.getChannel());
+            }
+            if(v.getSlot() == 0 && v.getChannel() == 0){
+                sumHist.fill(v.getCharge());
             }
         }
         cc.repaint();
