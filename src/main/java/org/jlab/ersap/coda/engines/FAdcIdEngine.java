@@ -209,40 +209,20 @@ public class FAdcIdEngine implements Engine {
                                                 bcSlot > 0 && bcChannel > 0 &&
                                                 foundTrigger && foundCenter) {
                                             event.addAll(slice);
-                                            for(VAdcHit v:event){
-                                                if(centerBlocks.contains(v.getName())){
-                                                    sum.setCharge(sum.getCharge() + v.getCharge());
-                                                }
-                                            }
                                             newTStart = tee;
                                         } else if (tSlot > 0 && tChannel > 0 &&
                                                 bcSlot == 0 && bcChannel == 0 &&
                                                 foundTrigger) {
                                             event.addAll(slice);
-                                            for(VAdcHit v:event){
-                                                if(centerBlocks.contains(v.getName())){
-                                                    sum.setCharge(sum.getCharge() + v.getCharge());
-                                                }
-                                            }
                                             newTStart = tee;
                                         } else if (tSlot == 0 && tChannel == 0 &&
                                                 bcSlot > 0 && bcChannel > 0 &&
                                                 foundCenter) {
                                             event.addAll(slice);
-                                            for(VAdcHit v:event){
-                                                if(centerBlocks.contains(v.getName())){
-                                                    sum.setCharge(sum.getCharge() + v.getCharge());
-                                                }
-                                            }
                                             newTStart = tee;
                                         } else if (tSlot == 0 && tChannel == 0 &&
                                                 bcSlot == 0 && bcChannel == 0) {
                                             event.addAll(slice);
-                                            for(VAdcHit v:event){
-                                                if(centerBlocks.contains(v.getName().trim())){
-                                                    sum.setCharge(sum.getCharge() + v.getCharge());
-                                                }
-                                            }
                                             newTStart = tee;
                                         }
                                     }
@@ -250,6 +230,11 @@ public class FAdcIdEngine implements Engine {
                             } while (tee <= tEnd);
 
                             if (!event.isEmpty()) {
+                                for(VAdcHit v:event){
+                                    if(centerBlocks.contains(v.getName().trim())){
+                                        sum.setCharge(sum.getCharge() + v.getCharge());
+                                    }
+                                }
                                 event.add(sum);
                                 out.setData(JavaObjectType.JOBJ, event);
                             }
