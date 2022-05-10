@@ -235,14 +235,14 @@ public class FAdcCosmicIdEngine implements Engine {
                                         for (VAdcHit a : slice) {
                                             trackCandidate.add(a.getSlot() * a.getChannel());
                                         }
-                                        if ((v1.retainAll(trackCandidate) && v1.size() <= nHitInTrack)
-                                                || (v2.retainAll(trackCandidate) && v2.size() <= nHitInTrack)
-                                                || (v3.retainAll(trackCandidate) && v3.size() <= nHitInTrack)
-                                                || (v4.retainAll(trackCandidate) && v4.size() <= nHitInTrack)
-                                                || (v5.retainAll(trackCandidate) && v5.size() <= nHitInTrack)
-                                                || (v6.retainAll(trackCandidate) && v6.size() <= nHitInTrack)
-                                                || (v7.retainAll(trackCandidate) && v7.size() <= nHitInTrack)
-                                                || (v8.retainAll(trackCandidate) && v8.size() <= nHitInTrack)
+                                        if ((v1.removeAll(trackCandidate) && v1.size() <= nHitInTrack)
+                                                || (v2.removeAll(trackCandidate) && v2.size() <= nHitInTrack)
+                                                || (v3.removeAll(trackCandidate) && v3.size() <= nHitInTrack)
+                                                || (v4.removeAll(trackCandidate) && v4.size() <= nHitInTrack)
+                                                || (v5.removeAll(trackCandidate) && v5.size() <= nHitInTrack)
+                                                || (v6.removeAll(trackCandidate) && v6.size() <= nHitInTrack)
+                                                || (v7.removeAll(trackCandidate) && v7.size() <= nHitInTrack)
+                                                || (v8.removeAll(trackCandidate) && v8.size() <= nHitInTrack)
                                         ) {
                                             event = slice;
                                             newTStart = tee;
