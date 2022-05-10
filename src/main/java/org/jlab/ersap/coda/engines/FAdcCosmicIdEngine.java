@@ -244,6 +244,15 @@ public class FAdcCosmicIdEngine implements Engine {
                                                 || (v7.retainAll(trackCandidate) && v7.size() <= nHitInTrack)
                                                 || (v8.retainAll(trackCandidate) && v8.size() <= nHitInTrack)
                                         ) {
+                                            System.out.println("DDD "+v1.size()
+                                                    +" "+v2.size()
+                                                    +" "+v3.size()
+                                                    +" "+v4.size()
+                                                    +" "+v5.size()
+                                                    +" "+v6.size()
+                                                    +" "+v7.size()
+                                                    +" "+v8.size()
+                                            );
                                             event = slice;
                                             newTStart = tee;
                                         }
