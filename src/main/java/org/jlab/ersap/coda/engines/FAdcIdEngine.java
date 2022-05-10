@@ -48,6 +48,11 @@ public class FAdcIdEngine implements Engine {
     private static String BC_CHANNEL = "bc_channel";
     private int bcChannel;
 
+    private static String BC_QMIN = "bc_qmin";
+    private int bcQmin;
+    private static String BC_QMAX = "bc_qmax";
+    private int bcQmax;
+
     private ArrayList<String> centerBlocks = new ArrayList<>();
 
     @Override
@@ -62,6 +67,8 @@ public class FAdcIdEngine implements Engine {
             tChannel = data.has(T_CHANNEL) ? data.getInt(T_CHANNEL) : 0;
             bcSlot = data.has(BC_SLOT) ? data.getInt(BC_SLOT) : 0;
             bcChannel = data.has(BC_CHANNEL) ? data.getInt(BC_CHANNEL) : 0;
+            bcQmin = data.has(BC_QMIN) ? data.getInt(BC_QMIN) : 0;
+            bcQmax = data.has(BC_QMAX) ? data.getInt(BC_QMAX) : 8000;
         }
         centerBlocks.add("1-17-6");
         centerBlocks.add("1-17-7");
@@ -167,7 +174,12 @@ public class FAdcIdEngine implements Engine {
                                 foundCenter = true;
                             }
                             times.add(ht);
-                            data.add(new VAdcHit(1, slt, channel, q, ht));
+                            if(bcSlot > 0 && bcChannel > 0
+                                    && slt == bcSlot && channel == bcChannel
+                            && q >= bcQmin && q <= bcQmax
+                            ) {
+                                data.add(new VAdcHit(1, slt, channel, q, ht));
+                            }
                         }
                         tStart = Collections.min(times);
                         tEnd = Collections.max(times);
@@ -230,19 +242,14 @@ public class FAdcIdEngine implements Engine {
                             } while (tee <= tEnd);
 
                             if (!event.isEmpty()) {
-                                ArrayList<VAdcHit> remv = new ArrayList<>();
-                                for(VAdcHit v:event){
-                                    if(!centerBlocks.contains(v.getName().trim())){
-                                        remv.add(v);
+//                                for(VAdcHit v:event){
+//                                    if(!centerBlocks.contains(v.getName().trim())){
+////                                        sum.setCharge(sum.getCharge() + v.getCharge());
+//                                    } else {
 //                                        sum.setCharge(sum.getCharge() + v.getCharge());
-                                    } else {
-                                        sum.setCharge(sum.getCharge() + v.getCharge());
-                                    }
-                                }
-                                for(VAdcHit vv:remv){
-                                    event.remove(vv);
-                                }
-                                event.add(sum);
+//                                    }
+//                                }
+//                                event.add(sum);
                                 out.setData(JavaObjectType.JOBJ, event);
                             }
                         }
