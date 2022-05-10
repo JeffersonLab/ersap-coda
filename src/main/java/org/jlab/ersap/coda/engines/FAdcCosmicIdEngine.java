@@ -39,7 +39,7 @@ public class FAdcCosmicIdEngine implements Engine {
     private static String S_HITS = "s_hits";
     private int nHitsInSWindow;
 
-    private int nHitInTrack = 1;
+    private int nHitInTrack = 0;
 
     @Override
     public EngineData configure(EngineData engineData) {
@@ -223,7 +223,7 @@ public class FAdcCosmicIdEngine implements Engine {
                                         .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
                                         .collect(Collectors.toList());
 
-                                if (slice.size() > nHitsInSWindow) {
+                                if (slice.size() == nHitsInSWindow) {
                                     // see if we find duplicate hits
                                     long dup = slice.stream()
                                             .filter(i -> Collections.frequency(slice, i) > 1)
