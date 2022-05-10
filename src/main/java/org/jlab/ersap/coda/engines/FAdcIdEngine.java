@@ -198,7 +198,7 @@ public class FAdcIdEngine implements Engine {
                                         .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
                                         .collect(Collectors.toList());
 
-                                if (slice.size() == nHitsInSWindow) {
+                                if (slice.size() > nHitsInSWindow) {
                                     // see if we find duplicate hits
                                     long dup = slice.stream()
                                             .filter(i -> Collections.frequency(slice, i) > 1)
