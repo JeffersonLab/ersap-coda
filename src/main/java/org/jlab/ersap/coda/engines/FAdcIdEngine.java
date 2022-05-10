@@ -231,7 +231,10 @@ public class FAdcIdEngine implements Engine {
 
                             if (!event.isEmpty()) {
                                 for(VAdcHit v:event){
-                                    if(centerBlocks.contains(v.getName().trim())){
+                                    if(!centerBlocks.contains(v.getName().trim())){
+                                        event.remove(v);
+//                                        sum.setCharge(sum.getCharge() + v.getCharge());
+                                    } else {
                                         sum.setCharge(sum.getCharge() + v.getCharge());
                                     }
                                 }
