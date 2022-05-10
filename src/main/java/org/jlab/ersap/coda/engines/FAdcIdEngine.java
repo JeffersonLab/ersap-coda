@@ -238,14 +238,12 @@ public class FAdcIdEngine implements Engine {
                             } while (tee <= tEnd);
 
                             if (!event.isEmpty()) {
-//                                for(VAdcHit v:event){
-//                                    if(!centerBlocks.contains(v.getName().trim())){
-////                                        sum.setCharge(sum.getCharge() + v.getCharge());
-//                                    } else {
-//                                        sum.setCharge(sum.getCharge() + v.getCharge());
-//                                    }
-//                                }
-//                                event.add(sum);
+                                for(VAdcHit v:event){
+                                    if(centerBlocks.contains(v.getName().trim())){
+                                        sum.setCharge(sum.getCharge() + v.getCharge());
+                                    }
+                                }
+                                event.add(sum);
                                 out.setData(JavaObjectType.JOBJ, event);
                             }
                         }
