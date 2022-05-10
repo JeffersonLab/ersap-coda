@@ -233,6 +233,7 @@ public class FAdcIdEngine implements Engine {
                                 for(VAdcHit v:event){
                                     if(centerBlocks.contains(v.getName().trim())){
                                         sum.setCharge(sum.getCharge() + v.getCharge());
+                                        centerBlocks.remove(v.getName().trim());
                                     }
                                 }
                                 event.add(sum);
