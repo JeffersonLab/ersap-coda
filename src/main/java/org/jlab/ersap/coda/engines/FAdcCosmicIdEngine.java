@@ -37,6 +37,8 @@ public class FAdcCosmicIdEngine implements Engine {
     private long tDelta; // time window to correlate hits as candidate for an event, i.e. coincident
     private static String S_STEP = "s_step";
     private int stepSize;
+    private static String S_HITS = "s_hits";
+    private int nHitsInSWindow;
 
     private HashSet<Integer> v1 = new HashSet<>();
     private HashSet<Integer> v2 = new HashSet<>();
@@ -54,6 +56,7 @@ public class FAdcCosmicIdEngine implements Engine {
             JSONObject data = new JSONObject(source);
             tDelta = data.has(C_WINDOW) ? data.getLong(C_WINDOW) : 0;
             stepSize = data.has(S_STEP) ? data.getInt(S_STEP) : 1;
+            nHitsInSWindow = data.has(S_HITS) ? data.getInt(S_HITS) : 3;
         }
         v1.add(17 * 0);
         v1.add(17 * 5);
@@ -108,6 +111,7 @@ public class FAdcCosmicIdEngine implements Engine {
     @Override
     public EngineData execute(EngineData engineData) {
         // reset hit bins and hit start times
+        long tStart, tEnd;
         tStart = 0;
         tEnd = 0;
 
@@ -170,93 +174,96 @@ public class FAdcCosmicIdEngine implements Engine {
                     byte[] byteData = dataBank.getRawBytes();
 
                     if (byteData.length > 0) {
+                        ///////////////////////////////
                         // define the hits for a slot in the VTP frame
-                        fADCPayloadDecoder(data, timestamp, slt, byteData);
+                        ArrayList<Long> times = new ArrayList<>();
+                        IntBuffer intBuf =
+                                ByteBuffer.wrap(byteData)
+                                        .order(ByteOrder.BIG_ENDIAN)
+                                        .asIntBuffer();
+                        int[] pData = new int[intBuf.remaining()];
+                        intBuf.get(pData);
+                        for (int i : pData) {
+                            int q = (i >> 0) & 0x1FFF;
+                            int channel = (i >> 13) & 0x000F;
+                            long v = ((i >> 17) & 0x3FFF) * 4;
+//            long ht = frame_time_ns + v; // actual time
+                            long ht = v; // time within the frame
+                            times.add(ht);
+                            data.add(new VAdcHit(1, slt, channel, q, ht));
+                        }
+                        tStart = Collections.min(times);
+                        tEnd = Collections.max(times);
+                        /////////////////////////////////
+
                     }
                 }
 
-                if (!data.isEmpty() && tStart < tEnd) {
-                    int step = 0;
-                    long tee;
-                    List<VAdcHit> event = new ArrayList<>();
-                    int hitCount = 0;
-                    do {
-                        final long ts = tStart + ((long) step * stepSize);
-                        final long te = ts + tDelta;
-                        tee = te;
-                        step++;
-                        List<VAdcHit> slice = data.stream()
-                                .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
-                                .collect(Collectors.toList());
+                if (!data.isEmpty()) {
 
-                        if (slice.size() > 3) {
-                            // see if we find duplicate hits
-                            long dup = slice.stream()
-                                    .filter(i -> Collections.frequency(slice, i) > 1)
-                                    .count();
-                            // See if we see vertical tracks
-                            if (dup == 0) {
-                                HashSet<Integer> trackCandidate = new HashSet<>();
-                                for (VAdcHit a : slice) {
-                                    trackCandidate.add(a.getSlot() * a.getChannel());
+                    // sliding window technique
+                    if (tDelta > 0) {
+                        if (tStart < tEnd) {
+                            int step = 0;
+                            long tee;
+                            long newTStart = 0;
+                            List<VAdcHit> event = new ArrayList<>();
+                            do {
+                                if (newTStart > 0) {
+                                    tStart = newTStart + stepSize;
+                                    step = 0;
+                                    newTStart = 0;
                                 }
-                                if ((v1.retainAll(trackCandidate) && v1.size() <= 1)
-                                        || (v2.retainAll(trackCandidate) && v2.size() <= 1)
-                                        || (v3.retainAll(trackCandidate) && v3.size() <= 1)
-                                        || (v4.retainAll(trackCandidate) && v4.size() <= 1)
-                                        || (v5.retainAll(trackCandidate) && v5.size() <= 1)
-                                        || (v6.retainAll(trackCandidate) && v6.size() <= 1)
-                                        || (v7.retainAll(trackCandidate) && v7.size() <= 1)
-                                        || (v8.retainAll(trackCandidate) && v8.size() <= 1)
-                                ) {
-                                    event = slice;
+                                final long ts = tStart + ((long) step * stepSize);
+                                final long te = ts + tDelta;
+                                tee = te;
+                                step++;
+                                List<VAdcHit> slice = data.stream()
+                                        .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
+                                        .collect(Collectors.toList());
+
+                                if (slice.size() > nHitsInSWindow) {
+                                    // see if we find duplicate hits
+                                    long dup = slice.stream()
+                                            .filter(i -> Collections.frequency(slice, i) > 1)
+                                            .count();
+                                    // if no duplicates found we take a window with the maximum hits
+                                    if (dup == 0) {
+                                        // See if we see vertical tracks
+                                        HashSet<Integer> trackCandidate = new HashSet<>();
+                                        for (VAdcHit a : slice) {
+                                            trackCandidate.add(a.getSlot() * a.getChannel());
+                                        }
+                                        if ((v1.retainAll(trackCandidate) && v1.size() <= 1)
+                                                || (v2.retainAll(trackCandidate) && v2.size() <= 1)
+                                                || (v3.retainAll(trackCandidate) && v3.size() <= 1)
+                                                || (v4.retainAll(trackCandidate) && v4.size() <= 1)
+                                                || (v5.retainAll(trackCandidate) && v5.size() <= 1)
+                                                || (v6.retainAll(trackCandidate) && v6.size() <= 1)
+                                                || (v7.retainAll(trackCandidate) && v7.size() <= 1)
+                                                || (v8.retainAll(trackCandidate) && v8.size() <= 1)
+                                        ) {
+                                            event = slice;
+                                            newTStart = tee;
+                                        }
+                                    }
                                 }
+                            } while (tee <= tEnd);
+
+                            if (!event.isEmpty()) {
+                                out.setData(JavaObjectType.JOBJ, event);
                             }
                         }
-
-                    } while (tee >= tEnd);
-                    out.setData(JavaObjectType.JOBJ, event);
+                    } else {
+                        // no software trigger, i.e. sliding window
+                        out.setData(JavaObjectType.JOBJ, data);
+                    }
                 }
             }
         }
         return out;
     }
 
-    /**
-     * Finds the hits (channel, charge and time) reported by the fADC in a specific slot
-     *
-     * @param data
-     * @param frame_time_ns
-     * @param slot
-     * @param ba
-     */
-    private void fADCPayloadDecoder(List<VAdcHit> data,
-                                    Long frame_time_ns,
-                                    int slot,
-                                    byte[] ba) {
-        IntBuffer intBuf =
-                ByteBuffer.wrap(ba)
-                        .order(ByteOrder.BIG_ENDIAN)
-                        .asIntBuffer();
-        int[] pData = new int[intBuf.remaining()];
-        intBuf.get(pData);
-        for (int i : pData) {
-            int q = (i >> 0) & 0x1FFF;
-            int channel = (i >> 13) & 0x000F;
-            long v = ((i >> 17) & 0x3FFF) * 4;
-//            long ht = frame_time_ns + v; // actual time
-            long ht = v; // time within the frame
-            if (tStart == 0) {
-                tStart = ht;
-                tEnd = ht;
-            } else if (ht <= tStart) {
-                tStart = ht;
-            } else if (ht >= tEnd) {
-                tEnd = ht;
-            }
-            data.add(new VAdcHit(1, slot, channel, q, ht));
-        }
-    }
 
     private int getSlot(int payloadId) {
         return slotMap[payloadId];
