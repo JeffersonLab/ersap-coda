@@ -140,7 +140,7 @@ public class FAdcIdEngine implements Engine {
                 // followed by data banks
                 // actual container of all fADC hits in the VTP frame
                 List<VAdcHit> data = new ArrayList<>();
-                VAdcHit sum = new VAdcHit(0,0,0,0,0);
+                VAdcHit sum = new VAdcHit(0, 0, 0, 0, 0);
                 // Skip over SIB by starting at 1
                 for (int k = 1; k < kids; k++) {
                     EvioBank dataBank = (EvioBank) rocTSB.getChildAt(k);
@@ -170,16 +170,12 @@ public class FAdcIdEngine implements Engine {
                                     slt == tSlot && channel == tChannel) {
                                 foundTrigger = true;
                             } else if (bcSlot > 0 && bcChannel > 0
-                                    && slt == bcSlot && channel == bcChannel) {
+                                    && slt == bcSlot && channel == bcChannel
+                                    && q >= bcQmin && q <= bcQmax) {
                                 foundCenter = true;
                             }
                             times.add(ht);
-                            if(bcSlot > 0 && bcChannel > 0
-                                    && slt == bcSlot && channel == bcChannel
-                            && q >= bcQmin && q <= bcQmax
-                            ) {
-                                data.add(new VAdcHit(1, slt, channel, q, ht));
-                            }
+                            data.add(new VAdcHit(1, slt, channel, q, ht));
                         }
                         tStart = Collections.min(times);
                         tEnd = Collections.max(times);
@@ -222,20 +218,27 @@ public class FAdcIdEngine implements Engine {
                                                 foundTrigger && foundCenter) {
                                             event.addAll(slice);
                                             newTStart = tee;
+                                            System.out.println("DDD - NO1");
                                         } else if (tSlot > 0 && tChannel > 0 &&
                                                 bcSlot == 0 && bcChannel == 0 &&
                                                 foundTrigger) {
                                             event.addAll(slice);
                                             newTStart = tee;
+                                            System.out.println("DDD - NO2");
+
                                         } else if (tSlot == 0 && tChannel == 0 &&
                                                 bcSlot > 0 && bcChannel > 0 &&
                                                 foundCenter) {
                                             event.addAll(slice);
                                             newTStart = tee;
+                                            System.out.println("DDD ------------------------------");
+
                                         } else if (tSlot == 0 && tChannel == 0 &&
                                                 bcSlot == 0 && bcChannel == 0) {
                                             event.addAll(slice);
                                             newTStart = tee;
+                                            System.out.println("DDD - NO3");
+
                                         }
                                     }
                                 }
