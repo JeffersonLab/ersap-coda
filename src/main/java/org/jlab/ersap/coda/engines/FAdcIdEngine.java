@@ -66,7 +66,7 @@ public class FAdcIdEngine implements Engine {
 //        centerBlocks.add("1-17-6");
 //        centerBlocks.add("1-17-7");
 //        centerBlocks.add("1-17-8");
-        centerBlocks.add("1-17-11");
+//        centerBlocks.add("1-17-11");
         centerBlocks.add("1-17-12");
 //        centerBlocks.add("1-19-0");
 //        centerBlocks.add("1-19-3");
@@ -198,7 +198,7 @@ public class FAdcIdEngine implements Engine {
                                         .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
                                         .collect(Collectors.toList());
 
-                                if (slice.size() > nHitsInSWindow) {
+                                if (slice.size() == nHitsInSWindow) {
                                     // see if we find duplicate hits
                                     long dup = slice.stream()
                                             .filter(i -> Collections.frequency(slice, i) > 1)
