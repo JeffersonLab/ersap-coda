@@ -149,8 +149,9 @@ public class LiveHistogram {
 //
 //        ccc.region(0).draw(sumHist).draw(func,"same").draw(paveStats);
         ccc.repaint();
-        System.out.println(sumHist.getStatText());
-
+        for(String s: sumHist.getStatText()){
+            System.out.println(s);
+        }
         cc.repaint();
     }
 
