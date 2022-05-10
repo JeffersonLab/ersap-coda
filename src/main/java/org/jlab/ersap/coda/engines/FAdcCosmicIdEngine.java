@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
  * @project ersap-coda
  */
 public class FAdcCosmicIdEngine implements Engine {
-    private long tStart, tEnd; // start and hits
 
     private static int[] slotMap = {0, 10, 13, 9, 14, 8, 15, 7, 16, 6, 17, 5, 18, 4, 19, 3, 20};
 
@@ -40,14 +39,7 @@ public class FAdcCosmicIdEngine implements Engine {
     private static String S_HITS = "s_hits";
     private int nHitsInSWindow;
 
-    private HashSet<Integer> v1 = new HashSet<>();
-    private HashSet<Integer> v2 = new HashSet<>();
-    private HashSet<Integer> v3 = new HashSet<>();
-    private HashSet<Integer> v4 = new HashSet<>();
-    private HashSet<Integer> v5 = new HashSet<>();
-    private HashSet<Integer> v6 = new HashSet<>();
-    private HashSet<Integer> v7 = new HashSet<>();
-    private HashSet<Integer> v8 = new HashSet<>();
+    private int nHitInTrack = 1;
 
     @Override
     public EngineData configure(EngineData engineData) {
@@ -58,6 +50,20 @@ public class FAdcCosmicIdEngine implements Engine {
             stepSize = data.has(S_STEP) ? data.getInt(S_STEP) : 1;
             nHitsInSWindow = data.has(S_HITS) ? data.getInt(S_HITS) : 3;
         }
+
+        return null;
+    }
+
+    @Override
+    public EngineData execute(EngineData engineData) {
+        HashSet<Integer> v1 = new HashSet<>();
+        HashSet<Integer> v2 = new HashSet<>();
+        HashSet<Integer> v3 = new HashSet<>();
+        HashSet<Integer> v4 = new HashSet<>();
+        HashSet<Integer> v5 = new HashSet<>();
+        HashSet<Integer> v6 = new HashSet<>();
+        HashSet<Integer> v7 = new HashSet<>();
+        HashSet<Integer> v8 = new HashSet<>();
         v1.add(17 * 0);
         v1.add(17 * 5);
         v1.add(17 * 10);
@@ -105,11 +111,6 @@ public class FAdcCosmicIdEngine implements Engine {
         v8.add(19 * 0);
         v8.add(19 * 6);
 
-        return null;
-    }
-
-    @Override
-    public EngineData execute(EngineData engineData) {
         // reset hit bins and hit start times
         long tStart, tEnd;
         tStart = 0;
@@ -227,21 +228,21 @@ public class FAdcCosmicIdEngine implements Engine {
                                     long dup = slice.stream()
                                             .filter(i -> Collections.frequency(slice, i) > 1)
                                             .count();
-                                    // if no duplicates found we take a window with the maximum hits
+                                    // if no duplicates found we take a window
                                     if (dup == 0) {
                                         // See if we see vertical tracks
                                         HashSet<Integer> trackCandidate = new HashSet<>();
                                         for (VAdcHit a : slice) {
                                             trackCandidate.add(a.getSlot() * a.getChannel());
                                         }
-                                        if ((v1.retainAll(trackCandidate) && v1.size() <= 1)
-                                                || (v2.retainAll(trackCandidate) && v2.size() <= 1)
-                                                || (v3.retainAll(trackCandidate) && v3.size() <= 1)
-                                                || (v4.retainAll(trackCandidate) && v4.size() <= 1)
-                                                || (v5.retainAll(trackCandidate) && v5.size() <= 1)
-                                                || (v6.retainAll(trackCandidate) && v6.size() <= 1)
-                                                || (v7.retainAll(trackCandidate) && v7.size() <= 1)
-                                                || (v8.retainAll(trackCandidate) && v8.size() <= 1)
+                                        if ((v1.retainAll(trackCandidate) && v1.size() <= nHitInTrack)
+                                                || (v2.retainAll(trackCandidate) && v2.size() <= nHitInTrack)
+                                                || (v3.retainAll(trackCandidate) && v3.size() <= nHitInTrack)
+                                                || (v4.retainAll(trackCandidate) && v4.size() <= nHitInTrack)
+                                                || (v5.retainAll(trackCandidate) && v5.size() <= nHitInTrack)
+                                                || (v6.retainAll(trackCandidate) && v6.size() <= nHitInTrack)
+                                                || (v7.retainAll(trackCandidate) && v7.size() <= nHitInTrack)
+                                                || (v8.retainAll(trackCandidate) && v8.size() <= nHitInTrack)
                                         ) {
                                             event = slice;
                                             newTStart = tee;
