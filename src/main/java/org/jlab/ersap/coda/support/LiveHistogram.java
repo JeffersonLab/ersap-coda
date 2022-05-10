@@ -118,9 +118,6 @@ public class LiveHistogram {
             } else {
                 scatter.fill(v.getTime(), v.getChannel());
             }
-            if(v.getSlot() == 0 && v.getChannel() == 0){
-                sumHist.fill(v.getCharge());
-            }
 
         } else if (histograms2.containsKey(name)) {
             histograms2.get(name).fill(v.getCharge());
@@ -129,10 +126,12 @@ public class LiveHistogram {
             } else {
                 scatter.fill(v.getTime(), v.getChannel());
             }
-            if(v.getSlot() == 0 && v.getChannel() == 0){
-                sumHist.fill(v.getCharge());
-            }
         }
+
+        if(v.getSlot() == 0 && v.getChannel() == 0){
+            sumHist.fill(v.getCharge());
+        }
+
         cc.repaint();
     }
 
