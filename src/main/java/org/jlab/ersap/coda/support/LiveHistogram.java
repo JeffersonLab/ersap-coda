@@ -94,7 +94,7 @@ public class LiveHistogram {
         cc = new TGDataCanvas();
         frame3.add(cc);
         frame3.setSize(600, 600);
-//        cc.initTimer(600);
+        cc.initTimer(600);
         scatter = new H2F("cvh", 100, 0, 70000, 100, 0, 33);
         cc.region().draw(scatter);
         frame3.setVisible(true);
@@ -103,7 +103,7 @@ public class LiveHistogram {
         ccc = new TGDataCanvas();
         frame4.add(ccc);
         frame4.setSize(600, 600);
-//        ccc.initTimer(600);
+        ccc.initTimer(600);
         sumHist = new H1F("sum", 100, 0, 12000);
         ccc.region().draw(sumHist);
         frame4.setVisible(true);
@@ -135,6 +135,29 @@ public class LiveHistogram {
         if(v.getSlot() == 0 && v.getChannel() == 0){
             sumHist.fill(v.getCharge());
         }
+//        cc.repaint();
+    }
+
+    public void resetScatter() {
+        scatter.reset();
+    }
+
+    public void writeHist() {
+        for(String s: sumHist.getStatText()){
+            System.out.println(s);
+        }
+
+        for (H1F h1 : histograms.values()) {
+            histDir.add(ERSAP_USER_DATA + "/data/output", h1);
+        }
+        for (H1F h2 : histograms2.values()) {
+            histDir.add(ERSAP_USER_DATA + "/data/output", h2);
+        }
+        histDir.add(ERSAP_USER_DATA + "/data/output", scatter);
+        histDir.write(ERSAP_USER_DATA + "/data/output/hist_desy.twig");
+    }
+
+   public void fit() {
 //        F1D func = new F1D("func","[a]*gaus(x,[b],[c])",7000,12000);
 //        func.setParameters(new double[]{50000,6000,500});
 //        func.setParLimits(0,0,50000);
@@ -148,28 +171,7 @@ public class LiveHistogram {
 //        paveStats.setNDF(true);
 //
 //        ccc.region(0).draw(sumHist).draw(func,"same").draw(paveStats);
-        ccc.repaint();
-        for(String s: sumHist.getStatText()){
-            System.out.println(s);
-        }
-        cc.repaint();
-    }
-
-    public void resetScatter() {
-        scatter.reset();
-    }
-
-    public void writeHist() {
-        for (H1F h1 : histograms.values()) {
-            histDir.add(ERSAP_USER_DATA + "/data/output", h1);
-        }
-        for (H1F h2 : histograms2.values()) {
-            histDir.add(ERSAP_USER_DATA + "/data/output", h2);
-        }
-        histDir.add(ERSAP_USER_DATA + "/data/output", scatter);
-        histDir.write(ERSAP_USER_DATA + "/data/output/hist_desy.twig");
-        System.out.println(sumHist.getStatText());
-    }
+   }
 
     public void readPlotHist() {
 
