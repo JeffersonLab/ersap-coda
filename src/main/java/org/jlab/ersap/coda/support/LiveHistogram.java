@@ -5,6 +5,9 @@ import twig.data.H2F;
 import twig.data.TDirectory;
 import twig.graphics.TGCanvas;
 import twig.graphics.TGDataCanvas;
+import twig.math.DataFitter;
+import twig.math.F1D;
+import twig.widgets.PaveText;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +33,7 @@ public class LiveHistogram {
     private H1F sumHist;
     private H2F scatter;
     private TGDataCanvas cc;
+    private TGDataCanvas ccc;
     private TDirectory histDir;
     private static String ERSAP_USER_DATA;
 
@@ -96,10 +100,10 @@ public class LiveHistogram {
         frame3.setVisible(true);
 
         JFrame frame4 = new JFrame("ERSAP: Sum");
-        TGDataCanvas ccc = new TGDataCanvas();
+        ccc = new TGDataCanvas();
         frame4.add(ccc);
         frame4.setSize(600, 600);
-        ccc.initTimer(600);
+//        ccc.initTimer(600);
         sumHist = new H1F("sum", 100, 0, 12000);
         ccc.region().draw(sumHist);
         frame4.setVisible(true);
@@ -131,6 +135,21 @@ public class LiveHistogram {
         if(v.getSlot() == 0 && v.getChannel() == 0){
             sumHist.fill(v.getCharge());
         }
+        F1D func = new F1D("func","[a]*gaus(x,[b],[c])",3000,10000);
+        func.setParameters(new double[]{50000,6000,500});
+        func.setParLimits(0,0,50000);
+        func.setParLimits(1,3000,10000);
+        func.setParLimits(2,0.0,10000);
+
+        func.attr().setLineWidth(2);
+        DataFitter.fit(func,sumHist,"N");
+
+        PaveText paveStats = new PaveText(func.getStats("M").toString(),0.05,0.95, false,18);
+        paveStats.setNDF(true);
+
+        ccc.region(0).draw(sumHist).draw(func,"same").draw(paveStats);
+        ccc.repaint();
+
 
         cc.repaint();
     }
@@ -148,6 +167,7 @@ public class LiveHistogram {
         }
         histDir.add(ERSAP_USER_DATA + "/data/output", scatter);
         histDir.write(ERSAP_USER_DATA + "/data/output/hist_desy.twig");
+        System.out.println(sumHist.getStatText());
     }
 
     public void readPlotHist() {
