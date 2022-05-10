@@ -100,7 +100,7 @@ public class LiveHistogram {
         frame4.add(ccc);
         frame4.setSize(600, 600);
         ccc.initTimer(600);
-        sumHist = new H1F("sum", 100, 1000, 5000);
+        sumHist = new H1F("sum", 100, 0, 8000);
         ccc.region().draw(sumHist);
         frame4.setVisible(true);
 
