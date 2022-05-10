@@ -218,27 +218,20 @@ public class FAdcIdEngine implements Engine {
                                                 foundTrigger && foundCenter) {
                                             event.addAll(slice);
                                             newTStart = tee;
-                                            System.out.println("DDD - NO1");
                                         } else if (tSlot > 0 && tChannel > 0 &&
                                                 bcSlot == 0 && bcChannel == 0 &&
                                                 foundTrigger) {
                                             event.addAll(slice);
                                             newTStart = tee;
-                                            System.out.println("DDD - NO2");
-
                                         } else if (tSlot == 0 && tChannel == 0 &&
                                                 bcSlot > 0 && bcChannel > 0 &&
                                                 foundCenter) {
                                             event.addAll(slice);
                                             newTStart = tee;
-                                            System.out.println("DDD ------------------------------");
-
                                         } else if (tSlot == 0 && tChannel == 0 &&
                                                 bcSlot == 0 && bcChannel == 0) {
                                             event.addAll(slice);
                                             newTStart = tee;
-                                            System.out.println("DDD - NO3");
-
                                         }
                                     }
                                 }
