@@ -230,13 +230,17 @@ public class FAdcIdEngine implements Engine {
                             } while (tee <= tEnd);
 
                             if (!event.isEmpty()) {
+                                ArrayList<VAdcHit> remv = new ArrayList<>();
                                 for(VAdcHit v:event){
                                     if(!centerBlocks.contains(v.getName().trim())){
-                                        event.remove(v);
+                                        remv.add(v);
 //                                        sum.setCharge(sum.getCharge() + v.getCharge());
                                     } else {
                                         sum.setCharge(sum.getCharge() + v.getCharge());
                                     }
+                                }
+                                for(VAdcHit vv:remv){
+                                    event.remove(vv);
                                 }
                                 event.add(sum);
                                 out.setData(JavaObjectType.JOBJ, event);
