@@ -135,16 +135,16 @@ public class LiveHistogram {
         if(v.getSlot() == 0 && v.getChannel() == 0){
             sumHist.fill(v.getCharge());
         }
-        F1D func = new F1D("func","[a]*gaus(x,[b],[c])",3000,10000);
+        F1D func = new F1D("func","[a]*gaus(x,[b],[c])",7000,12000);
         func.setParameters(new double[]{50000,6000,500});
         func.setParLimits(0,0,50000);
-        func.setParLimits(1,3000,10000);
-        func.setParLimits(2,0.0,10000);
+        func.setParLimits(1,7000,12000);
+        func.setParLimits(2,0.0,12000);
 
-        func.attr().setLineWidth(2);
+        func.attr().setLineWidth(1);
         DataFitter.fit(func,sumHist,"N");
 
-        PaveText paveStats = new PaveText(func.getStats("M").toString(),0.05,0.95, false,18);
+        PaveText paveStats = new PaveText(func.getStats("M").toString(),0.05,0.95, false,8);
         paveStats.setNDF(true);
 
         ccc.region(0).draw(sumHist).draw(func,"same").draw(paveStats);
