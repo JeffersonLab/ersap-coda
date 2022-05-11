@@ -147,7 +147,11 @@ public class LiveHistogram {
             System.out.println(s);
         }
         fit();
-
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         for (H1F h1 : histograms.values()) {
             histDir.add(ERSAP_USER_DATA + "/data/output", h1);
         }
