@@ -163,7 +163,7 @@ public class LiveHistogram {
     }
 
    public void fit() {
-       F1D func = new F1D("func","[a]+[b]*x+[c]*x*x+[d]*gaus(x,[e],[f])",0.0,1.0);
+       F1D func = new F1D("func","[a]+[b]*x+[c]*x*x+[d]*gaus(x,[e],[f])",1000.0,10000.0);
        func.setParameters(new double[]{1.0,1.0,1.0,150,0.6,0.02});
        func.setParLimits(3,0,1500);
        func.setParLimits(4,0.2,0.8);
