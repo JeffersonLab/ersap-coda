@@ -163,32 +163,34 @@ public class LiveHistogram {
     }
 
    public void fit() {
-       F1D func = new F1D("func","[a]+[b]*x+[c]*x*x+[d]*gaus(x,[e],[f])",1000.0,10000.0);
-       func.setParameters(new double[]{1.0,1.0,1.0,150,0.6,0.02});
-       func.setParLimits(3,0,1500);
-       func.setParLimits(4,0.2,0.8);
-       func.setParLimits(5,0.0,0.05);
-       func.attr().setLineWidth(2);
-       func.attr().setLineStyle(2);
-       func.fit(sumHist,"N");
+//       F1D func = new F1D("func","[a]+[b]*x+[c]*x*x+[d]*gaus(x,[e],[f])",4000.0,8000.0);
+//       func.setParameters(new double[]{1.0,1.0,1.0,150,0.6,0.02});
+//       func.setParLimits(3,0,1500);
+//       func.setParLimits(4,0.2,0.8);
+//       func.setParLimits(5,0.0,0.05);
+//       func.attr().setLineWidth(2);
+//       func.attr().setLineStyle(2);
+//       func.fit(sumHist,"N");
+//
+//       PaveText    paveStats = new PaveText(func.getStats("M"),0.05,0.95, false,8);
+//       paveStats.setNDF(true).setMultiLine(true);
+//       ccc.region(0).draw(sumHist).draw(func,"same").draw(paveStats);
 
-       PaveText    paveStats = new PaveText(func.getStats("M"),0.05,0.95, false,18);
-       paveStats.setNDF(true).setMultiLine(true);
-       ccc.region(0).draw(sumHist).draw(func,"same").draw(paveStats);
+       F1D func = new F1D("func","[a]*gaus(x,[b],[c])",3000,8000);
+        func.setParameters(new double[]{2000,5000,500});
+        func.setParLimits(0,0,2000);
+        func.setParLimits(1,3000,8000);
+        func.setParLimits(2,0.0,700);
+
+        func.attr().setLineWidth(1);
+        DataFitter.fit(func,sumHist,"N");
+
+        PaveText paveStats = new PaveText(func.getStats("M").toString(),0.05,0.95, false,8);
+        paveStats.setNDF(true);
+
+        ccc.region(0).draw(sumHist).draw(func,"same").draw(paveStats);
        ccc.repaint();
-//       F1D func = new F1D("func","[a]*gaus(x,[b],[c])",7000,12000);
-//        func.setParameters(new double[]{50000,6000,500});
-//        func.setParLimits(0,0,50000);
-//        func.setParLimits(1,7000,12000);
-//        func.setParLimits(2,0.0,12000);
-//
-//        func.attr().setLineWidth(1);
-//        DataFitter.fit(func,sumHist,"N");
-//
-//        PaveText paveStats = new PaveText(func.getStats("M").toString(),0.05,0.95, false,8);
-//        paveStats.setNDF(true);
-//
-//        ccc.region(0).draw(sumHist).draw(func,"same").draw(paveStats);
+
    }
 
     public void readPlotHist() {
