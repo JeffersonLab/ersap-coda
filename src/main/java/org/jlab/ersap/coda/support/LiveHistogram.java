@@ -177,8 +177,8 @@ public class LiveHistogram {
 //       ccc.region(0).draw(sumHist).draw(func,"same").draw(paveStats);
 
        F1D func = new F1D("func","[a]*gaus(x,[b],[c])",5000,10000);
-        func.setParameters(new double[]{1000,8000,1000});
-        func.setParLimits(0,0,1000);
+        func.setParameters(new double[]{2000,8000,1000});
+        func.setParLimits(0,0,2000);
         func.setParLimits(1,6000,9000);
         func.setParLimits(2,0.0,1000);
 
