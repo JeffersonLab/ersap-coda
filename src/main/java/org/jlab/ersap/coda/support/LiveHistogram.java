@@ -176,10 +176,10 @@ public class LiveHistogram {
 //       paveStats.setNDF(true).setMultiLine(true);
 //       ccc.region(0).draw(sumHist).draw(func,"same").draw(paveStats);
 
-       F1D func = new F1D("func","[a]*gaus(x,[b],[c])",4000,9000);
-        func.setParameters(new double[]{3000,6000,500});
-        func.setParLimits(0,0,3000);
-        func.setParLimits(1,4000,9000);
+       F1D func = new F1D("func","[a]*gaus(x,[b],[c])",5000,10000);
+        func.setParameters(new double[]{4000,6000,500});
+        func.setParLimits(0,0,4000);
+        func.setParLimits(1,5000,10000);
         func.setParLimits(2,0.0,700);
 
         func.attr().setLineWidth(1);
