@@ -15,6 +15,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -55,6 +56,10 @@ public class FAdcIdEngine implements Engine {
 
     private ArrayList<String> centerBlocks = new ArrayList<>();
 
+    private AtomicInteger totalFrames;
+    private AtomicInteger emptyFrames;
+    private AtomicInteger identifiedEvents;
+
     @Override
     public EngineData configure(EngineData engineData) {
         if (engineData.getMimeType().equalsIgnoreCase(EngineDataType.JSON.mimeType())) {
@@ -84,6 +89,7 @@ public class FAdcIdEngine implements Engine {
 
     @Override
     public EngineData execute(EngineData engineData) {
+        totalFrames.incrementAndGet();
         // reset hit bins and hit start times
         long tStart, tEnd;
         boolean foundTrigger = false;
@@ -180,6 +186,8 @@ public class FAdcIdEngine implements Engine {
                         tStart = Collections.min(times);
                         tEnd = Collections.max(times);
                         /////////////////////////////////
+                    } else {
+                        emptyFrames.incrementAndGet();
                     }
                 }
 
@@ -228,6 +236,7 @@ public class FAdcIdEngine implements Engine {
                                                 foundCenter) {
                                             event.addAll(slice);
                                             newTStart = tee;
+                                            identifiedEvents.incrementAndGet();
                                         } else if (tSlot == 0 && tChannel == 0 &&
                                                 bcSlot == 0 && bcChannel == 0) {
                                             event.addAll(slice);
@@ -269,6 +278,10 @@ public class FAdcIdEngine implements Engine {
                 }
             }
         }
+        System.out.println("Total Frames = "+totalFrames.get()
+                +"; Empty Frames = "+emptyFrames.get()
+                + "; Total Triggers = "
+                + identifiedEvents.get());
         return out;
     }
 
