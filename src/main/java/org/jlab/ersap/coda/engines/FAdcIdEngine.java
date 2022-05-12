@@ -56,9 +56,9 @@ public class FAdcIdEngine implements Engine {
 
     private ArrayList<String> centerBlocks = new ArrayList<>();
 
-    private AtomicInteger totalFrames;
-    private AtomicInteger emptyFrames;
-    private AtomicInteger identifiedEvents;
+    private AtomicInteger totalFrames = new AtomicInteger(0);
+    private AtomicInteger emptyFrames = new AtomicInteger(0);
+    private AtomicInteger identifiedEvents = new AtomicInteger(0);
 
     @Override
     public EngineData configure(EngineData engineData) {
