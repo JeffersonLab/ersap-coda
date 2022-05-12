@@ -176,6 +176,7 @@ public class LiveHistogram {
 //       paveStats.setNDF(true).setMultiLine(true);
 //       ccc.region(0).draw(sumHist).draw(func,"same").draw(paveStats);
 
+       //a - height, b - pick position, c- standard deviation
        F1D func = new F1D("func","[a]*gaus(x,[b],[c])",5000,11000);
         func.setParameters(new double[]{2000,9000,1000});
         func.setParLimits(0,0,2000);
