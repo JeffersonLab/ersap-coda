@@ -232,10 +232,11 @@ public class FAdcIdEngine implements Engine {
                                                 bcSlot > 0 && bcChannel > 0 &&
                                                 foundCenter) {
                                             // get max charge in the sliding window
+                                            q = 0;
                                             for (VAdcHit vk : slice) {
 
                                                 if (vk.getCharge() >= q) {
-                                                    q = sum.getCharge();
+                                                    q = vk.getCharge();
                                                     slt = vk.getSlot();
                                                     cht = vk.getChannel();
                                                 }
