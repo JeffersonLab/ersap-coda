@@ -227,7 +227,6 @@ public class FAdcIdEngine implements Engine {
                                             .filter(i -> Collections.frequency(slice, i) > 1)
                                             .count();
                                     // if no duplicates found we take a window with the maximum hits
-                                    System.out.println("DDD "+dup);
                                     if (dup == 0) {
                                         if (tSlot == 0 && tChannel == 0 &&
                                                 bcSlot > 0 && bcChannel > 0 &&
@@ -236,6 +235,7 @@ public class FAdcIdEngine implements Engine {
                                             q = 0;
                                             for (VAdcHit vk : slice) {
 
+                                                // find max chard showing channel
                                                 if (vk.getCharge() >= q) {
                                                     q = vk.getCharge();
                                                     slt = vk.getSlot();
@@ -243,9 +243,8 @@ public class FAdcIdEngine implements Engine {
                                                 }
                                             }
 
+                                            // if that the beam_hit block take it
                                             if (slt == bcSlot && cht == bcChannel) {
-                                                System.out.println("DDD   slot = "+slt
-                                                        +" channel = "+ cht);
                                                 event.addAll(slice);
                                                 newTStart = tee;
                                                 identifiedEvents.incrementAndGet();
@@ -276,6 +275,7 @@ public class FAdcIdEngine implements Engine {
                                 }
                             } while (tee <= tEnd);
 
+                            // now sum neighboring crystals
                             if (!event.isEmpty()) {
                                 for (VAdcHit v : event) {
                                     if (centerBlocks.contains(v.getName().trim())) {
