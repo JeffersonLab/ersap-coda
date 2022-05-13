@@ -76,31 +76,31 @@ public class FAdcIdEngine implements Engine {
             bcQmax = data.has(BC_QMAX) ? data.getInt(BC_QMAX) : 8000;
         }
 
-        centerBlocks.add("1-17-0");
-        centerBlocks.add("1-17-1");
-        centerBlocks.add("1-17-2");
-        centerBlocks.add("1-17-3");
-        centerBlocks.add("1-17-4");
-        centerBlocks.add("1-17-5");
+//        centerBlocks.add("1-17-0");
+//        centerBlocks.add("1-17-1");
+//        centerBlocks.add("1-17-2");
+//        centerBlocks.add("1-17-3");
+//        centerBlocks.add("1-17-4");
+//        centerBlocks.add("1-17-5");
         centerBlocks.add("1-17-6");
         centerBlocks.add("1-17-7");
         centerBlocks.add("1-17-8");
-        centerBlocks.add("1-17-9");
-        centerBlocks.add("1-17-10");
+//        centerBlocks.add("1-17-9");
+//        centerBlocks.add("1-17-10");
         centerBlocks.add("1-17-11");
         centerBlocks.add("1-17-12");
         centerBlocks.add("1-19-0");
-        centerBlocks.add("1-19-1");
-        centerBlocks.add("1-19-2");
+//        centerBlocks.add("1-19-1");
+//        centerBlocks.add("1-19-2");
         centerBlocks.add("1-19-3");
         centerBlocks.add("1-19-4");
         centerBlocks.add("1-19-5");
-        centerBlocks.add("1-19-6");
-        centerBlocks.add("1-19-7");
-        centerBlocks.add("1-19-8");
-        centerBlocks.add("1-19-9");
-        centerBlocks.add("1-19-10");
-        centerBlocks.add("1-19-11");
+//        centerBlocks.add("1-19-6");
+//        centerBlocks.add("1-19-7");
+//        centerBlocks.add("1-19-8");
+//        centerBlocks.add("1-19-9");
+//        centerBlocks.add("1-19-10");
+//        centerBlocks.add("1-19-11");
         return null;
     }
 
@@ -207,13 +207,15 @@ public class FAdcIdEngine implements Engine {
                                 // beam center and calorimeter events
                             } else {
                                 if ((slt == 17 && channel <= 12) || (slt == 19 && channel <= 11)) {
-                                    if (bcSlot > 0 && bcChannel > 0
-                                            && slt == bcSlot && channel == bcChannel
-                                            && q >= bcQmin && q <= bcQmax) {
-                                        foundCenter = true;
+                                    if (q > bcQmin) {
+                                        if (bcSlot > 0 && bcChannel > 0
+                                                && slt == bcSlot && channel == bcChannel
+                                                && q >= bcQmin && q <= bcQmax) {
+                                            foundCenter = true;
+                                        }
+                                        times.add(ht);
+                                        data.add(new VAdcHit(1, slt, channel, q, ht));
                                     }
-                                    times.add(ht);
-                                    data.add(new VAdcHit(1, slt, channel, q, ht));
                                 }
                             }
                         }
