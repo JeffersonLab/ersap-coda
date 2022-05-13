@@ -175,11 +175,20 @@ public class FAdcIdEngine implements Engine {
                             long v = ((i >> 17) & 0x3FFF) * 4;
 //            long ht = frame_time_ns + v; // actual time
                             long ht = v; // time within the frame
+
+                            // External trigger events
                             if (tSlot > 0 && tChannel > 0 &&
                                     slt == tSlot && channel == tChannel) {
                                 foundTrigger = true;
                                 times.add(ht);
                                 data.add(new VAdcHit(1, slt, channel, q, ht));
+
+                                // take everything
+                            } else if (tSlot == 0 && tChannel ==0 && bcSlot ==0 && bcChannel == 0){
+                                times.add(ht);
+                                data.add(new VAdcHit(1, slt, channel, q, ht));
+
+                                // beam center and calorimeter events
                             } else {
                                 if ((slt == 17 && channel <= 12) || (slt == 19 && channel <= 11)) {
                                     if (bcSlot > 0 && bcChannel > 0
