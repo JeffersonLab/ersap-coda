@@ -227,6 +227,7 @@ public class FAdcIdEngine implements Engine {
                                             .filter(i -> Collections.frequency(slice, i) > 1)
                                             .count();
                                     // if no duplicates found we take a window with the maximum hits
+                                    System.out.println("DDD "+dup);
                                     if (dup == 0) {
                                         if (tSlot == 0 && tChannel == 0 &&
                                                 bcSlot > 0 && bcChannel > 0 &&
@@ -241,10 +242,10 @@ public class FAdcIdEngine implements Engine {
                                                     cht = vk.getChannel();
                                                 }
                                             }
-                                            System.out.println("DDD   slot = "+slt
-                                                    +" channel = "+ cht);
-                                            if (slt == bcSlot && cht == bcChannel) {
 
+                                            if (slt == bcSlot && cht == bcChannel) {
+                                                System.out.println("DDD   slot = "+slt
+                                                        +" channel = "+ cht);
                                                 event.addAll(slice);
                                                 newTStart = tee;
                                                 identifiedEvents.incrementAndGet();
