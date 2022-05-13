@@ -240,9 +240,10 @@ public class FAdcIdEngine implements Engine {
                                                     cht = vk.getChannel();
                                                 }
                                             }
+                                            System.out.println("DDD   slot = "+slt
+                                                    +" channel = "+ cht);
                                             if (slt == bcSlot && cht == bcChannel) {
-                                                System.out.println("DDD   slot = "+slt
-                                                        +" channel = "+ cht);
+
                                                 event.addAll(slice);
                                                 newTStart = tee;
                                                 identifiedEvents.incrementAndGet();
