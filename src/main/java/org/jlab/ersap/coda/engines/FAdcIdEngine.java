@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 public class FAdcIdEngine implements Engine {
 
     private static int[] slotMap = {0, 10, 13, 9, 14, 8, 15, 7, 16, 6, 17, 5, 18, 4, 19, 3, 20};
+    private static int[] cal = {0, 17, 2*17, 3*17, 4*17, 5*17, 6*17, 7*17, 8*17, 9*17, 10*17, 11*17, 12*17,
+            19, 2*19, 3*19, 4*19, 5*19, 6*19, 7*19, 8*19, 9*19, 10*19, 11*19 };
 
     private static String C_WINDOW = "s_window";
     private long tDelta; // time window to correlate hits as candidate for an event, i.e. coincident
@@ -55,6 +57,7 @@ public class FAdcIdEngine implements Engine {
     private int bcQmax;
 
     private ArrayList<String> centerBlocks = new ArrayList<>();
+    private List calorimeterBlocks;
 
     private AtomicInteger totalFrames = new AtomicInteger(0);
     private AtomicInteger emptyFrames = new AtomicInteger(0);
@@ -75,6 +78,8 @@ public class FAdcIdEngine implements Engine {
             bcQmin = data.has(BC_QMIN) ? data.getInt(BC_QMIN) : 0;
             bcQmax = data.has(BC_QMAX) ? data.getInt(BC_QMAX) : 8000;
         }
+        calorimeterBlocks = Arrays.asList(cal);
+
 //        centerBlocks.add("1-17-6");
         centerBlocks.add("1-17-7");
 //        centerBlocks.add("1-17-8");
@@ -170,18 +175,21 @@ public class FAdcIdEngine implements Engine {
                             int q = (i >> 0) & 0x1FFF;
                             int channel = (i >> 13) & 0x000F;
                             long v = ((i >> 17) & 0x3FFF) * 4;
+
+                            if(calorimeterBlocks.contains(slt*channel)) {
 //            long ht = frame_time_ns + v; // actual time
-                            long ht = v; // time within the frame
-                            if (tSlot > 0 && tChannel > 0 &&
-                                    slt == tSlot && channel == tChannel) {
-                                foundTrigger = true;
-                            } else if (bcSlot > 0 && bcChannel > 0
-                                    && slt == bcSlot && channel == bcChannel
-                                    && q >= bcQmin && q <= bcQmax) {
-                                foundCenter = true;
+                                long ht = v; // time within the frame
+                                if (tSlot > 0 && tChannel > 0 &&
+                                        slt == tSlot && channel == tChannel) {
+                                    foundTrigger = true;
+                                } else if (bcSlot > 0 && bcChannel > 0
+                                        && slt == bcSlot && channel == bcChannel
+                                        && q >= bcQmin && q <= bcQmax) {
+                                    foundCenter = true;
+                                }
+                                times.add(ht);
+                                data.add(new VAdcHit(1, slt, channel, q, ht));
                             }
-                            times.add(ht);
-                            data.add(new VAdcHit(1, slt, channel, q, ht));
                         }
                         tStart = Collections.min(times);
                         tEnd = Collections.max(times);
@@ -227,13 +235,14 @@ public class FAdcIdEngine implements Engine {
                                                 foundCenter) {
                                             // get max charge in the sliding window
                                             for (VAdcHit vk : slice) {
+                                                System.out.println("DDD q = "+vk.getCharge()+" slot = "+vk.getSlot()+" channel = "+vk.getCharge());
+
                                                 if (vk.getCharge() >= q) {
                                                     q = sum.getCharge();
                                                     slt = vk.getSlot();
                                                     cht = vk.getChannel();
                                                 }
                                             }
-                                            System.out.println("DDD q = "+q+" slot = "+slt+" channel = "+cht);
                                             if (slt == bcSlot && cht == bcChannel) {
                                                 event.addAll(slice);
                                                 newTStart = tee;
