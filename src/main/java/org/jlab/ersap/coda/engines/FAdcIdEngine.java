@@ -173,89 +173,92 @@ public class FAdcIdEngine implements Engine {
                             int q = (i >> 0) & 0x1FFF;
                             int channel = (i >> 13) & 0x000F;
                             long v = ((i >> 17) & 0x3FFF) * 4;
-
-                            if((slt == 17 && channel <= 12) || (slt == 19 && channel <= 11) ) {
 //            long ht = frame_time_ns + v; // actual time
-                                long ht = v; // time within the frame
-                                if (tSlot > 0 && tChannel > 0 &&
-                                        slt == tSlot && channel == tChannel) {
-                                    foundTrigger = true;
-                                } else if (bcSlot > 0 && bcChannel > 0
-                                        && slt == bcSlot && channel == bcChannel
-                                        && q >= bcQmin && q <= bcQmax) {
-                                    foundCenter = true;
-                                }
+                            long ht = v; // time within the frame
+                            if (tSlot > 0 && tChannel > 0 &&
+                                    slt == tSlot && channel == tChannel) {
+                                foundTrigger = true;
                                 times.add(ht);
                                 data.add(new VAdcHit(1, slt, channel, q, ht));
+                            } else {
+                                if ((slt == 17 && channel <= 12) || (slt == 19 && channel <= 11)) {
+                                    if (bcSlot > 0 && bcChannel > 0
+                                            && slt == bcSlot && channel == bcChannel
+                                            && q >= bcQmin && q <= bcQmax) {
+                                        foundCenter = true;
+                                    }
+                                    times.add(ht);
+                                    data.add(new VAdcHit(1, slt, channel, q, ht));
+                                }
                             }
                         }
-                        if(!times.isEmpty()) {
-                            tStart = Collections.min(times);
-                            tEnd = Collections.max(times);
+                            if (!times.isEmpty()) {
+                                tStart = Collections.min(times);
+                                tEnd = Collections.max(times);
+                            }
+                            /////////////////////////////////
                         }
-                        /////////////////////////////////
                     }
-                }
 
-                if (isEmptyFrame){
-                    // empty frame
-                    emptyFrames.incrementAndGet();
-                }
-                if (!data.isEmpty()) {
+                    if (isEmptyFrame) {
+                        // empty frame
+                        emptyFrames.incrementAndGet();
+                    }
+                    if (!data.isEmpty()) {
 
-                    // sliding window technique
-                    if (tDelta > 0) {
-                        if (tStart < tEnd) {
-                            int step = 0;
-                            long tee;
-                            long newTStart = 0;
-                            List<VAdcHit> event = new ArrayList<>();
-                            do {
-                                int q = 0;
-                                int slt = -1, cht = -1;
+                        // sliding window technique
+                        if (tDelta > 0) {
+                            if (tStart < tEnd) {
+                                int step = 0;
+                                long tee;
+                                long newTStart = 0;
+                                List<VAdcHit> event = new ArrayList<>();
+                                do {
+                                    int q = 0;
+                                    int slt = -1, cht = -1;
 
-                                if (newTStart > 0) {
-                                    tStart = newTStart + stepSize;
-                                    step = 0;
-                                    newTStart = 0;
-                                }
-                                final long ts = tStart + ((long) step * stepSize);
-                                final long te = ts + tDelta;
-                                tee = te;
-                                step++;
-                                List<VAdcHit> slice = data.stream()
-                                        .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
-                                        .collect(Collectors.toList());
+                                    if (newTStart > 0) {
+                                        tStart = newTStart + stepSize;
+                                        step = 0;
+                                        newTStart = 0;
+                                    }
+                                    final long ts = tStart + ((long) step * stepSize);
+                                    final long te = ts + tDelta;
+                                    tee = te;
+                                    step++;
+                                    List<VAdcHit> slice = data.stream()
+                                            .filter(e -> (e.getTime() >= ts) && (e.getTime() <= te))
+                                            .collect(Collectors.toList());
 
-                                if (slice.size() > nHitsInSWindow) {
-                                    // see if we find duplicate hits
-                                    long dup = slice.stream()
-                                            .filter(i -> Collections.frequency(slice, i) > 1)
-                                            .count();
-                                    // if no duplicates found we take a window with the maximum hits
-                                    if (dup == 0) {
-                                        if (tSlot == 0 && tChannel == 0 &&
-                                                bcSlot > 0 && bcChannel > 0 &&
-                                                foundCenter) {
-                                            // get max charge in the sliding window
-                                            q = 0;
-                                            for (VAdcHit vk : slice) {
+                                    if (slice.size() > nHitsInSWindow) {
+                                        // see if we find duplicate hits
+                                        long dup = slice.stream()
+                                                .filter(i -> Collections.frequency(slice, i) > 1)
+                                                .count();
+                                        // if no duplicates found we take a window with the maximum hits
+                                        if (dup == 0) {
+                                            if (tSlot == 0 && tChannel == 0 &&
+                                                    bcSlot > 0 && bcChannel > 0 &&
+                                                    foundCenter) {
+                                                // get max charge in the sliding window
+                                                q = 0;
+                                                for (VAdcHit vk : slice) {
 
-                                                // find max chard showing channel
-                                                if (vk.getCharge() >= q) {
-                                                    q = vk.getCharge();
-                                                    slt = vk.getSlot();
-                                                    cht = vk.getChannel();
+                                                    // find max chard showing channel
+                                                    if (vk.getCharge() >= q) {
+                                                        q = vk.getCharge();
+                                                        slt = vk.getSlot();
+                                                        cht = vk.getChannel();
+                                                    }
+                                                }
+
+                                                // if that the beam_hit block take it
+                                                if (slt == bcSlot && cht == bcChannel) {
+                                                    event.addAll(slice);
+                                                    newTStart = tee;
+                                                    identifiedEvents.incrementAndGet();
                                                 }
                                             }
-
-                                            // if that the beam_hit block take it
-                                            if (slt == bcSlot && cht == bcChannel) {
-                                                event.addAll(slice);
-                                                newTStart = tee;
-                                                identifiedEvents.incrementAndGet();
-                                            }
-                                        }
 //                                        if (tSlot > 0 && tChannel > 0 &&
 //                                                bcSlot > 0 && bcChannel > 0 &&
 //                                                foundTrigger && foundCenter) {
@@ -277,99 +280,99 @@ public class FAdcIdEngine implements Engine {
 //                                            event.addAll(slice);
 //                                            newTStart = tee;
 //                                        }
+                                        }
                                     }
-                                }
-                            } while (tee <= tEnd);
+                                } while (tee <= tEnd);
 
-                            // now sum neighboring crystals
-                            if (!event.isEmpty()) {
-                                for (VAdcHit v : event) {
-                                    if (centerBlocks.contains(v.getName().trim())) {
-                                        sum.setCharge(sum.getCharge() + v.getCharge());
+                                // now sum neighboring crystals
+                                if (!event.isEmpty()) {
+                                    for (VAdcHit v : event) {
+                                        if (centerBlocks.contains(v.getName().trim())) {
+                                            sum.setCharge(sum.getCharge() + v.getCharge());
+                                        }
                                     }
+                                    event.add(sum);
+                                    out.setData(JavaObjectType.JOBJ, event);
                                 }
-                                event.add(sum);
-                                out.setData(JavaObjectType.JOBJ, event);
                             }
-                        }
-                    } else {
-                        // no software trigger, i.e. sliding window
-                        if (tSlot > 0 && tChannel > 0 &&
-                                bcSlot > 0 && bcChannel > 0 &&
-                                foundTrigger && foundCenter) {
-                            out.setData(JavaObjectType.JOBJ, data);
-                        } else if (tSlot > 0 && tChannel > 0 &&
-                                bcSlot == 0 && bcChannel == 0 &&
-                                foundTrigger) {
-                            out.setData(JavaObjectType.JOBJ, data);
-                        } else if (tSlot == 0 && tChannel == 0 &&
-                                bcSlot > 0 && bcChannel > 0 &&
-                                foundCenter) {
-                            out.setData(JavaObjectType.JOBJ, data);
-                        } else if (tSlot == 0 && tChannel == 0 &&
-                                bcSlot == 0 && bcChannel == 0) {
-                            out.setData(JavaObjectType.JOBJ, data);
+                        } else {
+                            // no software trigger, i.e. sliding window
+                            if (tSlot > 0 && tChannel > 0 &&
+                                    bcSlot > 0 && bcChannel > 0 &&
+                                    foundTrigger && foundCenter) {
+                                out.setData(JavaObjectType.JOBJ, data);
+                            } else if (tSlot > 0 && tChannel > 0 &&
+                                    bcSlot == 0 && bcChannel == 0 &&
+                                    foundTrigger) {
+                                out.setData(JavaObjectType.JOBJ, data);
+                            } else if (tSlot == 0 && tChannel == 0 &&
+                                    bcSlot > 0 && bcChannel > 0 &&
+                                    foundCenter) {
+                                out.setData(JavaObjectType.JOBJ, data);
+                            } else if (tSlot == 0 && tChannel == 0 &&
+                                    bcSlot == 0 && bcChannel == 0) {
+                                out.setData(JavaObjectType.JOBJ, data);
+                            }
                         }
                     }
                 }
             }
+
+            System.out.println("Total Frames = " + totalFrames.get()
+                    + "; Empty Frames = " + emptyFrames.get()
+                    + ", " + (double) emptyFrames.get() / totalFrames.get() * 100 * 1.0 + "%"
+                    + "; Total Triggers = " + identifiedEvents.get()
+                    + "; Identified " + (double) identifiedEvents.get() / ((totalFrames.get() - emptyFrames.get())) * 100 * 1.0 + "%"
+            );
+            return out;
         }
 
-        System.out.println("Total Frames = " + totalFrames.get()
-                + "; Empty Frames = " + emptyFrames.get()
-                +", " +(double) emptyFrames.get() / totalFrames.get()  * 100 * 1.0 + "%"
-                + "; Total Triggers = " + identifiedEvents.get()
-                + "; Identified " + (double) identifiedEvents.get() / ((totalFrames.get() - emptyFrames.get())) * 100 * 1.0 + "%"
-        );
-        return out;
-    }
+        private int getSlot ( int payloadId){
+            return slotMap[payloadId];
+        }
 
-    private int getSlot(int payloadId) {
-        return slotMap[payloadId];
-    }
+        @Override
+        public EngineData executeGroup (Set < EngineData > set) {
+            return null;
+        }
 
-    @Override
-    public EngineData executeGroup(Set<EngineData> set) {
-        return null;
-    }
+        @Override
+        public Set<EngineDataType> getInputDataTypes () {
+            return ErsapUtil.buildDataTypes(EvioDataType.EVIO,
+                    EngineDataType.JSON);
+        }
 
-    @Override
-    public Set<EngineDataType> getInputDataTypes() {
-        return ErsapUtil.buildDataTypes(EvioDataType.EVIO,
-                EngineDataType.JSON);
-    }
+        @Override
+        public Set<EngineDataType> getOutputDataTypes () {
+            return ErsapUtil.buildDataTypes(EvioDataType.EVIO);
+        }
 
-    @Override
-    public Set<EngineDataType> getOutputDataTypes() {
-        return ErsapUtil.buildDataTypes(EvioDataType.EVIO);
-    }
+        @Override
+        public Set<String> getStates () {
+            return null;
+        }
 
-    @Override
-    public Set<String> getStates() {
-        return null;
-    }
+        @Override
+        public String getDescription () {
+            return "fADC data decoder and event identification. EVIO data format";
+        }
 
-    @Override
-    public String getDescription() {
-        return "fADC data decoder and event identification. EVIO data format";
-    }
+        @Override
+        public String getVersion () {
+            return "v1.0";
+        }
 
-    @Override
-    public String getVersion() {
-        return "v1.0";
-    }
+        @Override
+        public String getAuthor () {
+            return "gurjyan";
+        }
 
-    @Override
-    public String getAuthor() {
-        return "gurjyan";
-    }
+        @Override
+        public void reset () {
 
-    @Override
-    public void reset() {
+        }
 
+        @Override
+        public void destroy () {
+        }
     }
-
-    @Override
-    public void destroy() {
-    }
-}
