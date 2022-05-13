@@ -327,12 +327,14 @@ public class FAdcIdEngine implements Engine {
                 }
             }
 
+        if(foundCenter) {
             System.out.println("Total Frames = " + totalFrames.get()
                     + "; Empty Frames = " + emptyFrames.get()
                     + ", " + (double) emptyFrames.get() / totalFrames.get() * 100 * 1.0 + "%"
                     + "; Total Triggers = " + identifiedEvents.get()
                     + "; Identified " + (double) identifiedEvents.get() / ((totalFrames.get() - emptyFrames.get())) * 100 * 1.0 + "%"
             );
+        }
             return out;
         }
 
