@@ -219,27 +219,44 @@ public class FAdcIdEngine implements Engine {
                                             .count();
                                     // if no duplicates found we take a window with the maximum hits
                                     if (dup == 0) {
-                                        if (tSlot > 0 && tChannel > 0 &&
-                                                bcSlot > 0 && bcChannel > 0 &&
-                                                foundTrigger && foundCenter) {
-                                            event.addAll(slice);
-                                            newTStart = tee;
-                                        } else if (tSlot > 0 && tChannel > 0 &&
-                                                bcSlot == 0 && bcChannel == 0 &&
-                                                foundTrigger) {
-                                            event.addAll(slice);
-                                            newTStart = tee;
-                                        } else if (tSlot == 0 && tChannel == 0 &&
-                                                bcSlot > 0 && bcChannel > 0 &&
-                                                foundCenter) {
-                                            event.addAll(slice);
-                                            newTStart = tee;
-                                            identifiedEvents.incrementAndGet();
-                                        } else if (tSlot == 0 && tChannel == 0 &&
-                                                bcSlot == 0 && bcChannel == 0) {
-                                            event.addAll(slice);
-                                            newTStart = tee;
+                                        if(foundCenter) {
+                                            int q = 0;
+                                            int slt = -1,cht = -1;
+                                            // get max charge in the sliding window
+                                            for(VAdcHit vk: slice){
+                                                if(vk.getCharge() >= q) {
+                                                    q = sum.getCharge();
+                                                    slt  = vk.getSlot();
+                                                    cht = vk.getChannel();
+                                                }
+                                            }
+                                            if (slt == bcSlot && cht == bcChannel) {
+                                                event.addAll(slice);
+                                                newTStart = tee;
+                                                identifiedEvents.incrementAndGet();
+                                            }
                                         }
+//                                        if (tSlot > 0 && tChannel > 0 &&
+//                                                bcSlot > 0 && bcChannel > 0 &&
+//                                                foundTrigger && foundCenter) {
+//                                            event.addAll(slice);
+//                                            newTStart = tee;
+//                                        } else if (tSlot > 0 && tChannel > 0 &&
+//                                                bcSlot == 0 && bcChannel == 0 &&
+//                                                foundTrigger) {
+//                                            event.addAll(slice);
+//                                            newTStart = tee;
+//                                        } else if (tSlot == 0 && tChannel == 0 &&
+//                                                bcSlot > 0 && bcChannel > 0 &&
+//                                                foundCenter) {
+//                                            event.addAll(slice);
+//                                            newTStart = tee;
+//                                            identifiedEvents.incrementAndGet();
+//                                        } else if (tSlot == 0 && tChannel == 0 &&
+//                                                bcSlot == 0 && bcChannel == 0) {
+//                                            event.addAll(slice);
+//                                            newTStart = tee;
+//                                        }
                                     }
                                 }
                             } while (tee <= tEnd);
