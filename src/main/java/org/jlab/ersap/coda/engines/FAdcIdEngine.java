@@ -315,12 +315,12 @@ public class FAdcIdEngine implements Engine {
             }
         }
 
-        System.out.println("Total Frames = " + totalFrames.get()
-                + "; Empty Frames = " + emptyFrames.get()
-                +", " +(double) emptyFrames.get() / totalFrames.get()  * 100 * 1.0 + "%"
-                + "; Total Triggers = " + identifiedEvents.get()
-                + "; Identified " + (double) identifiedEvents.get() / ((totalFrames.get() - emptyFrames.get())) * 100 * 1.0 + "%"
-        );
+//        System.out.println("Total Frames = " + totalFrames.get()
+//                + "; Empty Frames = " + emptyFrames.get()
+//                +", " +(double) emptyFrames.get() / totalFrames.get()  * 100 * 1.0 + "%"
+//                + "; Total Triggers = " + identifiedEvents.get()
+//                + "; Identified " + (double) identifiedEvents.get() / ((totalFrames.get() - emptyFrames.get())) * 100 * 1.0 + "%"
+//        );
         return out;
     }
 
@@ -371,5 +371,11 @@ public class FAdcIdEngine implements Engine {
 
     @Override
     public void destroy() {
+        System.out.println("Total Frames = " + totalFrames.get()
+                + "; Empty Frames = " + emptyFrames.get()
+                +", " +(double) emptyFrames.get() / totalFrames.get()  * 100 * 1.0 + "%"
+                + "; Total Triggers = " + identifiedEvents.get()
+                + "; Identified " + (double) identifiedEvents.get() / ((totalFrames.get() - emptyFrames.get())) * 100 * 1.0 + "%"
+        );
     }
 }
