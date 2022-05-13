@@ -40,6 +40,9 @@ public class FAdcIdEngine implements Engine {
     private static String S_HITS = "s_hits";
     private int nHitsInSWindow;
 
+    private static String S_THR = "s_thr";
+    private int s_threshold;
+
     private static String T_SLOT = "t_slot";
     private int tSlot;
     private static String T_CHANNEL = "t_channel";
@@ -74,6 +77,8 @@ public class FAdcIdEngine implements Engine {
             bcChannel = data.has(BC_CHANNEL) ? data.getInt(BC_CHANNEL) : 0;
             bcQmin = data.has(BC_QMIN) ? data.getInt(BC_QMIN) : 0;
             bcQmax = data.has(BC_QMAX) ? data.getInt(BC_QMAX) : 8000;
+            s_threshold = data.has(S_THR) ? data.getInt(S_THR) : 0;
+
         }
 
 //        centerBlocks.add("1-17-0");
@@ -207,6 +212,7 @@ public class FAdcIdEngine implements Engine {
                                 // beam center and calorimeter events
                             } else {
                                 if ((slt == 17 && channel <= 12) || (slt == 19 && channel <= 11)) {
+                                    if(q >= s_threshold) {
                                         if (bcSlot > 0 && bcChannel > 0
                                                 && slt == bcSlot && channel == bcChannel
                                                 && q >= bcQmin && q <= bcQmax) {
@@ -214,6 +220,7 @@ public class FAdcIdEngine implements Engine {
                                         }
                                         times.add(ht);
                                         data.add(new VAdcHit(1, slt, channel, q, ht));
+                                    }
                                 }
                             }
                         }
