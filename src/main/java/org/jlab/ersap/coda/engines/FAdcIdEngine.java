@@ -187,8 +187,10 @@ public class FAdcIdEngine implements Engine {
                                 data.add(new VAdcHit(1, slt, channel, q, ht));
                             }
                         }
-                        tStart = Collections.min(times);
-                        tEnd = Collections.max(times);
+                        if(!times.isEmpty()) {
+                            tStart = Collections.min(times);
+                            tEnd = Collections.max(times);
+                        }
                         /////////////////////////////////
                     }
                 }
@@ -231,7 +233,9 @@ public class FAdcIdEngine implements Engine {
                                                 foundCenter) {
                                             // get max charge in the sliding window
                                             for (VAdcHit vk : slice) {
-                                                System.out.println("DDD q = "+vk.getCharge()+" slot = "+vk.getSlot()+" channel = "+vk.getCharge());
+                                                System.out.println("DDD q = "+vk.getCharge()
+                                                        +" slot = "+vk.getSlot()
+                                                        +" channel = "+vk.getChannel());
 
                                                 if (vk.getCharge() >= q) {
                                                     q = sum.getCharge();
