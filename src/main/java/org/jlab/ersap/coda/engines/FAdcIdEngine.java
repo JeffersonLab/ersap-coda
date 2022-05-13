@@ -200,7 +200,7 @@ public class FAdcIdEngine implements Engine {
                             List<VAdcHit> event = new ArrayList<>();
                             do {
                                 int q = 0;
-                                int slt = -1,cht = -1;
+                                int slt = -1, cht = -1;
 
                                 if (newTStart > 0) {
                                     tStart = newTStart + stepSize;
@@ -222,12 +222,15 @@ public class FAdcIdEngine implements Engine {
                                             .count();
                                     // if no duplicates found we take a window with the maximum hits
                                     if (dup == 0) {
-                                        if(foundCenter) {
+                                        if (tSlot == 0 && tChannel == 0 &&
+                                                bcSlot > 0 && bcChannel > 0 &&
+                                                foundCenter) {
+                                            System.out.println("DDD found center");
                                             // get max charge in the sliding window
-                                            for(VAdcHit vk: slice){
-                                                if(vk.getCharge() >= q) {
+                                            for (VAdcHit vk : slice) {
+                                                if (vk.getCharge() >= q) {
                                                     q = sum.getCharge();
-                                                    slt  = vk.getSlot();
+                                                    slt = vk.getSlot();
                                                     cht = vk.getChannel();
                                                 }
                                             }
@@ -297,10 +300,10 @@ public class FAdcIdEngine implements Engine {
             }
         }
 
-        System.out.println("Total Frames = " + totalFrames.get()
-                + "; Empty Frames = " + emptyFrames.get()
-                + "; Total Triggers = " + identifiedEvents.get()
-                + "; Identified " + (double) identifiedEvents.get() / ((totalFrames.get() - emptyFrames.get())) * 100 * 1.0 + "%");
+//        System.out.println("Total Frames = " + totalFrames.get()
+//                + "; Empty Frames = " + emptyFrames.get()
+//                + "; Total Triggers = " + identifiedEvents.get()
+//                + "; Identified " + (double) identifiedEvents.get() / ((totalFrames.get() - emptyFrames.get())) * 100 * 1.0 + "%");
         return out;
     }
 
