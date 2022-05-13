@@ -322,7 +322,7 @@ public class FAdcIdEngine implements Engine {
                             } else if (tSlot == 0 && tChannel == 0 &&
                                     bcSlot == 0 && bcChannel == 0) {
                                 out.setData(JavaObjectType.JOBJ, data);
-                                System.out.printf("B");
+                                System.out.println("B");
                             }
                         }
                     }
