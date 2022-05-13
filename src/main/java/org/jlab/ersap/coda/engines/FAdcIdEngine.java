@@ -90,7 +90,6 @@ public class FAdcIdEngine implements Engine {
 
     @Override
     public EngineData execute(EngineData engineData) {
-        totalFrames.incrementAndGet();
         // reset hit bins and hit start times
         long tStart, tEnd;
         boolean foundTrigger = false;
@@ -136,6 +135,7 @@ public class FAdcIdEngine implements Engine {
 
             // Loop through all ROC Time Slice Banks (TSB) which come after TIB
             for (int j = 1; j < childCount; j++) {
+                totalFrames.incrementAndGet();
                 // ROC Time SLice Bank
                 EvioBank rocTSB = (EvioBank) ev.getChildAt(j);
                 int kids = rocTSB.getChildCount();
@@ -149,6 +149,7 @@ public class FAdcIdEngine implements Engine {
                 List<VAdcHit> data = new ArrayList<>();
                 VAdcHit sum = new VAdcHit(0, 0, 0, 0, 0);
                 // Skip over SIB by starting at 1
+                boolean isEmptyFrame = true;
                 for (int k = 1; k < kids; k++) {
                     EvioBank dataBank = (EvioBank) rocTSB.getChildAt(k);
                     // Ignore the data type (currently the improper value of 0xf).
@@ -158,6 +159,7 @@ public class FAdcIdEngine implements Engine {
                     byte[] byteData = dataBank.getRawBytes();
 
                     if (byteData.length > 0) {
+                        isEmptyFrame = false;
                         ///////////////////////////////
                         // define the hits for a slot in the VTP frame
                         ArrayList<Long> times = new ArrayList<>();
@@ -195,6 +197,10 @@ public class FAdcIdEngine implements Engine {
                     }
                 }
 
+                if (isEmptyFrame){
+                    // empty frame
+                    emptyFrames.incrementAndGet();
+                }
                 if (!data.isEmpty()) {
 
                     // sliding window technique
@@ -305,8 +311,6 @@ public class FAdcIdEngine implements Engine {
                             out.setData(JavaObjectType.JOBJ, data);
                         }
                     }
-                } else {
-                    emptyFrames.incrementAndGet();
                 }
             }
         }
