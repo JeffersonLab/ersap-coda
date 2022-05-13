@@ -32,8 +32,6 @@ import java.util.stream.Collectors;
 public class FAdcIdEngine implements Engine {
 
     private static int[] slotMap = {0, 10, 13, 9, 14, 8, 15, 7, 16, 6, 17, 5, 18, 4, 19, 3, 20};
-    private static int[] cal = {0, 17, 2*17, 3*17, 4*17, 5*17, 6*17, 7*17, 8*17, 9*17, 10*17, 11*17, 12*17,
-            19, 2*19, 3*19, 4*19, 5*19, 6*19, 7*19, 8*19, 9*19, 10*19, 11*19 };
 
     private static String C_WINDOW = "s_window";
     private long tDelta; // time window to correlate hits as candidate for an event, i.e. coincident
@@ -57,7 +55,6 @@ public class FAdcIdEngine implements Engine {
     private int bcQmax;
 
     private ArrayList<String> centerBlocks = new ArrayList<>();
-    private ArrayList<Integer> calorimeterBlocks = new ArrayList<>();
 
     private AtomicInteger totalFrames = new AtomicInteger(0);
     private AtomicInteger emptyFrames = new AtomicInteger(0);
@@ -77,10 +74,6 @@ public class FAdcIdEngine implements Engine {
             bcChannel = data.has(BC_CHANNEL) ? data.getInt(BC_CHANNEL) : 0;
             bcQmin = data.has(BC_QMIN) ? data.getInt(BC_QMIN) : 0;
             bcQmax = data.has(BC_QMAX) ? data.getInt(BC_QMAX) : 8000;
-        }
-
-        for (Integer i: cal){
-            calorimeterBlocks.add(i);
         }
 
 //        centerBlocks.add("1-17-6");
@@ -179,7 +172,7 @@ public class FAdcIdEngine implements Engine {
                             int channel = (i >> 13) & 0x000F;
                             long v = ((i >> 17) & 0x3FFF) * 4;
 
-                            if(calorimeterBlocks.contains(slt*channel)) {
+                            if((slt == 17 && channel <= 12) || (slt == 19 && channel <= 11) ) {
 //            long ht = frame_time_ns + v; // actual time
                                 long ht = v; // time within the frame
                                 if (tSlot > 0 && tChannel > 0 &&
