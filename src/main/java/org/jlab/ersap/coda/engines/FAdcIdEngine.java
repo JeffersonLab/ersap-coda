@@ -233,9 +233,6 @@ public class FAdcIdEngine implements Engine {
                                                 foundCenter) {
                                             // get max charge in the sliding window
                                             for (VAdcHit vk : slice) {
-                                                System.out.println("DDD q = "+vk.getCharge()
-                                                        +" slot = "+vk.getSlot()
-                                                        +" channel = "+vk.getChannel());
 
                                                 if (vk.getCharge() >= q) {
                                                     q = sum.getCharge();
@@ -244,6 +241,8 @@ public class FAdcIdEngine implements Engine {
                                                 }
                                             }
                                             if (slt == bcSlot && cht == bcChannel) {
+                                                System.out.println("DDD   slot = "+slt
+                                                        +" channel = "+ cht);
                                                 event.addAll(slice);
                                                 newTStart = tee;
                                                 identifiedEvents.incrementAndGet();
