@@ -40,8 +40,6 @@ public class FAdcIdEngine implements Engine {
     private static String S_HITS = "s_hits";
     private int nHitsInSWindow;
 
-    private static String S_THR = "s_thr";
-    private int s_threshold;
 
     private static String T_SLOT = "t_slot";
     private int tSlot;
@@ -51,6 +49,8 @@ public class FAdcIdEngine implements Engine {
     private int bcSlot;
     private static String BC_CHANNEL = "bc_channel";
     private int bcChannel;
+    private static String S_THR = "b_thr";
+    private int s_threshold;
 
     private static String BC_QMIN = "bc_qmin";
     private int bcQmin;
