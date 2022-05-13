@@ -199,6 +199,9 @@ public class FAdcIdEngine implements Engine {
                             long newTStart = 0;
                             List<VAdcHit> event = new ArrayList<>();
                             do {
+                                int q = 0;
+                                int slt = -1,cht = -1;
+
                                 if (newTStart > 0) {
                                     tStart = newTStart + stepSize;
                                     step = 0;
@@ -220,8 +223,6 @@ public class FAdcIdEngine implements Engine {
                                     // if no duplicates found we take a window with the maximum hits
                                     if (dup == 0) {
                                         if(foundCenter) {
-                                            int q = 0;
-                                            int slt = -1,cht = -1;
                                             // get max charge in the sliding window
                                             for(VAdcHit vk: slice){
                                                 if(vk.getCharge() >= q) {
