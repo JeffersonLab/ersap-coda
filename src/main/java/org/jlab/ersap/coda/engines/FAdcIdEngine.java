@@ -187,6 +187,7 @@ public class FAdcIdEngine implements Engine {
                             } else if (tSlot == 0 && tChannel ==0 && bcSlot ==0 && bcChannel == 0){
                                 times.add(ht);
                                 data.add(new VAdcHit(1, slt, channel, q, ht));
+                                System.out.println("A");
 
                                 // beam center and calorimeter events
                             } else {
@@ -321,6 +322,7 @@ public class FAdcIdEngine implements Engine {
                             } else if (tSlot == 0 && tChannel == 0 &&
                                     bcSlot == 0 && bcChannel == 0) {
                                 out.setData(JavaObjectType.JOBJ, data);
+                                System.out.printf("B");
                             }
                         }
                     }
