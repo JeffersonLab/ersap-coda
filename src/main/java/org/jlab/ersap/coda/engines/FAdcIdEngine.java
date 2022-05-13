@@ -57,7 +57,7 @@ public class FAdcIdEngine implements Engine {
     private int bcQmax;
 
     private ArrayList<String> centerBlocks = new ArrayList<>();
-    private List calorimeterBlocks;
+    private ArrayList<Integer> calorimeterBlocks = new ArrayList<>();
 
     private AtomicInteger totalFrames = new AtomicInteger(0);
     private AtomicInteger emptyFrames = new AtomicInteger(0);
@@ -78,7 +78,10 @@ public class FAdcIdEngine implements Engine {
             bcQmin = data.has(BC_QMIN) ? data.getInt(BC_QMIN) : 0;
             bcQmax = data.has(BC_QMAX) ? data.getInt(BC_QMAX) : 8000;
         }
-        calorimeterBlocks = Arrays.asList(cal);
+
+        for (Integer i: cal){
+            calorimeterBlocks.add(i);
+        }
 
 //        centerBlocks.add("1-17-6");
         centerBlocks.add("1-17-7");
