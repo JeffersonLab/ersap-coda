@@ -87,9 +87,9 @@ public class FAdcIdEngine implements Engine {
 //        centerBlocks.add("1-17-3");
 //        centerBlocks.add("1-17-4");
 //        centerBlocks.add("1-17-5");
-        centerBlocks.add("1-17-6");
+//        centerBlocks.add("1-17-6");
         centerBlocks.add("1-17-7");
-        centerBlocks.add("1-17-8");
+//        centerBlocks.add("1-17-8");
 //        centerBlocks.add("1-17-9");
 //        centerBlocks.add("1-17-10");
         centerBlocks.add("1-17-11");
@@ -97,9 +97,9 @@ public class FAdcIdEngine implements Engine {
         centerBlocks.add("1-19-0");
 //        centerBlocks.add("1-19-1");
 //        centerBlocks.add("1-19-2");
-        centerBlocks.add("1-19-3");
+//        centerBlocks.add("1-19-3");
         centerBlocks.add("1-19-4");
-        centerBlocks.add("1-19-5");
+//        centerBlocks.add("1-19-5");
 //        centerBlocks.add("1-19-6");
 //        centerBlocks.add("1-19-7");
 //        centerBlocks.add("1-19-8");
