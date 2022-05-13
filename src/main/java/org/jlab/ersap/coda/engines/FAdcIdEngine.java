@@ -207,7 +207,6 @@ public class FAdcIdEngine implements Engine {
                                 // beam center and calorimeter events
                             } else {
                                 if ((slt == 17 && channel <= 12) || (slt == 19 && channel <= 11)) {
-                                    if (q > bcQmin) {
                                         if (bcSlot > 0 && bcChannel > 0
                                                 && slt == bcSlot && channel == bcChannel
                                                 && q >= bcQmin && q <= bcQmax) {
@@ -215,7 +214,6 @@ public class FAdcIdEngine implements Engine {
                                         }
                                         times.add(ht);
                                         data.add(new VAdcHit(1, slt, channel, q, ht));
-                                    }
                                 }
                             }
                         }
@@ -264,8 +262,7 @@ public class FAdcIdEngine implements Engine {
                                                 .count();
                                         // if no duplicates found we take a window with the maximum hits
                                         if (dup == 0) {
-                                            if (tSlot == 0 && tChannel == 0 &&
-                                                    bcSlot > 0 && bcChannel > 0 &&
+                                            if (bcSlot > 0 && bcChannel > 0 &&
                                                     foundCenter) {
                                                 // get max charge in the sliding window
                                                 q = 0;
