@@ -62,6 +62,7 @@ public class FAdcIdEngine implements Engine {
     private AtomicInteger totalFrames = new AtomicInteger(0);
     private AtomicInteger emptyFrames = new AtomicInteger(0);
     private AtomicInteger identifiedEvents = new AtomicInteger(0);
+    private AtomicInteger logicalTriggers = new AtomicInteger(0);
 
     @Override
     public EngineData configure(EngineData engineData) {
@@ -196,23 +197,12 @@ public class FAdcIdEngine implements Engine {
                             long v = ((i >> 17) & 0x3FFF) * 4;
 //            long ht = frame_time_ns + v; // actual time
                             long ht = v; // time within the frame
-
-                            // External trigger events
                             if (tSlot > 0 && tChannel > 0 &&
                                     slt == tSlot && channel == tChannel) {
-                                foundTrigger = true;
-                                times.add(ht);
-                                data.add(new VAdcHit(1, slt, channel, q, ht));
-
-                                // take everything
-                            } else if (tSlot == 0 && tChannel ==0 && bcSlot ==0 && bcChannel == 0){
-                                times.add(ht);
-                                data.add(new VAdcHit(1, slt, channel, q, ht));
-
-                                // beam center and calorimeter events
+                                logicalTriggers.incrementAndGet();
                             } else {
                                 if ((slt == 17 && channel <= 12) || (slt == 19 && channel <= 11)) {
-                                    if(q >= s_threshold) {
+                                    if (q >= s_threshold) {
                                         if (bcSlot > 0 && bcChannel > 0
                                                 && slt == bcSlot && channel == bcChannel
                                                 && q >= bcQmin && q <= bcQmax) {
@@ -223,7 +213,34 @@ public class FAdcIdEngine implements Engine {
                                     }
                                 }
                             }
-                        }
+
+//                            // External trigger events
+//                            if (tSlot > 0 && tChannel > 0 &&
+//                                    slt == tSlot && channel == tChannel) {
+//                                foundTrigger = true;
+//                                times.add(ht);
+//                                data.add(new VAdcHit(1, slt, channel, q, ht));
+//
+//                                // take everything
+//                            } else if (tSlot == 0 && tChannel ==0 && bcSlot ==0 && bcChannel == 0){
+//                                times.add(ht);
+//                                data.add(new VAdcHit(1, slt, channel, q, ht));
+//
+//                                // beam center and calorimeter events
+//                            } else {
+//                                if ((slt == 17 && channel <= 12) || (slt == 19 && channel <= 11)) {
+//                                    if(q >= s_threshold) {
+//                                        if (bcSlot > 0 && bcChannel > 0
+//                                                && slt == bcSlot && channel == bcChannel
+//                                                && q >= bcQmin && q <= bcQmax) {
+//                                            foundCenter = true;
+//                                        }
+//                                        times.add(ht);
+//                                        data.add(new VAdcHit(1, slt, channel, q, ht));
+//                                    }
+//                                }
+//                            }
+                            }
                             if (!times.isEmpty()) {
                                 tStart = Collections.min(times);
                                 tEnd = Collections.max(times);
@@ -354,7 +371,8 @@ public class FAdcIdEngine implements Engine {
                     + "; Empty Frames = " + emptyFrames.get()
                     + ", " + (double) emptyFrames.get() / totalFrames.get() * 100 * 1.0 + "%"
                     + "; Total Triggers = " + identifiedEvents.get()
-                    + "; Identified " + (double) identifiedEvents.get() / ((totalFrames.get() - emptyFrames.get())) * 100 * 1.0 + "%"
+                    + "; Logical Triggers = " + logicalTriggers.get()
+                    + "; Identified = " + (double) identifiedEvents.get() / ((totalFrames.get() - emptyFrames.get())) * 100 * 1.0 + "%"
             );
         }
             return out;
