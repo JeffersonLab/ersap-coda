@@ -196,6 +196,10 @@ public:
     std::vector<std::uint8_t> write(const ersap::any& data) const override;
     ersap::any read(const std::vector<std::uint8_t>& buffer) const override;
 
+    // Binary serialization methods
+    static std::vector<std::uint8_t> serializeToBinary(const CodaTimeFrame& event);
+    static CodaTimeFrame deserializeFromBinary(const std::vector<std::uint8_t>& buffer);
+
 private:
     // Helper methods for xMsg payload serialization
     void serializeCodaTimeFrame(const CodaTimeFrame& event, std::vector<std::uint8_t>& buffer) const;

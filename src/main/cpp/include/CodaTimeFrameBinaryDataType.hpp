@@ -138,22 +138,11 @@ struct CodaTimeFrame {
     }
 };
 
-class CodaTimeFrameSerializer : public ersap::Serializer {
-public:
-    std::vector<std::uint8_t> write(const ersap::any& data) const override;
-    ersap::any read(const std::vector<std::uint8_t>& buffer) const override;
-    
-    // Public static methods for binary serialization
-    static std::vector<std::uint8_t> serializeToBinary(const CodaTimeFrame& event);
-    static CodaTimeFrame deserializeFromBinary(const std::vector<std::uint8_t>& buffer);
-};
+// Binary serialization utility functions
+std::vector<std::uint8_t> serializeToBinary(const CodaTimeFrame& event);
+CodaTimeFrame deserializeFromBinary(const std::vector<std::uint8_t>& buffer);
 
-const std::string CODA_TIME_FRAME_MIME_TYPE = "binary/coda-time-frame";
-
-const ersap::EngineDataType CODA_TIME_FRAME_TYPE{
-    CODA_TIME_FRAME_MIME_TYPE,
-    std::make_unique<CodaTimeFrameSerializer>()
-};
+const std::string CODA_TIME_FRAME_BINARY_MIME_TYPE = "binary/coda-time-frame";
 
 } // namespace coda
 } // namespace ersap
