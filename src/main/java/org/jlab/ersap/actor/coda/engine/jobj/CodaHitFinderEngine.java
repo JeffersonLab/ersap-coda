@@ -66,7 +66,7 @@ public class CodaHitFinderEngine implements Engine {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        out.setData(CodaTimeFrameDataType.CODA_TIME_FRAME, data);
+        out.setData(JavaObjectType.JOBJ, data);
         return out;
     }
 
@@ -79,7 +79,7 @@ public class CodaHitFinderEngine implements Engine {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        out.setData(CodaTimeFrameDataType.CODA_TIME_FRAME, data);
+        out.setData(JavaObjectType.JOBJ, data);
         return out;
     }
 
