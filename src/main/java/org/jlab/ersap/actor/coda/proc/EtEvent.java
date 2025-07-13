@@ -11,6 +11,8 @@ public class EtEvent {
     }
 
     public void addTimeFrame(List<RocTimeFrameBank> timeFrame) {
-        this.timeFrames.add(timeFrame);
+        if (timeFrame != null) {
+            this.timeFrames.add(timeFrame);
+        }
     }
 }

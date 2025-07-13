@@ -38,7 +38,9 @@ public class EvioEventParser {
             EvioEvent event = r.parseNextEvent();
             evioDataByteOrder = r.getByteOrder();
             List<RocTimeFrameBank> rocBanks = parseTimeFrame(event);
-            evt.addTimeFrame(rocBanks);
+            if (rocBanks != null) {
+                evt.addTimeFrame(rocBanks);
+            }
         }
         return evt;
     }
@@ -50,7 +52,9 @@ public class EvioEventParser {
         evioDataByteOrder = event.getByteOrder();
 
         List<RocTimeFrameBank> rocBanks = parseTimeFrame(event);
-        evt.addTimeFrame(rocBanks);
+        if (rocBanks != null) {
+            evt.addTimeFrame(rocBanks);
+        }
         return evt;
     }
 
@@ -64,13 +68,13 @@ public class EvioEventParser {
 //        if (debug) System.out.println("DDD=====> event tag = " + Integer.toHexString(evTag));
 
         if (evTag == 0xffd1) {
-            System.out.println("Skip over PRESTART event");
+            if (debug) System.out.println("EvioEventParser: Skipping PRESTART event (tag=0xffd1)");
             return null;
         } else if (evTag == 0xffd2) {
-            System.out.println("Skip over GO event");
+            if (debug) System.out.println("EvioEventParser: Skipping GO event (tag=0xffd2)");
             return null;
         } else if (evTag == 0xffd4) {
-            System.out.println("Hit END event, quitting");
+            if (debug) System.out.println("EvioEventParser: Encountered END event (tag=0xffd4), returning null");
             return null;
         }
 

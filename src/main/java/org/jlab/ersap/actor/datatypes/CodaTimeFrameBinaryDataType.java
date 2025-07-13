@@ -26,6 +26,10 @@ public class CodaTimeFrameBinaryDataType {
             out.writeInt(timeFrames.size());
 
             for (List<RocTimeFrameBank> frame : timeFrames) {
+                if (frame == null) {
+                    out.writeInt(0);
+                    continue;
+                }
                 out.writeInt(frame.size());
                 for (RocTimeFrameBank roc : frame) {
                     out.writeInt(roc.getRocID());
