@@ -11,6 +11,7 @@ import org.jlab.ersap.actor.coda.proc.LiveHistogram;
 import org.jlab.ersap.actor.coda.proc.RocTimeFrameBank;
 import org.jlab.ersap.actor.datatypes.CodaTimeFrameBinaryDataType;
 import org.jlab.ersap.actor.datatypes.CodaTimeFrameDataType;
+import org.jlab.ersap.actor.datatypes.SROTestDataType;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -105,12 +106,12 @@ public class MultiChannelDigitizerDisplayBinary implements Engine {
     @Override
     public Set<EngineDataType> getInputDataTypes() {
         return ErsapUtil.buildDataTypes(EngineDataType.JSON,
-                CodaTimeFrameBinaryDataType.CODA_TIME_FRAME);
+                SROTestDataType.INSTANCE);
     }
 
     @Override
     public Set<EngineDataType> getOutputDataTypes() {
-        return ErsapUtil.buildDataTypes(CodaTimeFrameBinaryDataType.CODA_TIME_FRAME);
+        return ErsapUtil.buildDataTypes(SROTestDataType.INSTANCE);
     }
 
     @Override

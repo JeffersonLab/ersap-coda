@@ -1,9 +1,10 @@
 package org.jlab.ersap.actor.coda.proc;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RocTimeFrameBank {
+public class RocTimeFrameBank implements Serializable {
     private int rocID;
     private int frameNumber;
     private long timeStamp;

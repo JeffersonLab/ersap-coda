@@ -1,5 +1,7 @@
 package org.jlab.ersap.actor.coda.proc;
 
+import java.io.Serializable;
+
 /**
  * Copyright (c) 2021, Jefferson Science Associates, all rights reserved.
  * See LICENSE.txt file.
@@ -11,7 +13,7 @@ package org.jlab.ersap.actor.coda.proc;
  * @author gurjyan on 2/13/23
  * {@code } ersap-coda
  */
-public class FADCHit implements IStreamItem {
+public class FADCHit implements IStreamItem, Serializable {
 
     private final int crate;
     private final int slot;

@@ -4,6 +4,7 @@ import org.jlab.epsci.ersap.engine.EngineDataType;
 import org.jlab.epsci.ersap.std.services.AbstractEventWriterService;
 import org.jlab.epsci.ersap.std.services.EventWriterException;
 import org.jlab.ersap.actor.datatypes.CodaTimeFrameBinaryDataType;
+import org.jlab.ersap.actor.datatypes.SROTestDataType;
 import org.json.JSONObject;
 
 import java.io.FileWriter;
@@ -36,6 +37,6 @@ public class CodaSinkBinaryEngine extends AbstractEventWriterService<FileWriter>
 
     @Override
     protected EngineDataType getDataType() {
-        return CodaTimeFrameBinaryDataType.CODA_TIME_FRAME;
+        return SROTestDataType.INSTANCE;
     }
 }
