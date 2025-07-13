@@ -155,7 +155,6 @@ set_target_properties(SROTestDataType PROPERTIES
 add_library(SROPrinterService SHARED ${SRO_ACTOR_SOURCES} ${SRO_ACTOR_HEADERS})
 target_link_libraries(SROPrinterService
     ${ERSAP_LIBRARY}
-    SROTestDataType
 )
 set_target_properties(SROPrinterService PROPERTIES
     VERSION ${PROJECT_VERSION}
@@ -168,7 +167,6 @@ install(TARGETS
     CodaTimeFrameDataType
     CodaTimeFramePrinterActor
     CodaTimeFrameBinaryPrinterActor
-    SROTestDataType
     SROPrinterService
     LIBRARY DESTINATION lib
     PUBLIC_HEADER DESTINATION include/ersap-actor-cpp
