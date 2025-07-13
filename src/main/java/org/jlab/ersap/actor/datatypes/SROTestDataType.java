@@ -27,7 +27,7 @@ public final class SROTestDataType extends EngineDataType {
             @Override
             public ByteBuffer write(Object data) throws ErsapException {
                 List<List<RocTimeFrameBank>> sroData;
-                
+                System.out.println("DDD ===> "+ data.getClass().getName());
                 // Handle both EtEvent and direct List<List<RocTimeFrameBank>>
                 if (data instanceof EtEvent) {
                     EtEvent etEvent = (EtEvent) data;
