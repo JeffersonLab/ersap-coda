@@ -1,5 +1,4 @@
-#ifndef ERSAP_DEMO_DATA_SRO_HPP_
-#define ERSAP_DEMO_DATA_SRO_HPP_
+#include "SROTestDataType.hpp"
 
 #include <ersap/engine_data_type.hpp>
 #include <ersap/any.hpp>
@@ -117,9 +116,7 @@ private:
     }
 };
 
-const ersap::EngineDataType SRO_TYPE{"binary/sro-data", std::make_unique<SROSerializer>()};
+ERSAP_EXPORT const ersap::EngineDataType SRO_TYPE{"binary/sro-data", std::make_unique<SROSerializer>()};
 
 } // namespace demo
 } // namespace ersap
-
-#endif
