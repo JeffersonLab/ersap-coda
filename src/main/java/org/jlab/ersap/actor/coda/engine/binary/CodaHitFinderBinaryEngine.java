@@ -92,13 +92,13 @@ public class CodaHitFinderBinaryEngine implements Engine {
 
     @Override
     public Set<EngineDataType> getInputDataTypes() {
-        return ErsapUtil.buildDataTypes(SROTestDataType.INSTANCE,
+        return ErsapUtil.buildDataTypes(JavaObjectType.JOBJ,
                 EngineDataType.JSON);
     }
 
     @Override
     public Set<EngineDataType> getOutputDataTypes() {
-        return ErsapUtil.buildDataTypes(CodaTimeFrameBinaryDataType.CODA_TIME_FRAME);
+        return ErsapUtil.buildDataTypes(SROTestDataType.INSTANCE);
     }
 
     @Override
