@@ -171,7 +171,7 @@ ersap::EngineData SROPrinterService::execute_group(const std::vector<ersap::Engi
 
 std::vector<ersap::EngineDataType> SROPrinterService::input_data_types() const
 {
-    return { SRO_TYPE };
+    return { SRO_TYPE, ersap::type::JSON };
 }
 
 std::vector<ersap::EngineDataType> SROPrinterService::output_data_types() const
