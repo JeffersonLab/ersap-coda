@@ -75,11 +75,12 @@ ersap::EngineData CodaTimeFramePrinterActor::execute(ersap::EngineData& input) {
                                ", got " + input.mime_type());
         return output;
     }
-    
+    std::cout << "DDD => CodaTimeFramePrinterActor " << std::endl;
+/*
     try {
         // Extract CodaTimeFrame from input
         const auto& event = ersap::data_cast<const CodaTimeFrame&>(input);
-/*
+
         // Print event content
         printSeparator("CodaTimeFrame Analysis");
         printEventSummary(event);
@@ -103,7 +104,7 @@ ersap::EngineData CodaTimeFramePrinterActor::execute(ersap::EngineData& input) {
         //@todo Attention: the following two variables must be synchronized. It is not thread safe!
         eventCount_++;
         totalHitCount_ += event.getTotalHitCount();
-*/
+
         // Pass through the original event unchanged
         output.set_data(CODA_TIME_FRAME_TYPE, event);
 
@@ -112,7 +113,7 @@ ersap::EngineData CodaTimeFramePrinterActor::execute(ersap::EngineData& input) {
         output.set_description("Error processing CodaTimeFrame: " + std::string(e.what()));
         std::cerr << "Error in CodaTimeFramePrinterActor: " << e.what() << std::endl;
     }
-    
+*/
     return output;
 }
 
