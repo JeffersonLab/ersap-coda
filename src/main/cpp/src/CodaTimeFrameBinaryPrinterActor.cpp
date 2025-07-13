@@ -79,7 +79,7 @@ ersap::EngineData CodaTimeFrameBinaryPrinterActor::execute(ersap::EngineData& in
                                ", got " + input.mime_type());
         return output;
     }
-    
+    std::cout << "DDD => CodaTimeFrameBinaryPrinterActor " << std::endl;
     try {
         // Extract CodaTimeFrame from input
         const auto& event = ersap::data_cast<const CodaTimeFrame&>(input);
