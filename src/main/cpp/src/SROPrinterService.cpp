@@ -1,6 +1,6 @@
-#include "sro_printer_service.hpp"
+#include "SROPrinterService.hpp"
 
-#include <sro_data_type.cpp>
+#include <SROPrinterService.hpp>
 #include <ersap/stdlib/json_utils.hpp>
 
 #include <iostream>
