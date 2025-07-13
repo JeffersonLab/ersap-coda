@@ -8,7 +8,7 @@
 #include <memory>
 #include <stdexcept>
 #include <cstring>
-#include <sro.hpp>  // Assume this includes RocTimeFrameBank and FADCHit definitions
+#include <SROTestDataType.hpp>  // Assume this includes RocTimeFrameBank and FADCHit definitions
 
 namespace ersap {
 namespace demo {
