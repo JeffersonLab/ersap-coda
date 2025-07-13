@@ -70,5 +70,5 @@ private:
     int64_t time_stamp_;
     std::vector<FADCHit> hits_;
 };
-
+extern const ersap::EngineDataType SRO_TYPE;
 #endif // ERSAP_DEMO_SRO_HPP_

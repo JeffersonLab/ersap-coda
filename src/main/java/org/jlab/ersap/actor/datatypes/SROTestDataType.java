@@ -19,6 +19,7 @@ public final class SROTestDataType extends EngineDataType {
 
     public static final SROTestDataType INSTANCE = new SROTestDataType();
 
+
     private SROTestDataType() {
         super(MIME_TYPE, new ErsapSerializer() {
 
@@ -54,5 +55,6 @@ public final class SROTestDataType extends EngineDataType {
                 }
             }
         });
+
     }
 }
