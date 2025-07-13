@@ -83,7 +83,7 @@ ersap::EngineData CodaTimeFrameBinaryPrinterActor::execute(ersap::EngineData& in
     try {
         // Extract CodaTimeFrame from input
         const auto& event = ersap::data_cast<const CodaTimeFrame&>(input);
- /*
+
         // Print binary event content
         printSeparator("CodaTimeFrame Binary Analysis");
         printBinaryEventSummary(event);
@@ -91,7 +91,7 @@ ersap::EngineData CodaTimeFrameBinaryPrinterActor::execute(ersap::EngineData& in
         if (showSerializationStats_) {
             printSerializationDetails(event);
         }
-        
+ /*
         if (showBinaryDetails_) {
             auto binaryData = serializeEvent(event);
             printBinaryStructure(binaryData);
@@ -100,14 +100,14 @@ ersap::EngineData CodaTimeFrameBinaryPrinterActor::execute(ersap::EngineData& in
                 printHexDump(binaryData, maxBytesToShow_);
             }
         }
-        
+  */
         printBinaryStatistics(event);
         printSeparator();
         
         // Update statistics
         eventCount_++;
         totalBinarySize_ += serializeEvent(event).size();
-   */
+
         // Pass through the original event unchanged
         output.set_data(CODA_TIME_FRAME_BINARY_TYPE, event);
         
