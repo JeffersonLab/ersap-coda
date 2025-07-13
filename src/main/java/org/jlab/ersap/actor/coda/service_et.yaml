@@ -4,7 +4,7 @@ io-services:
     class: org.jlab.ersap.actor.coda.engine.CodaEtSourceEngine
     name: Source
   writer:
-    class: org.jlab.ersap.actor.coda.engine.CodaSinkEngine
+    class: org.jlab.ersap.actor.coda.engine.jobj.CodaSinkEngine
     name: Sink
 services:
   - class: org.jlab.ersap.actor.coda.engine.EventIdentificationEngine

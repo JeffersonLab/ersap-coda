@@ -1,4 +1,4 @@
-package org.jlab.ersap.actor.coda.engine;
+package org.jlab.ersap.actor.coda.engine.jobj;
 
 import org.jlab.epsci.ersap.engine.EngineDataType;
 import org.jlab.epsci.ersap.std.services.AbstractEventWriterService;

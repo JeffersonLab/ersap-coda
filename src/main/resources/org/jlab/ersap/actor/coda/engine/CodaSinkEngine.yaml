@@ -1,6 +1,6 @@
 ---
 name: CodaSinkEngine
-engine: org.jlab.ersap.actor.coda.engine.CodaSinkEngine
+engine: org.jlab.ersap.actor.coda.engine.jobj.CodaSinkEngine
 type: java
 
 author: vardan
@@ -8,4 +8,4 @@ email: gurjyan@jlab.org
 
 version: 0.1
 description:
-  Writes CODA events to a file.
+  Writes Java object to a file.
