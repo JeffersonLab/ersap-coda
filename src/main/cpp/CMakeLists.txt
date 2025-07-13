@@ -86,19 +86,19 @@ set(BINARY_ACTOR_HEADERS
 
 # New SRO files
 set(SRO_DATATYPE_SOURCES
-    src/main/cpp/SROTestDataType.cpp
+    src/SROTestDataType.cpp
 )
 
 set(SRO_DATATYPE_HEADERS
-    src/main/include/SROTestDataType.hpp
+    include/SROTestDataType.hpp
 )
 
 set(SRO_ACTOR_SOURCES
-    src/main/cpp/SROPrinterService.cpp
+    src/SROPrinterService.cpp
 )
 
 set(SRO_ACTOR_HEADERS
-    src/main/include/SROPrinterService.hpp
+    include/SROPrinterService.hpp
 )
 
 # Create shared library for the data type
