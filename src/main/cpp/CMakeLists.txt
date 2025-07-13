@@ -152,12 +152,12 @@ set_target_properties(SROTestDataType PROPERTIES
 )
 
 # Create shared library for the new SRO printer actor
-add_library(SROPrinterActor SHARED ${SRO_ACTOR_SOURCES} ${SRO_ACTOR_HEADERS})
-target_link_libraries(SROPrinterActor
+add_library(SROPrinterService SHARED ${SRO_ACTOR_SOURCES} ${SRO_ACTOR_HEADERS})
+target_link_libraries(SROPrinterService
     ${ERSAP_LIBRARY}
     SROTestDataType
 )
-set_target_properties(SROPrinterActor PROPERTIES
+set_target_properties(SROPrinterService PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 1
     PUBLIC_HEADER "${SRO_ACTOR_HEADERS}"
@@ -169,7 +169,7 @@ install(TARGETS
     CodaTimeFramePrinterActor
     CodaTimeFrameBinaryPrinterActor
     SROTestDataType
-    SROPrinterActor
+    SROPrinterService
     LIBRARY DESTINATION lib
     PUBLIC_HEADER DESTINATION include/ersap-actor-cpp
 )
@@ -203,5 +203,5 @@ message(STATUS "  make install")
 message(STATUS "")
 message(STATUS "Usage in ERSAP:")
 message(STATUS "  Set LD_LIBRARY_PATH to include the installation directory")
-message(STATUS "  Use 'SROPrinterActor' as the engine")
+message(STATUS "  Use 'SROPrinterService' as the engine")
 message(STATUS "  Data type library 'SROTestDataType' will be loaded automatically")
