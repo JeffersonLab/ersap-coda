@@ -73,9 +73,9 @@ ersap::EngineData CodaTimeFrameBinaryPrinterActor::execute(ersap::EngineData& in
     auto output = ersap::EngineData{};
 
     // Verify input data type
-    if (input.mime_type() != CODA_TIME_FRAME_MIME_TYPE) {
+    if (input.mime_type() != CODA_TIME_FRAME_BINARY_MIME_TYPE) {
         output.set_status(ersap::EngineStatus::ERROR);
-        output.set_description("Wrong input type: expected " + CODA_TIME_FRAME_MIME_TYPE + 
+        output.set_description("Wrong input type: expected " + CODA_TIME_FRAME_BINARY_MIME_TYPE + 
                                ", got " + input.mime_type());
         return output;
     }
@@ -109,7 +109,7 @@ ersap::EngineData CodaTimeFrameBinaryPrinterActor::execute(ersap::EngineData& in
         totalBinarySize_ += serializeEvent(event).size();
         
         // Pass through the original event unchanged
-        output.set_data(CODA_TIME_FRAME_TYPE, event);
+        output.set_data(CODA_TIME_FRAME_BINARY_TYPE, event);
         
     } catch (const std::exception& e) {
         output.set_status(ersap::EngineStatus::ERROR);
@@ -126,11 +126,11 @@ ersap::EngineData CodaTimeFrameBinaryPrinterActor::execute_group(const std::vect
 }
 
 std::vector<ersap::EngineDataType> CodaTimeFrameBinaryPrinterActor::input_data_types() const {
-    return { CODA_TIME_FRAME_TYPE, ersap::type::JSON };
+    return { CODA_TIME_FRAME_BINARY_TYPE, ersap::type::JSON };
 }
 
 std::vector<ersap::EngineDataType> CodaTimeFrameBinaryPrinterActor::output_data_types() const {
-    return { CODA_TIME_FRAME_TYPE, ersap::type::JSON };
+    return { CODA_TIME_FRAME_BINARY_TYPE, ersap::type::JSON };
 }
 
 std::set<std::string> CodaTimeFrameBinaryPrinterActor::states() const {
@@ -280,7 +280,7 @@ std::string CodaTimeFrameBinaryPrinterActor::formatHexByte(std::uint8_t byte) co
 }
 
 std::vector<std::uint8_t> CodaTimeFrameBinaryPrinterActor::serializeEvent(const CodaTimeFrame& event) const {
-    return CodaTimeFrameSerializer::serializeToBinary(event);
+    return serializeToBinary(event);
 }
 
 std::size_t CodaTimeFrameBinaryPrinterActor::calculateExpectedSize(const CodaTimeFrame& event) const {
