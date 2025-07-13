@@ -116,7 +116,7 @@ private:
     }
 };
 
-ERSAP_EXPORT const ersap::EngineDataType SRO_TYPE{"binary/sro-data", std::make_unique<SROSerializer>()};
+const ersap::EngineDataType SRO_TYPE{"binary/sro-data", std::make_unique<SROSerializer>()};
 
 } // namespace demo
 } // namespace ersap
