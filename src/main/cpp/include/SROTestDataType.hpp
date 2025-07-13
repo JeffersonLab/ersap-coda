@@ -1,6 +1,7 @@
 #ifndef ERSAP_DEMO_SRO_HPP_
 #define ERSAP_DEMO_SRO_HPP_
 
+#include <ersap/engine_data_type.hpp>
 #include <vector>
 #include <cstdint>
 #include <string>
