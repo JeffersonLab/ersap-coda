@@ -4,6 +4,7 @@ import org.jlab.epsci.ersap.base.error.ErsapException;
 import org.jlab.epsci.ersap.engine.EngineDataType;
 import org.jlab.epsci.ersap.engine.ErsapSerializer;
 import org.jlab.ersap.actor.coda.proc.RocTimeFrameBank;
+import org.jlab.ersap.actor.coda.proc.EtEvent;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -25,7 +26,16 @@ public final class SROTestDataType extends EngineDataType {
 
             @Override
             public ByteBuffer write(Object data) throws ErsapException {
-                List<List<RocTimeFrameBank>> sroData = (List<List<RocTimeFrameBank>>) data;
+                List<List<RocTimeFrameBank>> sroData;
+                
+                // Handle both EtEvent and direct List<List<RocTimeFrameBank>>
+                if (data instanceof EtEvent) {
+                    EtEvent etEvent = (EtEvent) data;
+                    sroData = etEvent.getTimeFrames();
+                } else {
+                    sroData = (List<List<RocTimeFrameBank>>) data;
+                }
+                
                 try {
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
                     ObjectOutputStream out = new ObjectOutputStream(bos);
@@ -49,7 +59,14 @@ public final class SROTestDataType extends EngineDataType {
                     buffer.get(bytes);
                     ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
                     ObjectInputStream in = new ObjectInputStream(bis);
-                    return (List<List<RocTimeFrameBank>>) in.readObject();
+                    List<List<RocTimeFrameBank>> timeFrames = (List<List<RocTimeFrameBank>>) in.readObject();
+                    
+                    // Create an EtEvent to wrap the timeFrames for consistency
+                    EtEvent etEvent = new EtEvent();
+                    for (List<RocTimeFrameBank> timeFrame : timeFrames) {
+                        etEvent.addTimeFrame(timeFrame);
+                    }
+                    return etEvent;
                 } catch (IOException | ClassNotFoundException e) {
                     throw new ErsapException("Failed to deserialize SRO data", e);
                 }
