@@ -144,6 +144,7 @@ ersap::EngineData SROPrinterService::configure(ersap::EngineData& input)
 ersap::EngineData SROPrinterService::execute(ersap::EngineData& input)
 {
     auto output = ersap::EngineData{};
+    std::cout << "DDD-1 ==> Received SRO Data:\n";
 
     if (input.mime_type() != SRO_TYPE) {
         output.set_status(ersap::EngineStatus::ERROR);
@@ -152,6 +153,7 @@ ersap::EngineData SROPrinterService::execute(ersap::EngineData& input)
     }
 
     const auto& data = ersap::data_cast<std::vector<std::vector<RocTimeFrameBank>>>(input);
+    std::cout << "DDD-2 ==> Received SRO Data:\n";
 
     std::cout << "Received SRO Data:\n";
     for (const auto& frameList : data) {
