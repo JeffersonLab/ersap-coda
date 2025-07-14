@@ -5,11 +5,13 @@ import org.jlab.epsci.ersap.engine.EngineDataType;
 import org.jlab.epsci.ersap.engine.ErsapSerializer;
 import org.jlab.ersap.actor.coda.proc.RocTimeFrameBank;
 import org.jlab.ersap.actor.coda.proc.EtEvent;
+import org.jlab.ersap.actor.coda.proc.FADCHit;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A ERSAP engine data-type for a List<List<RocTimeFrameBank>>
@@ -37,9 +39,37 @@ public final class SROTestDataType extends EngineDataType {
                 }
                 
                 try {
+                    // Use the same binary format as C++ for compatibility
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    ObjectOutputStream out = new ObjectOutputStream(bos);
-                    out.writeObject(sroData);
+                    DataOutputStream out = new DataOutputStream(bos);
+                    
+                    // Write outer list size
+                    out.writeInt(sroData.size());
+                    
+                    for (List<RocTimeFrameBank> sublist : sroData) {
+                        // Write inner list size
+                        out.writeInt(sublist.size());
+                        
+                        for (RocTimeFrameBank frame : sublist) {
+                            // Write frame data
+                            out.writeInt(frame.getRocID());
+                            out.writeInt(frame.getFrameNumber());
+                            out.writeLong(frame.getTimeStamp());
+                            
+                            // Write hits
+                            List<FADCHit> hits = frame.getHits();
+                            out.writeInt(hits.size());
+                            
+                            for (FADCHit hit : hits) {
+                                out.writeInt(hit.crate());
+                                out.writeInt(hit.slot());
+                                out.writeInt(hit.channel());
+                                out.writeInt(hit.charge());
+                                out.writeLong(hit.time());
+                            }
+                        }
+                    }
+                    
                     out.flush();
                     byte[] bytes = bos.toByteArray();
                     ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
@@ -58,8 +88,37 @@ public final class SROTestDataType extends EngineDataType {
                     byte[] bytes = new byte[buffer.remaining()];
                     buffer.get(bytes);
                     ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                    ObjectInputStream in = new ObjectInputStream(bis);
-                    List<List<RocTimeFrameBank>> timeFrames = (List<List<RocTimeFrameBank>>) in.readObject();
+                    DataInputStream in = new DataInputStream(bis);
+                    
+                    // Read outer list size
+                    int outerSize = in.readInt();
+                    List<List<RocTimeFrameBank>> timeFrames = new ArrayList<>();
+                    
+                    for (int o = 0; o < outerSize; ++o) {
+                        // Read inner list size
+                        int innerSize = in.readInt();
+                        List<RocTimeFrameBank> sublist = new ArrayList<>();
+                        
+                        for (int f = 0; f < innerSize; ++f) {
+                            RocTimeFrameBank frame = new RocTimeFrameBank();
+                            frame.setRocID(in.readInt());
+                            frame.setFrameNumber(in.readInt());
+                            frame.setTimeStamp(in.readLong());
+                            
+                            // Read hits
+                            int hitCount = in.readInt();
+                            for (int h = 0; h < hitCount; ++h) {
+                                int crate = in.readInt();
+                                int slot = in.readInt();
+                                int channel = in.readInt();
+                                int charge = in.readInt();
+                                long time = in.readLong();
+                                frame.addHit(new FADCHit(crate, slot, channel, charge, time));
+                            }
+                            sublist.add(frame);
+                        }
+                        timeFrames.add(sublist);
+                    }
                     
                     // Create an EtEvent to wrap the timeFrames for consistency
                     EtEvent etEvent = new EtEvent();
@@ -67,7 +126,7 @@ public final class SROTestDataType extends EngineDataType {
                         etEvent.addTimeFrame(timeFrame);
                     }
                     return etEvent;
-                } catch (IOException | ClassNotFoundException e) {
+                } catch (IOException e) {
                     throw new ErsapException("Failed to deserialize SRO data", e);
                 }
             }
