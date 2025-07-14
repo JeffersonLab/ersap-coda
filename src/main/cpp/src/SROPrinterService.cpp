@@ -128,14 +128,20 @@ private:
             std::cout << "DDD-C++: to_int: offset " << offset << " too large for buffer size " << b.size() << std::endl;
             throw std::runtime_error("Buffer overflow in to_int");
         }
-        int32_t result = (b[offset+3] << 24) | (b[offset+2] << 16) | (b[offset+1] << 8) | (b[offset]);
+        // Read in big-endian format to match Java DataOutputStream
+        int32_t result = (b[offset] << 24) | (b[offset+1] << 16) | (b[offset+2] << 8) | (b[offset+3]);
         std::cout << "DDD-C++: to_int at offset " << offset << " = " << result << std::endl;
         return result;
     }
 
     int64_t to_long(const bytes_t& b, size_t offset) const {
+        if (offset + 7 >= b.size()) {
+            std::cout << "DDD-C++: to_long: offset " << offset << " too large for buffer size " << b.size() << std::endl;
+            throw std::runtime_error("Buffer overflow in to_long");
+        }
+        // Read in big-endian format to match Java DataOutputStream
         int64_t val = 0;
-        for (int j = 7; j >= 0; --j) {
+        for (int j = 0; j < 8; ++j) {
             val = (val << 8) | b[offset + j];
         }
         return val;

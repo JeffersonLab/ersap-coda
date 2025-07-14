@@ -76,7 +76,6 @@ public final class SROTestDataType extends EngineDataType {
                     byte[] bytes = bos.toByteArray();
                     System.out.println("DDD-Java: Total bytes written: " + bytes.length);
                     ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
-                    buffer.order(ByteOrder.LITTLE_ENDIAN);
                     buffer.put(bytes);
                     buffer.flip();
                     return buffer;
