@@ -81,8 +81,13 @@ public class MultiChannelDigitizerDisplayBinary implements Engine {
 
     @Override
     public EngineData execute(EngineData engineData) {
+        System.out.println("DDD-Histogram: Received data type: " + engineData.getMimeType());
+        System.out.println("DDD-Histogram: Received data class: " + engineData.getData().getClass().getName());
+        
         EtEvent data = (EtEvent) engineData.getData();
         List<List<RocTimeFrameBank>> ltf = data.getTimeFrames();
+        System.out.println("DDD-Histogram: EtEvent has " + (ltf != null ? ltf.size() : "null") + " timeFrames");
+        
         if(ltf !=null && !ltf.isEmpty()) {
             for (List<RocTimeFrameBank> rtf : data.getTimeFrames()) {
                 if(rtf !=null && !rtf.isEmpty()) {
