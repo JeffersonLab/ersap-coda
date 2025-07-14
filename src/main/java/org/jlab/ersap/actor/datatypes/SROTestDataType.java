@@ -90,13 +90,11 @@ public final class SROTestDataType extends EngineDataType {
                     
                     // Read outer list size
                     int outerSize = in.readInt();
-                    System.out.println("DDD-Java-Deserialize: Outer size: " + outerSize);
                     List<List<RocTimeFrameBank>> timeFrames = new ArrayList<>();
                     
                     for (int o = 0; o < outerSize; ++o) {
                         // Read inner list size
                         int innerSize = in.readInt();
-                        System.out.println("DDD-Java-Deserialize: Inner size: " + innerSize);
                         List<RocTimeFrameBank> sublist = new ArrayList<>();
                         
                         for (int f = 0; f < innerSize; ++f) {
@@ -125,7 +123,6 @@ public final class SROTestDataType extends EngineDataType {
                     for (List<RocTimeFrameBank> timeFrame : timeFrames) {
                         etEvent.addTimeFrame(timeFrame);
                     }
-                    System.out.println("DDD-Java-Deserialize: Created EtEvent with " + etEvent.getTimeFrames().size() + " timeFrames");
                     return etEvent;
                 } catch (IOException e) {
                     throw new ErsapException("Failed to deserialize SRO data", e);
