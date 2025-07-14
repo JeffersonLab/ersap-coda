@@ -75,19 +75,15 @@ public:
 
     ersap::any read(const std::vector<std::uint8_t>& buffer) const override {
         size_t i = 0;
-        std::cout << "DDD-C++: Buffer size: " << buffer.size() << std::endl;
         
         if (buffer.size() < 4) {
-            std::cout << "DDD-C++: Buffer too small, size: " << buffer.size() << std::endl;
             throw std::runtime_error("Buffer too small for SRO data");
         }
         
         int32_t outer_size = to_int(buffer, i); 
-        std::cout << "DDD-C++: Outer size: " << outer_size << std::endl;
         i += 4;
         
         if (outer_size < 0 || outer_size > 1000000) {
-            std::cout << "DDD-C++: Invalid outer_size: " << outer_size << std::endl;
             throw std::runtime_error("Invalid outer_size: " + std::to_string(outer_size));
         }
         
@@ -125,18 +121,14 @@ public:
 private:
     int32_t to_int(const bytes_t& b, size_t offset) const {
         if (offset + 3 >= b.size()) {
-            std::cout << "DDD-C++: to_int: offset " << offset << " too large for buffer size " << b.size() << std::endl;
             throw std::runtime_error("Buffer overflow in to_int");
         }
         // Read in big-endian format to match Java DataOutputStream
-        int32_t result = (b[offset] << 24) | (b[offset+1] << 16) | (b[offset+2] << 8) | (b[offset+3]);
-        std::cout << "DDD-C++: to_int at offset " << offset << " = " << result << std::endl;
-        return result;
+        return (b[offset] << 24) | (b[offset+1] << 16) | (b[offset+2] << 8) | (b[offset+3]);
     }
 
     int64_t to_long(const bytes_t& b, size_t offset) const {
         if (offset + 7 >= b.size()) {
-            std::cout << "DDD-C++: to_long: offset " << offset << " too large for buffer size " << b.size() << std::endl;
             throw std::runtime_error("Buffer overflow in to_long");
         }
         // Read in big-endian format to match Java DataOutputStream
@@ -171,7 +163,6 @@ ersap::EngineData SROPrinterService::configure(ersap::EngineData& input)
 ersap::EngineData SROPrinterService::execute(ersap::EngineData& input)
 {
     auto output = ersap::EngineData{};
-    std::cout << "DDD-1 ==> Received SRO Data:\n";
 
     if (input.mime_type() != SRO_TYPE) {
         output.set_status(ersap::EngineStatus::ERROR);
@@ -180,12 +171,14 @@ ersap::EngineData SROPrinterService::execute(ersap::EngineData& input)
     }
 
     const auto& data = ersap::data_cast<std::vector<std::vector<RocTimeFrameBank>>>(input);
-    std::cout << "DDD-2 ==> Received SRO Data:\n";
 
     std::cout << "Received SRO Data:\n";
     for (const auto& frameList : data) {
         for (const auto& frame : frameList) {
-            std::cout << frame.toString() << "\n";
+            // Only print frames that have hits
+            if (!frame.getHits().empty()) {
+                std::cout << frame.toString() << "\n";
+            }
         }
     }
 

@@ -29,7 +29,6 @@ public final class SROTestDataType extends EngineDataType {
             @Override
             public ByteBuffer write(Object data) throws ErsapException {
                 List<List<RocTimeFrameBank>> sroData;
-                System.out.println("DDD ===> "+ data.getClass().getName());
                 // Handle both EtEvent and direct List<List<RocTimeFrameBank>>
                 if (data instanceof EtEvent) {
                     EtEvent etEvent = (EtEvent) data;
@@ -44,12 +43,10 @@ public final class SROTestDataType extends EngineDataType {
                     DataOutputStream out = new DataOutputStream(bos);
                     
                     // Write outer list size
-                    System.out.println("DDD-Java: Writing outer size: " + sroData.size());
                     out.writeInt(sroData.size());
                     
                     for (List<RocTimeFrameBank> sublist : sroData) {
                         // Write inner list size
-                        System.out.println("DDD-Java: Writing inner size: " + sublist.size());
                         out.writeInt(sublist.size());
                         
                         for (RocTimeFrameBank frame : sublist) {
@@ -74,7 +71,6 @@ public final class SROTestDataType extends EngineDataType {
                     
                     out.flush();
                     byte[] bytes = bos.toByteArray();
-                    System.out.println("DDD-Java: Total bytes written: " + bytes.length);
                     ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
                     buffer.put(bytes);
                     buffer.flip();
