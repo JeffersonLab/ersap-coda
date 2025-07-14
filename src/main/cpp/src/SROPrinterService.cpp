@@ -75,7 +75,22 @@ public:
 
     ersap::any read(const std::vector<std::uint8_t>& buffer) const override {
         size_t i = 0;
-        int32_t outer_size = to_int(buffer, i); i += 4;
+        std::cout << "DDD-C++: Buffer size: " << buffer.size() << std::endl;
+        
+        if (buffer.size() < 4) {
+            std::cout << "DDD-C++: Buffer too small, size: " << buffer.size() << std::endl;
+            throw std::runtime_error("Buffer too small for SRO data");
+        }
+        
+        int32_t outer_size = to_int(buffer, i); 
+        std::cout << "DDD-C++: Outer size: " << outer_size << std::endl;
+        i += 4;
+        
+        if (outer_size < 0 || outer_size > 1000000) {
+            std::cout << "DDD-C++: Invalid outer_size: " << outer_size << std::endl;
+            throw std::runtime_error("Invalid outer_size: " + std::to_string(outer_size));
+        }
+        
         std::vector<std::vector<RocTimeFrameBank>> sro;
         sro.reserve(outer_size);
 
@@ -109,7 +124,13 @@ public:
 
 private:
     int32_t to_int(const bytes_t& b, size_t offset) const {
-        return (b[offset+3] << 24) | (b[offset+2] << 16) | (b[offset+1] << 8) | (b[offset]);
+        if (offset + 3 >= b.size()) {
+            std::cout << "DDD-C++: to_int: offset " << offset << " too large for buffer size " << b.size() << std::endl;
+            throw std::runtime_error("Buffer overflow in to_int");
+        }
+        int32_t result = (b[offset+3] << 24) | (b[offset+2] << 16) | (b[offset+1] << 8) | (b[offset]);
+        std::cout << "DDD-C++: to_int at offset " << offset << " = " << result << std::endl;
+        return result;
     }
 
     int64_t to_long(const bytes_t& b, size_t offset) const {
