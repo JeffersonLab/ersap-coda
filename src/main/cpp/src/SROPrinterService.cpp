@@ -25,11 +25,18 @@ public:
     ByteBuffer(size_t size) { data_.reserve(size); }
 
     void put(std::int32_t v) {
-        data_.insert(data_.end(), (byte_t*) &v, (byte_t*) &v + sizeof(v));
+        // Write in big-endian format to match Java DataInputStream
+        data_.push_back((v >> 24) & 0xFF);
+        data_.push_back((v >> 16) & 0xFF);
+        data_.push_back((v >> 8) & 0xFF);
+        data_.push_back(v & 0xFF);
     }
 
     void put(std::int64_t v) {
-        data_.insert(data_.end(), (byte_t*) &v, (byte_t*) &v + sizeof(v));
+        // Write in big-endian format to match Java DataInputStream
+        for (int i = 7; i >= 0; --i) {
+            data_.push_back((v >> (i * 8)) & 0xFF);
+        }
     }
 
     template<typename T>
