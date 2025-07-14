@@ -1,0 +1,42 @@
+---
+io-services:
+  reader:
+    class: org.jlab.ersap.actor.coda.engine.CodaEtSourceEngine
+    name: Source
+  writer:
+    class: org.jlab.ersap.actor.coda.engine.binary.CodaSinkBinaryEngine
+    name: Sink
+
+services:
+  - class: org.jlab.ersap.actor.coda.engine.binary.CodaHitFinderBinaryEngine
+    name: HitFinder
+
+  - class: SROPrinterService
+    name: SoftTrig
+    lang: cpp
+
+  - class: org.jlab.ersap.actor.coda.engine.binary.MultiChannelDigitizerDisplayBinary
+    name: Histogram
+
+configuration:
+  io-services:
+    reader:
+      et_name: "/tmp/et_SRO_ERSAP"
+      et_port: 23911
+      et_station: "ersap"
+      fifo_capacity: 128
+  services:
+    HitFinder:
+      stream_source: "et"
+      verbose: "no"
+    SoftTrig:
+      max_hits_to_show: 100
+    Histogram:
+      hist_bins: 100
+      hist_min: 100
+      hist_max: 8000
+      roc_id: 2
+      slot: 15
+mime-types:
+  - binary/data-evio
+  - binary/sro-data
