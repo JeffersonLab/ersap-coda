@@ -64,51 +64,59 @@ This opens a YAML file describing the service composition:
 
     ---
     io-services:
-      reader:
-        class: org.jlab.ersap.actor.coda.engine.CodaEtSourceEngine
-        name: Source
-      writer:
-        class: org.jlab.ersap.actor.coda.engine.CodaHistogramSinkEngine
-        name: Sink
+    reader:
+    class: org.jlab.ersap.actor.coda.engine.CodaEtSourceEngine
+    name: Source
+    writer:
+    class: org.jlab.ersap.actor.coda.engine.binary.CodaSinkBinaryEngine
+    name: Sink
     
     services:
-      - class: org.jlab.ersap.actor.coda.engine.EventIdentificationEngine
-        name: EventId
+    - class: org.jlab.ersap.actor.coda.engine.binary.CodaHitFinderBinaryEngine
+      name: HitFinder
+    
+    - class: SROPrinterService
+      name: SoftTrig
+      lang: cpp
+    
+    - class: org.jlab.ersap.actor.coda.engine.binary.MultiChannelDigitizerDisplayBinary
+      name: Histogram
     
     configuration:
-      io-services:
-        reader:
-          et_name: "/tmp/et_SRO_ERSAP"
-          et_port: 23911
-          et_station: "ersap"
-          fifo_capacity: 128
-        writer:
-          hist_bins: 100
-          hist_min: 100
-          hist_max: 8000
-          hist_titles: "1-15-0,1-15-1,...,1-15-15"
-          coincidence: "1-15-0,1-15-1"
-          grid_size: 4
-    
-      services:
-        EventId:
-          sliding_window: 40
-          multiplicity: 2
-    
+    io-services:
+    reader:
+      et_name: "/tmp/et_SRO_ERSAP"
+      et_port: 23911
+      et_station: "ersap"
+      fifo_capacity: 128
+    services:
+    HitFinder:
+      stream_source: "et"
+      verbose: "no"
+    SoftTrig:
+      max_hits_to_show: 100
+    Histogram:
+      hist_bins: 100
+      hist_min: 100
+      hist_max: 8000
+      roc_id: 2
+      slot: 15
     mime-types:
       - binary/data-evio
-      - binary/data-jobj
+      - binary/sro-data
 
 ## Output Histogram Configuration
 To control histogram rendering in the accumulation mode, adjust parameters under the 
-    
-    writer: 
-        hist_bins: 100
-        hist_min: 100
-        hist_max: 8000
-        hist_titles: "1-15-0,1-15-1,...,1-15-15"
-        coincidence: "1-15-0,1-15-1"
-        grid_size: 4
+
+    Histogram:
+      hist_bins: 100
+      hist_min: 100
+      hist_max: 8000
+      roc_id: 2
+      slot: 15
+    mime-types:
+      - binary/data-evio
+      - binary/sro-data
 
 hist_bins: Number of bins
 

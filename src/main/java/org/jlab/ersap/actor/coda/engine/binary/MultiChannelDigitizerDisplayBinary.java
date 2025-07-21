@@ -9,8 +9,6 @@ import org.jlab.ersap.actor.coda.proc.EtEvent;
 import org.jlab.ersap.actor.coda.proc.FADCHit;
 import org.jlab.ersap.actor.coda.proc.LiveHistogram;
 import org.jlab.ersap.actor.coda.proc.RocTimeFrameBank;
-import org.jlab.ersap.actor.datatypes.CodaTimeFrameBinaryDataType;
-import org.jlab.ersap.actor.datatypes.CodaTimeFrameDataType;
 import org.jlab.ersap.actor.datatypes.SROTestDataType;
 import org.json.JSONObject;
 

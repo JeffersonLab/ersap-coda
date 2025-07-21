@@ -7,8 +7,6 @@ import org.jlab.epsci.ersap.engine.EngineData;
 import org.jlab.epsci.ersap.engine.EngineDataType;
 import org.jlab.ersap.actor.coda.proc.EtEvent;
 import org.jlab.ersap.actor.coda.proc.EvioEventParser;
-import org.jlab.ersap.actor.datatypes.CodaTimeFrameBinaryDataType;
-import org.jlab.ersap.actor.datatypes.CodaTimeFrameDataType;
 import org.jlab.ersap.actor.datatypes.JavaObjectType;
 import org.jlab.ersap.actor.datatypes.SROTestDataType;
 import org.json.JSONObject;
@@ -68,7 +66,7 @@ public class CodaHitFinderBinaryEngine implements Engine {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        out.setData(CodaTimeFrameBinaryDataType.CODA_TIME_FRAME, data);
+        out.setData(SROTestDataType.INSTANCE, data);
         return out;
     }
 

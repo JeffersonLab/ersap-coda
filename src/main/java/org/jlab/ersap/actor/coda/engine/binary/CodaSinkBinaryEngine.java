@@ -3,7 +3,6 @@ package org.jlab.ersap.actor.coda.engine.binary;
 import org.jlab.epsci.ersap.engine.EngineDataType;
 import org.jlab.epsci.ersap.std.services.AbstractEventWriterService;
 import org.jlab.epsci.ersap.std.services.EventWriterException;
-import org.jlab.ersap.actor.datatypes.CodaTimeFrameBinaryDataType;
 import org.jlab.ersap.actor.datatypes.SROTestDataType;
 import org.json.JSONObject;
 
