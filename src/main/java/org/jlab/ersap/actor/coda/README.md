@@ -35,6 +35,7 @@ In a new terminal window:
     $ERSAP_HOME/bin/ersap_shell
 Once inside the ERSAP shell, start the local processing pipeline:
 
+    ersap> set threades 1
     ersap> run_local
 
 ## Stopping the ERSAP Pipeline
