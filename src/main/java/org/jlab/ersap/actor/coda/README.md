@@ -90,6 +90,9 @@ This opens a YAML file describing the service composition:
       et_port: 23911
       et_station: "ersap"
       fifo_capacity: 128
+    writer:
+      output_file: "/tmp/output_sro_data.bin"
+      frames_per_file: 1000
     services:
     HitFinder:
       stream_source: "et"
@@ -131,3 +134,20 @@ grid_size: Layout matrix (e.g., 4 for 4x4 visualization)
 The CODA DAQ system can be restarted independently without affecting the ERSAP pipeline.
 
 It is recommended to monitor pipeline behavior during long-running sessions to ensure data integrity and thread consistency.
+
+## CodaSinkBinaryEngine Output File Splitting
+
+The `CodaSinkBinaryEngine` now supports automatic file splitting based on the number of frames written:
+
+- `output_file`: The base path for the output binary file (e.g., `/tmp/output_sro_data.bin`).
+- `frames_per_file`: The maximum number of frames to write to each file before rolling over to a new file. When the limit is reached, a new file is created with a numeric postfix (e.g., `output_sro_data-1.bin`, `output_sro_data-2.bin`, etc.).
+
+**Example configuration:**
+
+```yaml
+writer:
+  output_file: "/tmp/output_sro_data.bin"
+  frames_per_file: 1000
+```
+
+This ensures that large data sets are automatically split into manageable files for easier handling and post-processing.

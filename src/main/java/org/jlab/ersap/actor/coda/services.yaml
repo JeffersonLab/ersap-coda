@@ -25,6 +25,9 @@ configuration:
       et_port: 23911
       et_station: "ersap"
       fifo_capacity: 128
+    writer:
+      output_file: "/tmp/output_sro_data.bin"
+      frames_per_file: 1000
   services:
     HitFinder:
       stream_source: "et"
