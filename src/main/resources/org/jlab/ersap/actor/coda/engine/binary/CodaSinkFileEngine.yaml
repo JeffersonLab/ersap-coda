@@ -1,0 +1,11 @@
+---
+name: CodaSinkFileEngine
+engine: org.jlab.ersap.actor.coda.engine.binary.CodaSinkFileEngine
+type: java
+
+author: vardan
+email: gurjyan@jlab.org
+
+version: 0.1
+description:
+  Writes CSV file that later can be used by Python to create .npy files
