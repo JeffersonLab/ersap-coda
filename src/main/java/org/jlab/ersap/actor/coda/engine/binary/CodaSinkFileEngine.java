@@ -50,7 +50,7 @@ public class CodaSinkFileEngine extends AbstractEventWriterService<FileWriter> {
                                         hit.slot()+","+
                                         hit.channel()+","+
                                         hit.charge()+","+
-                                        hit.time());
+                                        hit.time() +"\n");
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
