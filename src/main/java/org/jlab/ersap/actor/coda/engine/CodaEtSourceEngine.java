@@ -23,6 +23,8 @@ import java.nio.file.Path;
  * {@code } ersap-actor
  */
 public class CodaEtSourceEngine extends AbstractEventReaderService<CodaETReader> {
+    private static final String ET_HOST = "et_host";
+    private String etHost = AConstants.udf;
     private static final String ET_NAME = "et_name";
     private String etName = AConstants.udf;
     private static final String ET_STATION_NAME = "et_station";
@@ -32,6 +34,12 @@ public class CodaEtSourceEngine extends AbstractEventReaderService<CodaETReader>
 
     @Override
     protected CodaETReader createReader(Path path, JSONObject jsonObject) throws EventReaderException {
+        if (jsonObject.has(ET_HOST)) {
+            etHost = jsonObject.getString(ET_HOST);
+        } else {
+            System.out.println("ERROR: No ET host is defined. Exiting...");
+            System.exit(1);
+        }
         if (jsonObject.has(ET_NAME)) {
             etName = jsonObject.getString(ET_NAME);
         } else {
@@ -43,8 +51,7 @@ public class CodaEtSourceEngine extends AbstractEventReaderService<CodaETReader>
         }
         int maxRingItems = jsonObject.has(FIFO_CAPACITY) ? jsonObject.getInt(FIFO_CAPACITY) : 131072;
         int etPort = jsonObject.has(ET_PORT) ? jsonObject.getInt(ET_PORT) : 23911;
-
-        return new CodaETReader(etName, etPort, etStationName, maxRingItems);
+            return new CodaETReader(etHost,etName, etPort, etStationName, maxRingItems);
     }
 
     @Override

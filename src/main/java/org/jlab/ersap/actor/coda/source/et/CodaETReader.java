@@ -53,7 +53,7 @@ public class CodaETReader implements IASource, Runnable {
 
     private AtomicBoolean running = new AtomicBoolean(true);
 
-    public CodaETReader(String etName, int etPort, String etStationName, int capacity) {
+    public CodaETReader(String etHost, String etName, int etPort, String etStationName, int capacity) {
         // Queue staff
         this.queue = new LinkedBlockingQueue<>(capacity);
 
@@ -62,9 +62,14 @@ public class CodaETReader implements IASource, Runnable {
         System.out.println("Connecting to local "+etName+" ET system.");
         try {
             config.setNetworkContactMethod(EtConstants.direct);
-            config.setHost(EtConstants.hostLocal);
+            if(etHost.equalsIgnoreCase("localhost")) {
+                config.setHost(EtConstants.hostLocal);
+                config.setWaitTime(0);
+            } else {
+                config.setHost(etHost);
+                config.setWaitTime(2000);
+            }
             config.setTcpPort(etPort); // e.g. 23911
-            config.setWaitTime(0);
             config.setEtName(etName);
             // create ET system object with verbose debugging output
             etSystem = new EtSystem(config);
