@@ -36,6 +36,7 @@ public class EvioEventParser {
 
         for (int i = 0; i < r.getEventCount(); i++) {
             EvioEvent event = r.parseNextEvent();
+            if(debug) System.out.println(event.toXML());
             evioDataByteOrder = r.getByteOrder();
             List<RocTimeFrameBank> rocBanks = parseTimeFrame(event);
             if (rocBanks != null) {
