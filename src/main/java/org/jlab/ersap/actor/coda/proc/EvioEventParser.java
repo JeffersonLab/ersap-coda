@@ -109,6 +109,7 @@ public class EvioEventParser {
 
             // Here we get all ROC or streams data (e.g., ROC1, ROC2, etc., aggregated)
             int kids = rocTFB.getChildCount();
+            if(debug) System.out.println("DDD =======> "+kids);
             if (kids < 2) {
                 throw new Exception("Problem: too few child for TFB (" + childCount + ")");
             }
@@ -133,6 +134,7 @@ public class EvioEventParser {
                 // Ignore the data type (currently the improper value of 0xf).
                 // Just get the data as bytes
                 byte[] byteData = payloadBank.getRawBytes();
+                if(debug) System.out.println("DDDDDDDDDDDDDDDD ======> "+byteData.length);
                     hits = parseFADCPayload(timestamp, rocID, payloadId, byteData);
                     if(!hits.isEmpty()) {
                         if (debug) {
