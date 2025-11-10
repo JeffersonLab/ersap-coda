@@ -133,7 +133,7 @@ public class EvioEventParser {
                 // Ignore the data type (currently the improper value of 0xf).
                 // Just get the data as bytes
                 byte[] byteData = payloadBank.getRawBytes();
-                if(debug) System.out.println("DDD ======> Payload raw bank length = "+byteData.length);
+                if(debug) System.out.println("DDD ======> Payload RawBytes length = "+byteData.length);
                     hits = parseFADCPayload(timestamp, rocID, payloadId, byteData);
                     if(!hits.isEmpty()) {
                         if (debug) {
