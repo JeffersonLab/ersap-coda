@@ -65,7 +65,7 @@ public class EvioEventParser {
         int evTag = ev.getHeader().getTag();
 
         // Note the event tag = 0xff60 is a built stream event
-//        if (debug) System.out.println("DDD=====> event tag = " + Integer.toHexString(evTag));
+        if (debug) System.out.println("DDD=====> event tag = " + Integer.toHexString(evTag));
 
         if (evTag == 0xffd1) {
             if (debug) System.out.println("EvioEventParser: Skipping PRESTART event (tag=0xffd1)");
