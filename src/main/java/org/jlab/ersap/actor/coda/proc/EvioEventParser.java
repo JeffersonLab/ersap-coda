@@ -60,10 +60,11 @@ public class EvioEventParser {
     }
 
     private List<RocTimeFrameBank> parseTimeFrame(EvioEvent ev) throws Exception {
-
+        System.out.println("DDD =============== 1");
         List<RocTimeFrameBank> banks = new ArrayList<>();
         // Read Aggregated time frame (evio v6.0) bank header and extract event tag
         int evTag = ev.getHeader().getTag();
+        System.out.println("DDD =============== 2");
 
         // Note the event tag = 0xff60 is a built stream event
         if (debug) System.out.println("DDD=====> event tag = " + Integer.toHexString(evTag));
