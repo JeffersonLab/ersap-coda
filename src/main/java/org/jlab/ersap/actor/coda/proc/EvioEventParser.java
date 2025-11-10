@@ -94,6 +94,7 @@ public class EvioEventParser {
         long timestamp = ((((long) intData[1]) & 0x00000000ffffffffL) +
                 (((long) intData[2]) << 32));
 
+        if(debug) System.out.println("DDD =====> frameNumber = "+frameNumber+" timeStamp = "+timestamp);
         // Loop through all Aggregation info segments (AIS) which come after TSS.
         // This is ROCs loop
         for (int j = 1; j < childCount; j++) {
@@ -105,6 +106,7 @@ public class EvioEventParser {
             EvioBank rocTFB = (EvioBank) ev.getChildAt(j);
             // This must be the ROC ID
             int rocID = rocTFB.getHeader().getTag();
+            if(debug) System.out.println("DDD =====> rocID = "+rocID);
             rocTimeFrameBank.setRocID(rocID);
 
             // Here we get all ROC or streams data (e.g., ROC1, ROC2, etc., aggregated)
@@ -126,6 +128,7 @@ public class EvioEventParser {
                 // Get tag of the header which is the payload ID (associated slot number).
                 // Note that this number is NOT the VXI slot number
                 int payloadId = payloadBank.getHeader().getTag();
+                if(debug) System.out.println("DDD =====> payloadID = "+payloadId);
 
                 // @todo check to see why payloadLength always returns 1
                 // int payloadLength = payloadBank.getHeader().getLength();
