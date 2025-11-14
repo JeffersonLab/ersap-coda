@@ -33,6 +33,10 @@ public class MultiChannelDigitizerDisplayBinary implements Engine {
     private int rocId = 1;
     private static String SLOT = "slot";
     private int slot = 1;
+    private static String VERBOSE = "verbose";
+    private String verbose;
+
+    private boolean isDebug = false;
 
     private LiveHistogram liveHist;
 
@@ -65,6 +69,10 @@ public class MultiChannelDigitizerDisplayBinary implements Engine {
             if (opts.has(ROC_ID)) {
                 rocId = opts.getInt(ROC_ID);
             }
+            verbose = opts.has(VERBOSE) ? opts.getString(VERBOSE) : "no";
+            if (verbose.trim().equalsIgnoreCase("yes")) {
+                isDebug = true;
+            }
 
             List<String> histTitles = new ArrayList<>();
             for(int i=0;i<16;i++){
@@ -87,7 +95,7 @@ public class MultiChannelDigitizerDisplayBinary implements Engine {
                 if(rtf !=null && !rtf.isEmpty()) {
                     for (RocTimeFrameBank tb : rtf) {
                         for (FADCHit hit : tb.getHits()) {
-//                            System.out.println("DDD => "+hit);
+                        if (isDebug) System.out.println("DDD => "+hit);
                             liveHist.update(hit.getName(), hit);
                         }
                     }
