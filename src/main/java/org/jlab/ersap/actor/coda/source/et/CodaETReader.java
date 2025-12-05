@@ -151,8 +151,9 @@ public class CodaETReader implements IASource, Runnable {
                     etSystem.putEvents(etAttachment, etEvents);
                     count += evtCount;
                 }
-                System.out.println("DDD ==================================== 1");
+                System.out.println("DDD ==================================== A - "+etSystem.getNumEvents());
                 // Get chunk more events (ET buffer) from ET system
+
                 etEvents = etSystem.getEvents(etAttachment, Mode.SLEEP, Modify.ANYTHING, 0, chunk);
                 evtCount = 0;
             }
