@@ -30,6 +30,7 @@ public class EvioEventParser {
     public EtEvent parseEtEvent(ByteBuffer buf) throws Exception {
         EvioReader r = new EvioReader(buf);
         EtEvent evt = new EtEvent();
+        System.out.println("DDD ==================================== A");
         if (debug) System.out.println("DDD== EvioReader > version    = " + r.getEvioVersion()
                 + " eventCount = " + r.getEventCount()
                 + " blockCount = " + r.getBlockCount());
