@@ -40,8 +40,9 @@ public class EvioEventParser {
                     System.out.println();           // new row after 4 words
                 }
             }
-
         }
+        buf.rewind();
+
         EvioReader r = new EvioReader(buf);
         EtEvent evt = new EtEvent();
         if (debug) System.out.println("DDD== EvioReader > version    = " + r.getEvioVersion()
