@@ -30,18 +30,18 @@ public class EvioEventParser {
     public EtEvent parseEtEvent(ByteBuffer buf) throws Exception {
         System.out.println("DDD ============================== X ");
         int count = 0;
-        for (int i=0;i<50;i++) {
-            while (buf.remaining() >= 4) {
-                int word = buf.getInt();
-                System.out.printf("0x%08X ", word);  // <-- space after each word
-                count++;
-
-                if (count % 4 == 0) {
-                    System.out.println();           // new row after 4 words
-                }
-            }
-        }
-        buf.rewind();
+//        for (int i=0;i<50;i++) {
+//            while (buf.remaining() >= 4) {
+//                int word = buf.getInt();
+//                System.out.printf("0x%08X ", word);  // <-- space after each word
+//                count++;
+//
+//                if (count % 4 == 0) {
+//                    System.out.println();           // new row after 4 words
+//                }
+//            }
+//        }
+//        buf.rewind();
 
         EvioReader r = new EvioReader(buf);
         EtEvent evt = new EtEvent();
