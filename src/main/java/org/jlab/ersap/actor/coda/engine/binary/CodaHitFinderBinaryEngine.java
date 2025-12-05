@@ -75,8 +75,6 @@ public class CodaHitFinderBinaryEngine implements Engine {
         EtEvent data;
         // Decoding
         try {
-            System.out.println("DDD ==================================== A");
-
             data = parser.parseEtEvent((ByteBuffer) engineData.getData());
         } catch (Exception e) {
             throw new RuntimeException(e);

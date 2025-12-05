@@ -28,6 +28,7 @@ public class EvioEventParser {
      * This is going to be an evio-6 format
      */
     public EtEvent parseEtEvent(ByteBuffer buf) throws Exception {
+        System.out.println("DDD ============================== X ");
         EvioReader r = new EvioReader(buf);
         EtEvent evt = new EtEvent();
         if (debug) System.out.println("DDD== EvioReader > version    = " + r.getEvioVersion()
